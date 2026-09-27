@@ -45,7 +45,7 @@
  * ║  ⚙️  ตั้งค่า (CONFIG) — แก้ 2 บรรทัดนี้เท่านั้น                        ║
  * ║  ⚠️ อัปโหลด index.html ใหม่ทับ → ต้องกรอก EXEC_URL ใหม่ทุกครั้ง        ║
  * ╚════════════════════════════════════════════════════════════════╝ */
-var EXEC_URL = 'https://script.google.com/macros/s/AKfycbxEZtmvZDSyRwJXkUFaMTDQSw2IFRIGFLaQkvNglunK2kjp9a0IEBLbLwnEuZOCdd4SZA/exec';          // ← วางลิงก์เว็บแอปที่ลงท้ายด้วย /exec (Deploy › Manage deployments)
+var EXEC_URL = '';          // ← วางลิงก์เว็บแอปที่ลงท้ายด้วย /exec (Deploy › Manage deployments)
 var OPEN_MODE = 'auto';     // 'auto' (แนะนำ) · 'iframe' = ฝังในหน้านี้เสมอ · 'redirect' = เปลี่ยนไปหน้าเว็บแอปเสมอ
 /* ═════════════════════════ จบส่วนตั้งค่า ═════════════════════════ */
 </script>
@@ -70,6 +70,7 @@ var OPEN_MODE = 'auto';     // 'auto' (แนะนำ) · 'iframe' = ฝัง�
     var ios=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
     return ios||(/Safari/.test(ua)&&!/Chrome|Chromium|CriOS|FxiOS|Edg|OPR|Android/.test(ua));
   }
+  var READY_MS=9000;   /* เวลารอเว็บแอปในกรอบ (มิลลิวินาที) */
   function useIframe(){ return OPEN_MODE==='iframe'||(OPEN_MODE==='auto'&&!isSafari()); }
   function open(){
     if(!/^https:\/\/script\.google\.com\/.+\/exec(\?.*)?$/.test(EXEC_URL)){ show('setup'); return; }
@@ -84,7 +85,15 @@ var OPEN_MODE = 'auto';     // 'auto' (แนะนำ) · 'iframe' = ฝัง�
       /* ทางหนีไฟ: ถ้าในกรอบขึ้นหน้าล็อกอินไม่ผ่านหรือหน้าว่าง กดเปิดแบบเต็มหน้าได้ (ซ่อนเองหลัง 12 วินาที) */
       var a=document.createElement('a'); a.className='full'; a.href=url; a.textContent='เปิดแบบเต็มหน้า';
       a.onclick=function(e){ e.preventDefault(); location.replace(url); };
-      document.body.appendChild(a); setTimeout(function(){ a.className='full dim'; }, 12000);
+      document.body.appendChild(a);
+      /* รอสัญญาณ "เปิดสำเร็จ" จากเว็บแอป · ไม่มาภายในเวลา (ยังไม่ล็อกอิน / เบราว์เซอร์บล็อกคุกกี้ในกรอบ / Google ตอบ 401)
+       * → เปลี่ยนไปเปิดแบบเต็มหน้าเอง ผู้ใช้ไม่ต้องเจอหน้าว่างหรือหน้า error */
+      var ready=false, timer=setTimeout(function(){ if(!ready) location.replace(url); }, READY_MS);
+      window.addEventListener('message', function(ev){
+        if(ev.data!=='site-english:ready') return;
+        if(!/\.googleusercontent\.com$|^https:\/\/script\.google\.com$/.test(ev.origin)&&ev.origin!==location.origin) return;
+        ready=true; clearTimeout(timer); setTimeout(function(){ a.className='full dim'; }, 4000);
+      });
       return;
     }
     /* redirect: เปิดเว็บแอปแทนหน้านี้ (ไม่เก็บหน้านี้ในประวัติ กดย้อนกลับจะไม่วนมาหน้านี้) */
