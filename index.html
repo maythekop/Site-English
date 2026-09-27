@@ -71,7 +71,12 @@ var OPEN_MODE = 'auto';     // 'auto' (แนะนำ) · 'iframe' = ฝัง�
     return ios||(/Safari/.test(ua)&&!/Chrome|Chromium|CriOS|FxiOS|Edg|OPR|Android/.test(ua));
   }
   var READY_MS=9000;   /* เวลารอเว็บแอปในกรอบ (มิลลิวินาที) */
-  function useIframe(){ return OPEN_MODE==='iframe'||(OPEN_MODE==='auto'&&!isSafari()); }
+  /* จำผลครั้งก่อน: เครื่องนี้ฝังไม่ได้ (เช่น Chrome บล็อกคุกกี้บุคคลที่สาม) → ครั้งต่อไปเปิดแบบเต็มหน้าทันที ไม่ต้องรอ
+   * จำไว้ 7 วัน แล้วลองฝังใหม่อีกครั้งเผื่อเปลี่ยนการตั้งค่าเบราว์เซอร์ */
+  var MEMO_KEY='se_open_mode', MEMO_DAYS=7;
+  function memo(){ try{ var m=JSON.parse(localStorage.getItem(MEMO_KEY)||'null'); return (m&&Date.now()-m.t<MEMO_DAYS*864e5)?m.v:''; }catch(e){ return ''; } }
+  function setMemo(v){ try{ localStorage.setItem(MEMO_KEY,JSON.stringify({v:v,t:Date.now()})); }catch(e){} }
+  function useIframe(){ return OPEN_MODE==='iframe'||(OPEN_MODE==='auto'&&!isSafari()&&memo()!=='redirect'); }
   function open(){
     if(!/^https:\/\/script\.google\.com\/.+\/exec(\?.*)?$/.test(EXEC_URL)){ show('setup'); return; }
     if(!navigator.onLine){ show('offline'); return; }
@@ -81,6 +86,7 @@ var OPEN_MODE = 'auto';     // 'auto' (แนะนำ) · 'iframe' = ฝัง�
     if(useIframe()){
       var f=document.createElement('iframe'); f.src=url; f.title='Site English';
       f.setAttribute('allow','microphone; autoplay; clipboard-write');
+      f.style.visibility='hidden';   /* ซ่อนไว้จนเว็บแอปแจ้งว่าเปิดสำเร็จ — ผู้ใช้จะไม่เห็นหน้า error ของ Google */
       document.body.appendChild(f);
       /* ทางหนีไฟ: ถ้าในกรอบขึ้นหน้าล็อกอินไม่ผ่านหรือหน้าว่าง กดเปิดแบบเต็มหน้าได้ (ซ่อนเองหลัง 12 วินาที) */
       var a=document.createElement('a'); a.className='full'; a.href=url; a.textContent='เปิดแบบเต็มหน้า';
@@ -88,11 +94,11 @@ var OPEN_MODE = 'auto';     // 'auto' (แนะนำ) · 'iframe' = ฝัง�
       document.body.appendChild(a);
       /* รอสัญญาณ "เปิดสำเร็จ" จากเว็บแอป · ไม่มาภายในเวลา (ยังไม่ล็อกอิน / เบราว์เซอร์บล็อกคุกกี้ในกรอบ / Google ตอบ 401)
        * → เปลี่ยนไปเปิดแบบเต็มหน้าเอง ผู้ใช้ไม่ต้องเจอหน้าว่างหรือหน้า error */
-      var ready=false, timer=setTimeout(function(){ if(!ready) location.replace(url); }, READY_MS);
+      var ready=false, timer=setTimeout(function(){ if(!ready){ if(OPEN_MODE==='auto') setMemo('redirect'); location.replace(url); } }, READY_MS);
       window.addEventListener('message', function(ev){
         if(ev.data!=='site-english:ready') return;
         if(!/\.googleusercontent\.com$|^https:\/\/script\.google\.com$/.test(ev.origin)&&ev.origin!==location.origin) return;
-        ready=true; clearTimeout(timer); setTimeout(function(){ a.className='full dim'; }, 4000);
+        ready=true; clearTimeout(timer); f.style.visibility='visible'; setMemo('iframe'); setTimeout(function(){ a.className='full dim'; }, 4000);
       });
       return;
     }
