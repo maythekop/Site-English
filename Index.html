@@ -1,0 +1,2102 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Site English — ฝึกสื่อสารงานทางหลวง (Demo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== โทเคนสี: ธีม "ถนนยางมะตอย + ป้ายแนะนำทางสีเขียว + สีตีเส้นเหลือง" ===== */
+:root{
+  --bg:#22303A; --panel:#2C3C47; --panel-2:#354855; --line:#44596A;
+  --text:#EEF1EE; --muted:#B9C3C6; --sign:#0E6B4A; --sign-ink:#FFFFFF;
+  --mark:#F2B705; --mark-ink:#1D2A31; --ok:#3FBF7F; --bad:#FF7A6B; --user:#1F5C7A;
+  --font-th:'Sarabun','Noto Sans Thai',Tahoma,sans-serif;
+  --font-sign:'Barlow Condensed','Arial Narrow','Sarabun',sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#E6E4DE; --panel:#FFFFFF; --panel-2:#F1F0EC; --line:#CFCBC1;
+    --text:#1D2A31; --muted:#56646B; --user:#D6EAF3; --mark-ink:#1D2A31;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#22303A; --panel:#2C3C47; --panel-2:#354855; --line:#44596A;
+  --text:#EEF1EE; --muted:#B9C3C6; --user:#1F5C7A;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font-th);font-size:16px;line-height:1.6;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--mark);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== แถบหัว ===== */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:10px 16px}
+.kmpost{flex:none;width:46px;border-radius:8px 8px 3px 3px;background:#fff;color:#1D2A31;text-align:center;overflow:hidden;box-shadow:0 0 0 1px var(--line)}
+.kmpost b{display:block;background:var(--sign);color:#fff;font:600 11px/18px var(--font-sign);letter-spacing:.04em}
+.kmpost span{display:block;font:700 22px/28px var(--font-sign)}
+.brand{flex:1;min-width:0}
+.brand h1{margin:0;font:700 22px/1.1 var(--font-sign);letter-spacing:.01em}
+.brand p{margin:0;font-size:13px;color:var(--muted)}
+.xp{font:600 15px var(--font-sign);color:var(--mark);white-space:nowrap}
+.guide-btn{display:flex;align-items:center;gap:6px;border:1.5px solid var(--mark);background:transparent;color:var(--mark);border-radius:999px;padding:6px 12px;font-size:14px;font-weight:600;white-space:nowrap}
+.guide-btn svg{width:18px;height:18px}
+
+/* ===== พื้นที่เนื้อหา ===== */
+main{max-width:760px;margin:0 auto;padding:18px 16px 110px}
+h2{font:700 26px/1.15 var(--font-sign);margin:0 0 6px}
+h3{font-size:17px;margin:22px 0 8px}
+.lead{color:var(--muted);margin:0 0 16px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+.demo-note{font-size:13px;color:var(--muted);border-left:3px solid var(--mark);padding:4px 10px;margin:14px 0}
+.en{font-family:var(--font-th);font-size:16.5px}
+
+/* ปุ่ม */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:8px;padding:10px 16px;font-weight:600;border:1.5px solid var(--line);background:var(--panel-2);min-height:44px}
+.btn svg{width:18px;height:18px;flex:none}
+.btn.primary{background:var(--mark);border-color:var(--mark);color:var(--mark-ink)}
+.btn.busy{opacity:.6;cursor:wait}
+.btn.done{background:var(--ok);border-color:var(--ok);color:#10261B}
+.btn.live{background:var(--bad);border-color:var(--bad);color:#2A0E0A}
+.vol{display:flex;align-items:center;gap:10px;margin-top:10px;max-width:420px}
+.vol-meter{flex:1;display:flex;align-items:center;gap:10px;min-width:0}
+.vol-label{font-size:14px;color:var(--muted);white-space:nowrap}
+.vol-bar{flex:1;height:8px;border-radius:4px;background:var(--panel-2);border:1px solid var(--line);overflow:hidden;min-width:60px}
+.vol-bar i{display:block;height:100%;background:var(--mark);transition:width .15s}
+#volVal{font:600 15px var(--font-sign);min-width:56px;text-align:right;white-space:nowrap}
+.icon-btn:disabled,.btn:disabled{opacity:.45;cursor:not-allowed}
+.icon-btn{width:40px;height:40px;border-radius:8px;border:1.5px solid var(--line);background:var(--panel-2);display:inline-flex;align-items:center;justify-content:center;flex:none}
+.icon-btn svg{width:18px;height:18px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ===== ป้ายแนะนำทาง (จุดเด่นของหน้า) ===== */
+.sign{background:var(--sign);color:var(--sign-ink);border-radius:14px;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.sign-in{border:3px solid #fff;border-radius:10px;padding:18px 18px 16px;display:grid;grid-template-columns:auto 1fr;gap:6px 16px;align-items:center}
+.sign-arrow{grid-row:span 2;width:58px;height:58px}
+.sign-title{font:700 clamp(30px,7vw,44px)/1 var(--font-sign);letter-spacing:.01em}
+.sign-sub{font-size:15px;opacity:.95}
+.sign-meta{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding-top:10px;border-top:2px solid rgba(255,255,255,.35);font-size:14px}
+.sign-meta span{background:rgba(0,0,0,.18);border-radius:6px;padding:2px 8px}
+
+/* คำศัพท์ */
+.terms{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.term{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;gap:10px;align-items:flex-start}
+.term div{flex:1;min-width:0}
+.term strong{display:block;font:600 19px/1.2 var(--font-sign)}
+.term small{color:var(--muted);font-size:14px}
+
+/* คำถามแบบเลือกตอบ */
+.q{margin:12px 0}
+.q p{margin:0 0 8px;font-weight:600}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1.5px solid var(--line);background:var(--panel-2);border-radius:8px;padding:10px 12px;min-height:44px}
+.opt.right{border-color:var(--ok);background:rgba(63,191,127,.18)}
+.opt.wrong{border-color:var(--bad);background:rgba(255,122,107,.15)}
+.explain{font-size:14px;color:var(--muted);margin-top:6px}
+
+/* ===== แชท ===== */
+.persona{display:flex;gap:12px;align-items:center}
+.avatar{width:48px;height:48px;border-radius:50%;background:var(--sign);display:flex;align-items:center;justify-content:center;font:700 20px var(--font-sign);color:#fff;flex:none;border:2px solid #fff}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.persona b{display:block}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:0;border-right:1px solid var(--line);background:var(--panel-2);color:var(--text);min-height:40px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--mark);color:#1D2A31;font-weight:700}
+.seg-lbl{font-size:14px;color:var(--muted);margin-right:6px}
+.sh-words .w{padding:1px 2px;border-radius:3px}.sh-words .ok{background:rgba(63,191,127,.22)}.sh-words .miss{background:rgba(226,88,74,.22);text-decoration:underline dotted}
+.ls-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px;max-height:260px;overflow:auto}
+.ls-list li{padding:6px 10px;border-radius:8px;font-size:14px;border:1px solid transparent}
+.ls-list li.now{border-color:var(--mark);background:var(--panel-2);font-weight:600}
+.em-model{white-space:pre-wrap}
+.cefr{display:flex;gap:12px;align-items:center}
+.cefr .lv{flex:none;width:56px;height:56px;border-radius:12px;background:var(--sign);color:#fff;display:flex;align-items:center;justify-content:center;font:700 22px var(--font-sign)}
+.mk{margin:10px 0;padding:10px 12px;border:1px solid var(--line);border-left:4px solid var(--bad);border-radius:0 8px 8px 0;background:var(--panel-2);font-size:14px}
+.mk ul{margin:6px 0 0;padding-left:18px}.mk li{margin:3px 0}.mk s{color:var(--bad)}.mk small{color:var(--muted)}
+.ai-warn{border-left:4px solid var(--mark);padding:6px 10px;background:var(--panel-2);font-size:14px;margin:8px 0}
+.mkbook{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.mkbook li{display:flex;gap:10px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--panel)}
+.mkbook .mk-t{min-width:0}.mkbook s{color:var(--bad)}.mkbook small{display:block;color:var(--muted);font-size:13px}
+.tw{cursor:pointer;border-bottom:1.5px dotted var(--mark);border-radius:2px}
+.tw:hover,.tw:focus-visible{background:rgba(242,183,5,.18)}
+.tw.busy{opacity:.5}.tw.saved{background:rgba(63,191,127,.22);border-bottom-color:var(--ok)}
+.stage.flat{height:auto;min-height:0;padding:100px 8px 10px}
+.hw2d svg{display:block;width:100%;height:auto}
+.hw2d .seg-now.grow{animation:seg-grow .7s ease-out}
+@keyframes seg-grow{0%{opacity:.3}60%{opacity:1}100%{opacity:1}}
+/* แจ้งผลสั้น ๆ (บันทึกผล/XP) — อยู่เหนือแถบเมนูล่าง */
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 78px);z-index:40;max-width:min(92vw,560px);background:#10222E;color:#fff;border:1px solid var(--mark);border-radius:10px;padding:10px 14px;font-size:14px;line-height:1.5;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.toast.bad{border-color:var(--bad)}
+.xp.pulse{animation:xp-pulse .6s ease}
+@keyframes xp-pulse{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+.tasks{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.tasks .t-lbl{font-size:14px;color:var(--muted);margin-right:2px}
+.tasks .t{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:14px;background:var(--panel-2)}
+.tasks .t svg{width:16px;height:16px}
+.tasks .t.done{border-color:var(--ok);color:var(--text)}
+.tasks .t.done svg{color:var(--ok)}
+.tasks .t:not(.done) svg{opacity:.35}
+[data-speak][aria-pressed="true"]{border-color:var(--mark)}
+/* ภาพที่ปรึกษา (ออกแบบใหม่ของแอป) · สถานะ: idle / speaking / listening / thinking */
+.liam{width:112px;height:90px;flex:none;overflow:visible}
+.liam .l-open,.liam .l-o,.liam .l-mid,.liam .l-wave,.liam .l-dots,.liam .l-hand{opacity:0;transition:opacity .2s}
+.liam .l-brows path{transform-box:fill-box;transform-origin:50% 50%;transition:transform .3s}
+.liam .l-smile{transition:opacity .15s}
+.liam .l-body{transform-box:fill-box;transform-origin:50% 100%;animation:l-breathe 4.2s ease-in-out infinite}
+.liam .l-head{transform-box:fill-box;transform-origin:50% 92%;transition:transform .35s}
+.liam .l-eyes{transform-box:fill-box;transform-origin:50% 50%;animation:l-blink 5s infinite}
+.liam.speaking .l-smile{opacity:0}
+/* พูด: สลับรูปปาก 3 แบบตามจังหวะ (ลดการเคลื่อนไหว = ค้างที่ปากเปิด) */
+.liam.speaking .l-open{opacity:1;animation:l-v1 .66s steps(1) infinite}
+.liam.speaking .l-o{animation:l-v2 .66s steps(1) infinite}
+.liam.speaking .l-mid{animation:l-v3 .66s steps(1) infinite}
+.liam.listening .l-brows path{transform:translateY(-1.6px)}
+.liam.thinking .l-brow-r{transform:translateY(-2px) rotate(-8deg)}
+.liam.thinking .l-hand{opacity:1}
+.liam.thinking .l-head{transform:rotate(3deg)}
+.liam.speaking .l-wave{opacity:1}
+.liam.speaking .l-wave path{animation:l-wave 1.1s ease-out infinite}
+.liam.speaking .l-wave path+path{animation-delay:.35s}
+.liam.speaking .l-head{animation:l-bob 1.4s ease-in-out infinite}
+.liam.listening .l-head{transform:rotate(-6deg);animation:l-nod 1.8s ease-in-out infinite}
+.liam.thinking .l-dots{opacity:1}
+.liam.thinking .l-dots circle{animation:l-dot 1s ease-in-out infinite}
+.liam.thinking .l-dots circle:nth-child(2){animation-delay:.15s}
+.liam.thinking .l-dots circle:nth-child(3){animation-delay:.3s}
+.liam.thinking .l-eyes{transform:translate(1.5px,-1.5px)}
+.liam-state{display:inline-flex;align-items:center;gap:6px;margin-top:4px;font-size:13px;color:var(--muted)}
+.liam-state i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.persona.speaking .liam-state i{background:var(--ok)}
+.persona.listening .liam-state i{background:var(--mark)}
+.persona.thinking .liam-state i{background:#7FB3E0}
+@keyframes l-breathe{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.015)}}
+@keyframes l-blink{0%,93%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes l-v1{0%{opacity:1}33%{opacity:0}100%{opacity:0}}
+@keyframes l-v2{0%{opacity:0}33%{opacity:1}66%{opacity:0}100%{opacity:0}}
+@keyframes l-v3{0%{opacity:0}66%{opacity:1}100%{opacity:1}}
+@keyframes l-wave{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+@keyframes l-bob{0%,100%{transform:rotate(0)}50%{transform:rotate(2deg)}}
+@keyframes l-nod{0%,100%{transform:rotate(-6deg) translateY(0)}50%{transform:rotate(-6deg) translateY(1.5px)}}
+@keyframes l-dot{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.persona small{color:var(--muted)}
+.chat{display:flex;flex-direction:column;gap:12px;margin:16px 0}
+.msg{max-width:88%;padding:10px 12px;border-radius:12px;position:relative}
+.msg.them{align-self:flex-start;background:var(--panel);border:1px solid var(--line);border-top-left-radius:3px}
+.msg.me{align-self:flex-end;background:var(--user);border-top-right-radius:3px}
+.msg .who{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:2px}
+.msg .icon-btn{width:32px;height:32px}
+.fb{align-self:flex-end;max-width:88%;background:var(--panel-2);border:1px dashed var(--mark);border-radius:10px;padding:10px 12px;font-size:14px}
+.fb b{color:var(--mark)}
+.fb ul{margin:6px 0 0;padding-left:18px}
+.typing{align-self:flex-start;color:var(--muted);font-size:14px}
+.composer{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom,0px));background:var(--bg);padding:10px 0 4px}
+textarea{width:100%;min-height:84px;resize:vertical;border-radius:10px;border:1.5px solid var(--line);background:var(--panel);color:var(--text);padding:10px 12px;font:inherit}
+.hint{background:var(--panel-2);border-radius:8px;padding:10px 12px;font-size:15px;margin-top:8px}
+.status{font-size:13px;color:var(--bad);min-height:1.2em;margin-top:4px}
+
+/* ===== คะแนนเกม ===== */
+.bars{display:grid;gap:10px;margin:12px 0}
+.bar label{display:flex;justify-content:space-between;font-size:14px}
+.track{height:10px;background:var(--panel-2);border-radius:5px;overflow:hidden}
+.fill{height:100%;background:var(--mark);width:0;transition:width .6s}
+.model{background:var(--panel-2);border-left:4px solid var(--sign);border-radius:6px;padding:10px 12px}
+
+/* ===== คู่มือย่อ ===== */
+.steps{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.steps li{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+.steps .n{width:44px;height:44px;border-radius:8px;background:var(--mark);color:var(--mark-ink);font:700 24px/44px var(--font-sign);text-align:center}
+.steps b{display:block}
+.steps span{color:var(--muted);font-size:15px}
+
+/* คลังศัพท์ */
+.deck{display:grid;gap:10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+.card-top{display:flex;gap:10px;align-items:center}
+.card-top div{flex:1;min-width:0}
+.card-top strong{font:600 20px/1.2 var(--font-sign)}
+.card p{margin:6px 0;font-size:15px}
+.due{font-size:13px;color:var(--muted)}
+.seg{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.seg .btn{min-height:38px;padding:6px 12px;font-size:14px}
+.seg .btn[aria-pressed="true"]{background:var(--sign);border-color:var(--sign);color:#fff}
+
+
+/* ===== หมวดหมู่ / สายเนื้อหา / คลังเรื่อง ===== */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--c);border-radius:999px;padding:3px 10px;font-size:14px;font-weight:600;background:var(--panel)}
+.chip i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.chip small{font-weight:400;color:var(--muted);font-size:12px}
+.stream{display:inline-block;border-radius:6px;padding:2px 10px;font-size:13px;font-weight:700}
+.s-core{background:var(--sign);color:#fff}
+.s-research{background:#2F5E9E;color:#fff}
+.s-thai{background:#7A3E8F;color:#fff}
+.s-innov{background:var(--mark);color:var(--mark-ink)}
+.src{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);display:grid;gap:4px}
+.src a{color:var(--text);text-decoration:underline;text-decoration-color:var(--mark);text-underline-offset:3px;word-break:break-word}
+.src .ptitle{font-style:italic}
+.load-box{display:grid;gap:10px;justify-items:start}
+#diag{width:100%}#diag ol{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:8px}
+#diag li{border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:0 8px 8px 0;padding:8px 10px;background:var(--panel-2);font-size:14px}
+#diag li.ok{border-left-color:var(--ok)}#diag li.bad{border-left-color:var(--bad)}
+#diag .tag{font-weight:700;margin-right:6px}#diag li.ok .tag{color:var(--ok)}#diag li.bad .tag{color:var(--bad)}
+#diag .fix{display:block;margin-top:4px;font-weight:600}#diag small{display:block;color:var(--muted);word-break:break-word}
+.badge{display:inline-block;background:var(--panel-2);border:1px solid var(--mark);color:var(--text);border-radius:5px;padding:0 6px;font-size:12px;font-weight:600;width:max-content}
+.archive{display:grid;gap:8px}
+.arc{display:flex;gap:12px;background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:8px;padding:10px 12px}
+.arc-day{font:700 18px/1.2 var(--font-sign);color:var(--muted);flex:none;width:52px}
+.arc-body{min-width:0}
+.arc-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--muted);margin-top:4px}
+
+
+/* ===== ทางหลวงของฉัน (ฉากตัวต่อ 3D) ===== */
+.stage{position:relative;height:clamp(360px,62vh,600px);border-radius:14px;overflow:hidden;border:1px solid var(--line);
+  background:linear-gradient(180deg,#7EC4FF 0%,#CFEBFF 55%,#EAF4DA 100%)}
+.stage .gl{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;cursor:grab}
+.stage .gl:active{cursor:grabbing}
+.hud{position:absolute;top:12px;left:12px;z-index:2;min-width:190px;max-width:calc(100% - 24px);padding:10px 14px;border-radius:12px;color:#fff;
+  background:rgba(10,26,42,.80);border:1px solid rgba(242,183,5,.75);box-shadow:0 0 18px rgba(242,183,5,.25);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.hud-km{display:flex;align-items:baseline;gap:6px}
+.hud-km b{font:700 34px/1 var(--font-sign);color:var(--mark)}
+.hud-km span{font:600 16px var(--font-sign);opacity:.9}
+.hud .track{margin:8px 0 6px;background:rgba(255,255,255,.18)}
+.hud-rank{font-weight:600;font-size:14px}
+.hud-rank small{font-weight:400;opacity:.85}
+.gl-hint{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:2;font-size:12px;color:#fff;background:rgba(10,26,42,.7);border-radius:999px;padding:3px 12px;white-space:nowrap;pointer-events:none}
+.gl-fail{position:absolute;inset:auto 12px 44px 12px;z-index:3;background:rgba(10,26,42,.88);color:#fff;border-radius:10px;padding:10px 12px;font-size:14px}
+.reward{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;background:rgba(10,26,42,.35);padding:16px}
+.reward[hidden]{display:none}
+.rw-in{background:rgba(10,26,42,.92);color:#fff;border:1.5px solid var(--mark);box-shadow:0 0 28px rgba(242,183,5,.35);border-radius:14px;padding:18px 20px;text-align:center;max-width:340px;animation:pop .35s ease-out}
+.rw-in h4{margin:10px 0 4px;font:700 26px/1.15 var(--font-sign)}
+.rw-in p{margin:4px 0}
+.rw-unlock{border-left:4px solid var(--c);background:rgba(255,255,255,.08);border-radius:6px;padding:6px 10px;text-align:left}
+.rw-in .btn{margin-top:12px}
+.rw-brick{width:64px;height:30px;margin:0 auto;background:var(--mark);border-radius:4px;position:relative;box-shadow:inset 0 -5px 0 rgba(0,0,0,.18)}
+.rw-brick i{position:absolute;top:-8px;width:18px;height:9px;border-radius:4px 4px 0 0;background:var(--mark);box-shadow:inset 0 2px 0 rgba(255,255,255,.35)}
+.rw-brick i:first-child{left:10px}.rw-brick i:last-child{right:10px}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+.ranks{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.rk{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;opacity:.6}
+.rk.on{opacity:1}
+.rk.cur{border:2px solid var(--mark);box-shadow:0 0 0 3px rgba(242,183,5,.18)}
+.rk b{display:block;font:600 17px/1.15 var(--font-sign)}
+.rk small{color:var(--muted)}
+.lms{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.lm{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:8px;padding:10px 12px;opacity:.75}
+.lm.built{opacity:1}
+.lm-ic{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--panel-2);flex:none}
+.lm.built .lm-ic{background:var(--c);color:#fff}
+.lm-ic svg{width:16px;height:16px}
+.lm b{display:block}
+.lm small{color:var(--muted);font-size:13px}
+@media (max-width:600px){.ranks{grid-template-columns:repeat(2,1fr)}.hud{min-width:0;top:8px;left:8px;padding:7px 10px}.hud-km b{font-size:26px}.hud .track{margin:5px 0 4px}.hud-rank small{display:none}}
+
+/* ===== แถบเมนูล่าง ===== */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--panel);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+nav.tabs button{border:0;background:transparent;padding:8px 2px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:13px;color:var(--muted);min-height:64px}
+nav.tabs svg{width:24px;height:24px}
+nav.tabs button[aria-current="page"]{color:var(--mark);box-shadow:inset 0 3px 0 var(--mark)}
+
+@media (max-width:420px){
+  .brand p{display:none}
+  .guide-btn .lbl-long{display:none}
+  .xp{font-size:14px}
+  main{padding:14px 12px 110px}
+  .sign-in{padding:14px 12px 12px;gap:4px 12px}
+  .sign-arrow{width:44px;height:44px}
+  textarea{min-height:64px}
+}
+@media (min-width:900px){
+  main{padding-top:26px}
+  .terms{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="kmpost" title="ฝึกต่อเนื่อง 12 วัน" aria-label="ฝึกต่อเนื่อง 12 วัน" role="img"><b>DAY</b><span id="streak">12</span></div>
+    <div class="brand">
+      <h1>Site English</h1>
+      <p>ฝึกสื่อสารงานทางหลวงเป็นภาษาอังกฤษ วันละเรื่อง</p>
+    </div>
+    <div class="xp" aria-live="polite"><span id="xp">340</span> XP</div>
+    <button class="guide-btn" data-go="guide" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/><path d="M10 8h5M10 12h5"/></svg>
+      <span>คู่มือย่อ</span>
+    </button>
+  </div>
+</header>
+
+<main id="main"></main>
+
+<nav class="tabs" aria-label="เมนูหลัก" id="tabs" hidden>
+  <div class="in">
+    <button type="button" data-go="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v5M8 21h8M9 10h6"/></svg>เรื่องวันนี้</button>
+    <button type="button" data-go="talk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>คุยงาน</button>
+    <button type="button" data-go="explain"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>เกมอธิบาย</button>
+    <button type="button" data-go="review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/></svg>ทบทวน</button>
+    <button type="button" data-go="highway"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3L4 21M16 3l4 18"/><path d="M12 4v3M12 11v3M12 18v2"/></svg>ทางหลวง</button>
+  </div>
+</nav>
+
+<script>
+/* =========================================================
+   Site English — DEMO (ข้อมูลจำลองทั้งหมด ยังไม่ต่อ Gemini / Google Sheets)
+   ของจริง: เนื้อหารายวันมาจากชีต Topics, คำตอบ/คะแนนมาจาก Gemini ผ่าน GAS
+   ========================================================= */
+
+/* ---------- ไอคอน inline SVG ชุดเดียว ---------- */
+var ICON = {
+  minus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+  stop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>',
+  speaker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>',
+  mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l16-8-6 16-2.5-6.5z"/></svg>',
+  arrow:'<svg class="sign-arrow" viewBox="0 0 60 60" aria-hidden="true"><path d="M30 6 L50 28 H38 V54 H22 V28 H10 Z" fill="#fff"/></svg>'
+};
+
+/* ---------- หมวดหมู่เนื้อหา (ของจริงอยู่ในชีต Categories) ---------- */
+var CATS = {
+  pave:   {th:'ผิวทางและวัสดุ',            en:'Pavement & Materials',        color:'#E0A100'},
+  recyc:  {th:'รีไซเคิลและความยั่งยืน',     en:'Recycling & Sustainability',  color:'#3FAF6B'},
+  bridge: {th:'สะพานและโครงสร้าง',         en:'Bridges & Structures',        color:'#4D8FD1'},
+  geo:    {th:'ดิน ฐานราก ลาดดิน',          en:'Geotechnics & Slopes',        color:'#B07A4F'},
+  drain:  {th:'ระบายน้ำ',                   en:'Drainage & Hydraulics',       color:'#2BA6B8'},
+  safety: {th:'ความปลอดภัยทางถนน',         en:'Road Safety',                 color:'#E2584A'},
+  digital:{th:'เทคโนโลยีดิจิทัลและเครื่องจักร',en:'Digital & Construction Tech', color:'#9A6FD6'},
+  mgmt:   {th:'บริหารงานก่อสร้างและราคา',   en:'Construction Mgmt & Cost',    color:'#8C9AA3'}
+};
+/* ---------- สายเนื้อหา 4 สาย (สุ่มวันละ 1 เรื่อง) ---------- */
+var STREAMS = {
+  core:    {th:'ความรู้หลัก',        en:'Core knowledge'},
+  research:{th:'งานวิจัยต่างประเทศ', en:'International research'},
+  thai:    {th:'งานวิจัยไทย',        en:'Thai research'},
+  innov:   {th:'นวัตกรรม',           en:'Innovation'}
+};
+
+/* ---------- เรื่องตัวอย่าง 1 เรื่องต่อสาย (ของจริงอ่านจากชีต Topics) ---------- */
+var TOPICS = [
+ { stream:'core', cat:'pave', title:'Warm Mix Asphalt', sub:'Paving at lower temperatures — what changes on site?', minutes:12,
+   summary:'Warm mix asphalt, or WMA, is produced and placed at temperatures about 20 to 40 degrees Celsius lower than conventional hot mix asphalt. Contractors lower the temperature by foaming the binder with a small amount of water, or by adding organic or chemical additives. Because the plant burns less fuel, WMA reduces emissions and fumes, which also makes working conditions better for the paving crew. The mix stays workable for longer, so it can be hauled further and compacted in cooler weather. However, engineers still need to check moisture sensitivity and early rutting resistance, especially when a foaming process is used.',
+   source:{note:'เรียบเรียงจากความรู้ทั่วไปเรื่อง WMA — ของจริงจะอ้างมาตรฐาน/เอกสารอ้างอิงที่ใช้'},
+   terms:[{en:'binder',th:'วัสดุยึดเกาะ (แอสฟัลต์ซีเมนต์)'},{en:'workable',th:'ทำงานง่าย เกลี่ย/บดอัดได้ดี'},{en:'haul distance',th:'ระยะขนส่ง'},{en:'moisture sensitivity',th:'ความไวต่อความชื้น (การหลุดลอก)'},{en:'rutting',th:'ร่องล้อ'}],
+   activity:{type:'quiz', checks:[
+     {q:'Compared with hot mix, WMA is placed at a temperature that is…',opts:['about 20–40 °C higher','about 20–40 °C lower','the same, but with more binder'],a:1,why:'WMA ใช้อุณหภูมิต่ำกว่า HMA ประมาณ 20–40 °C'},
+     {q:'Which issue do engineers still need to check with WMA?',opts:['Moisture sensitivity','Paint colour of the plant','Traffic sign height'],a:0,why:'โดยเฉพาะกระบวนการแบบ foaming ต้องตรวจความไวต่อความชื้นและการเกิดร่องล้อช่วงแรก'}]}
+ },
+ { stream:'research', cat:'recyc', title:'Cold In-Place Recycling', sub:'How does a foamed-bitumen recycled base perform after three years?', minutes:15,
+   fictional:true,
+   summary:'This study followed four rural highway sections where the old asphalt and part of the base were recycled in place with foamed bitumen and 1 percent cement. The researchers measured deflection, rutting and cracking every six months for three years. The recycled sections showed deflection similar to a new crushed-rock base, and rut depth stayed below 10 millimetres. Early cracking was higher in one section where the existing base contained a lot of clay. The authors conclude that the method is suitable for low-volume roads, but they recommend testing the plasticity of the existing material before design.',
+   source:{journal:'(ตัวอย่างสมมติ) Journal of Pavement Recycling', year:'2026', doi:'—', note:'สรุปจากบทคัดย่อเท่านั้น'},
+   terms:[{en:'in-place recycling',th:'การนำวัสดุเดิมกลับมาใช้ใหม่ในที่'},{en:'deflection',th:'ค่าการยุบตัว (ค่าแอ่นตัว)'},{en:'low-volume road',th:'ถนนปริมาณจราจรต่ำ'},{en:'plasticity',th:'ความเป็นพลาสติก (ค่า PI)'},{en:'limitation',th:'ข้อจำกัดของงานวิจัย'}],
+   activity:{type:'write', mode:'brief', title:'Brief the consultant',
+     task:'Tell Liam about this paper in 3 sentences: what they did, what they found, and one limitation.',
+     keys:['study','recycl','foam','three years','rut','deflection','clay','plasticity','low-volume','recommend','limitation','found'],
+     model:'The researchers recycled four rural road sections in place with foamed bitumen and a little cement, and monitored them for three years. They found that the recycled base was about as stiff as a new crushed-rock base and rutting stayed low. One limitation is that a section with clayey base material cracked early, so the existing material must be checked before design.'}
+ },
+ { stream:'thai', cat:'geo', title:'ดินลูกรังผสมซีเมนต์และเถ้าชานอ้อย', sub:'Translate a Thai abstract for a foreign reader', minutes:15,
+   fictional:true,
+   thaiAbstract:'งานวิจัยนี้ศึกษาการปรับปรุงดินลูกรังด้วยปูนซีเมนต์ร้อยละ 3 ร่วมกับเถ้าชานอ้อยร้อยละ 0–15 สำหรับใช้เป็นวัสดุชั้นรองพื้นทาง ผลการทดสอบพบว่าเถ้าชานอ้อยร้อยละ 10 ให้กำลังรับแรงอัดแกนเดียวสูงสุดที่อายุบ่ม 7 วัน และช่วยลดการใช้ปูนซีเมนต์ได้ อย่างไรก็ตาม เมื่อเพิ่มเถ้าเกินร้อยละ 10 กำลังรับแรงอัดลดลง',
+   summary:'',
+   source:{journal:'(ตัวอย่างสมมติ) วารสารวิศวกรรมงานทาง', year:'2569', doi:'—', note:'ของจริงดึงจาก ThaiJO — แสดงบทคัดย่อภาษาไทยให้ฝึกแปล'},
+   terms:[{en:'laterite',th:'ดินลูกรัง'},{en:'bagasse ash',th:'เถ้าชานอ้อย'},{en:'unconfined compressive strength',th:'กำลังรับแรงอัดแกนเดียว'},{en:'curing age',th:'อายุบ่ม'},{en:'subbase',th:'ชั้นรองพื้นทาง'}],
+   activity:{type:'write', mode:'translate', title:'Translate & explain',
+     task:'Summarise this Thai abstract in clear English (2–3 sentences) so a foreign engineer can understand it.',
+     keys:['laterite','cement','bagasse','ash','subbase','strength','compressive','10','percent','%','7 days','cur','decrease','reduce'],
+     model:'This study improved laterite with 3 percent cement and 0 to 15 percent sugarcane bagasse ash for use as a subbase material. Adding 10 percent bagasse ash gave the highest unconfined compressive strength after 7 days of curing and reduced the amount of cement needed. Above 10 percent, the strength started to decrease.'}
+ },
+ { stream:'innov', cat:'digital', title:'Intelligent Compaction', sub:'Rollers that map every pass — would it help DOH sites?', minutes:12,
+   summary:'Intelligent compaction, or IC, uses vibratory rollers fitted with an accelerometer, a GPS receiver and an on-board computer. As the roller works, the system measures how the material responds to vibration and shows a stiffness value, the number of passes and, for asphalt, the surface temperature on a colour map. The operator can see weak or under-compacted spots in real time instead of waiting for spot tests. Engineers can also download the data to check coverage over the whole section. IC does not replace density tests, but it helps decide where to test.',
+   source:{note:'ตัวอย่างข่าวนวัตกรรม — ของจริงดึงจาก RSS ข่าวงานทางพร้อมลิงก์ต้นฉบับ'},
+   terms:[{en:'accelerometer',th:'เซนเซอร์วัดความเร่ง'},{en:'coverage',th:'ความครอบคลุมพื้นที่บดอัด'},{en:'spot test',th:'การทดสอบเป็นจุด'},{en:'real time',th:'ทันที ขณะทำงาน'},{en:'under-compacted',th:'บดอัดไม่ถึง'}],
+   activity:{type:'write', mode:'opinion', title:'Would you use it?',
+     task:'Would IC be useful on a Department of Highways project? Give your opinion and two reasons in 3–4 sentences.',
+     keys:['because','cost','density','test','weak','coverage','contractor','roller','train','data','quality','reduce'],
+     model:'I think IC would be useful, especially on long base course sections. First, it shows weak spots in real time, so the contractor can fix them before the next layer. Second, it helps us choose where to do density tests instead of testing at random. However, the rollers are expensive, so we might start with a pilot project.'}
+ }
+];
+/* สุ่มเรื่องของวันแบบคงที่ตามวันที่ (วันเดียวกันได้เรื่องเดิม) */
+var TODAY_IDX = (function(){var d=new Date();return (d.getFullYear()*372+d.getMonth()*31+d.getDate())%TOPICS.length;})();
+var DAY_NO = 12;
+/* ---------- โหมดข้อมูล ----------
+ * อยู่ในเว็บแอป GAS (มี google.script.run) = อ่าน "เรื่องวันนี้" จริงจากชีต Topics ผ่าน seGetTopicForDate()
+ * เปิดไฟล์นี้ตรง ๆ นอก GAS = ใช้เรื่องตัวอย่างด้านบน (Demo) */
+var IN_GAS = !!(window.google && google.script && google.script.run);
+var DATA = {mode: IN_GAS ? 'loading' : 'demo', error: ''};
+
+/* คลังเรื่องที่ผ่านมา (Demo) — แสดงการจัดหมวด */
+var ARCHIVE = [
+  {day:11,stream:'innov',cat:'safety',title:'Rumble strips with recycled rubber'},
+  {day:10,stream:'core',cat:'geo',title:'Soil nailing for cut slopes'},
+  {day:9,stream:'research',cat:'bridge',title:'Corrosion monitoring of bridge decks'},
+  {day:8,stream:'thai',cat:'drain',title:'ท่อลอดเหลี่ยมกับน้ำหลากฉับพลัน'},
+  {day:7,stream:'core',cat:'mgmt',title:'Unit price analysis for earthworks'},
+  {day:6,stream:'innov',cat:'digital',title:'Drone surveys for cut-and-fill volumes'}
+];
+
+/* ---------- บทสนทนาจำลองกับที่ปรึกษาชาวต่างชาติ ---------- */
+var CONSULTANT = {name:'Liam Carter', role:'Resident Engineer · Australia', init:'LC'};
+var SCRIPT = [
+  {say:"Morning! I've just seen the density report for Station 12+400. The base course only reached 92 percent relative compaction. What happened, and what's your plan?",
+   model:"The moisture content was about two percent above optimum, so the roller couldn't reach full density. We'll scarify the layer, let it dry to near optimum, recompact it, and retest before we place the next layer."},
+  {say:"That makes sense. How will you stop it from happening again on the next section?",
+   model:"Before rolling, we'll do a quick moisture check on every section. We'll also run a short test strip to confirm how many roller passes we need."},
+  {say:"Good plan. Please send me the retest results by Friday. Could you also explain the problem to the foremen in simple English?",
+   model:"Sure. I'll tell them: the soil was too wet, so we couldn't press it tight enough. We need to dry it a little, roll it again, and test it before moving on."},
+  {say:"Perfect — clear and simple. That's exactly how I'd want it explained on site. See you at the progress meeting.", end:true}
+];
+
+/* ---------- เกมอธิบาย ---------- */
+var EXPLAIN = {
+  topic:'California Bearing Ratio (CBR)',
+  task:'Explain CBR to a foreign visitor who is not an engineer. Use 3–4 short sentences.',
+  keys:['soil','strength','strong','load','force','push','plunger','rod','compare','crushed','rock','stone','percent','%','road','layer','thick'],
+  jargon:['subgrade','penetration','soaked','proctor','mdd','omc','cbr value'],
+  model:"CBR tells us how strong the soil under a road is. We push a small steel rod into a soil sample and measure the force it needs. Then we compare that force with the force needed for a standard crushed rock, and give the result as a percentage. A higher CBR means stronger soil, so the road layers above it can be thinner."
+};
+
+/* ---------- คำถามทบทวน ---------- */
+var QUIZ = [
+  {q:'"Relative compaction" compares the field dry density with…',opts:['the maximum dry density from the lab test','the density of water','the density of the asphalt layer'],a:0,why:'Relative compaction = field dry density ÷ maximum dry density × 100'},
+  {q:'A foreign engineer says "alligator cracking". In Thai this is…',opts:['รอยแตกตามขวาง','รอยแตกหนังจระเข้','ร่องล้อ'],a:1,why:'Alligator (fatigue) cracking = รอยแตกหนังจระเข้ เกิดจากความล้า'},
+  {q:'Which sentence is clearest for a foreign consultant?',opts:['Base not pass because wet, will do again.','The base failed because it was too wet. We will dry it and recompact it.','Due to the aforementioned moisture non-conformance, remedial works shall be undertaken.'],a:1,why:'ประโยคสั้น มีเหตุ + สิ่งที่จะทำ ไม่ใช้ภาษาทางการเกินจำเป็น'},
+  {q:'"Tack coat" is sprayed…',opts:['on the subgrade before the subbase','between asphalt layers to bond them','on the finished surface to add colour'],a:1,why:'Tack coat ใช้ยึดชั้นแอสฟัลต์เข้าด้วยกัน (ต่างจาก prime coat ที่พ่นบนพื้นทาง)'}
+];
+var DECK = [
+  {en:'rutting',th:'ร่องล้อ',ex:'Rutting appears in the wheel paths after heavy truck traffic.'},
+  {en:'scarify',th:'คราด/ขุดคุ้ยผิวชั้นวัสดุ',ex:'We will scarify the base and recompact it.'},
+  {en:'optimum moisture content',th:'ปริมาณความชื้นที่เหมาะสม (OMC)',ex:'Compact the layer close to optimum moisture content.'},
+  {en:'test strip',th:'แปลงทดลองบดอัด',ex:'The test strip showed that we need eight roller passes.'},
+  {en:'prime coat',th:'ไพรม์โค้ท',ex:'Apply the prime coat on the base before paving.'}
+];
+
+/* ---------- สถานะแอป ---------- */
+var ST = {screen:null, xp:340, turn:0, quizIdx:0, slow:false, listening:null, autoVoice:false};
+/* หน้าคุยงาน: อ่านข้อความที่ปรึกษาออกเสียงอัตโนมัติ — ค่าเริ่มต้นปิด (หน้าเรียนต้องสงบ) จำค่าไว้ในเครื่อง */
+(function(){try{ST.autoVoice=localStorage.getItem('se_talk_voice')==='1';}catch(e){}})();
+function stopSpeak(){ST.speakSeq=(ST.speakSeq||0)+1; if(ST.ls&&ST.ls.playing){ ST.ls.playing=false; lsUI(); } try{if('speechSynthesis' in window) speechSynthesis.cancel();}catch(e){} if(ST.liam==='speaking') setLiam('idle'); markSpeakBtn(null);}
+/* ปุ่มฟังที่กำลังเล่น: เปลี่ยนเป็นปุ่ม "หยุด" · กดซ้ำเพื่อหยุด · เสียงจบแล้วคืนหน้าตาเดิม */
+function markSpeakBtn(btn){
+  var old=ST.speakBtn;
+  if(old&&old!==btn&&old._orig!==undefined){ old.innerHTML=old._orig; old.setAttribute('aria-pressed','false'); if(old._lbl!==undefined){old.setAttribute('aria-label',old._lbl); old.title=old._ttl;} delete old._orig; }
+  clearInterval(ST.speakW); ST.speakBtn=btn;
+  if(!btn) return;
+  if(btn._orig===undefined){
+    btn._orig=btn.innerHTML;
+    var iconOnly=!(btn.textContent||'').trim();
+    if(iconOnly){ btn._lbl=btn.getAttribute('aria-label'); btn._ttl=btn.title; btn.innerHTML=ICON.stop; btn.setAttribute('aria-label','หยุดเสียง'); btn.title='หยุดเสียง'; }
+    else btn.innerHTML=ICON.stop+'หยุดฟัง';
+  }
+  btn.setAttribute('aria-pressed','true');
+  var quiet=0; ST.speakW=setInterval(function(){   /* บางเบราว์เซอร์ไม่ส่ง onend → เฝ้าดูเอง */
+    var busy=('speechSynthesis' in window)&&(speechSynthesis.speaking||speechSynthesis.pending);
+    quiet=busy?0:quiet+1; if(quiet>=4&&ST.speakBtn===btn) markSpeakBtn(null);
+  },300);
+}
+var main = document.getElementById('main');
+
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function addXP(n){ if(IN_GAS) return; ST.xp+=n; document.getElementById('xp').textContent=ST.xp; }   /* เว็บแอปจริง: XP มาจากชีตเท่านั้น */
+/* ---------- ผลการฝึก (เว็บแอปจริง): XP · กม. · ตำแหน่ง · คลังศัพท์ · เรื่องที่ผ่านมา มาจากชีต ---------- */
+var PROG=null;
+var TASK_TH={today:'เรื่องวันนี้',talk:'คุยงาน',explain:'เกมอธิบาย',review:'ทบทวน',email:'เขียนอีเมล/รายงาน',shadow:'พูดตาม'};
+function toast(msg,bad){
+  var el=document.getElementById('toast'); if(!el) return;
+  el.textContent=msg; el.className='toast'+(bad?' bad':''); el.hidden=false;
+  clearTimeout(ST.toastT); ST.toastT=setTimeout(function(){el.hidden=true;},bad?7000:4500);
+}
+function loadProgress(){
+  if(!IN_GAS) return;
+  if(!PROG){ document.getElementById('xp').textContent='–'; var sk=document.getElementById('streak'); if(sk) sk.textContent='–'; }
+  google.script.run
+    .withSuccessHandler(function(s){ applyProgress(s); })
+    .withFailureHandler(function(e){ console.error('seGetProgress error',e); toast('โหลดผลการฝึกไม่สำเร็จ: '+(e&&e.message?e.message:e),true); })
+    .seGetProgress(localYmd());
+}
+function tasksDone(){ if(!PROG) return 0; return PROG.today.required.filter(function(k){return PROG.today.tasks[k];}).length; }
+function builtKey(){ return 'se_built_'+(PROG?PROG.today.date:''); }
+function builtShown(){ try{ return localStorage.getItem(builtKey())==='1'; }catch(e){ return true; } }
+/* ฉากถนน: ภารกิจที่ทำแล้ววันนี้ = ชั้นทางของช่วงวันนี้ · ครบวันแต่ยังไม่ได้กดสร้าง = ค้างไว้ก่อนให้เห็นการก่อสร้าง */
+function syncHW(){
+  if(!PROG) return;
+  var km=Math.min(PROG.km,HW.total), pend=PROG.today.complete&&!builtShown()&&km>0;
+  HW.pending=pend;
+  HW.done=pend?km-1:km;
+  HW.stage=pend?3:(PROG.today.complete?1:Math.min(3,tasksDone()+1));   /* ครบวันและสร้างแล้ว = ช่วงถัดไปรอภารกิจของวันพรุ่งนี้ */
+}
+function applyProgress(s){
+  var prevXp=PROG?PROG.xp:null; PROG=s; ST.xp=s.xp;
+  var xe=document.getElementById('xp'); xe.textContent=s.xp;
+  if(prevXp!==null&&s.xp!==prevXp){ var w=xe.parentNode; w.classList.remove('pulse'); void w.offsetWidth; w.classList.add('pulse'); }
+  var kp=document.querySelector('.kmpost'), sk=document.getElementById('streak');
+  if(sk) sk.textContent=s.day;
+  if(kp){ var t='วันที่ฝึก '+s.day+' · ฝึกครบต่อเนื่อง '+s.streak+' วัน'; kp.title=t; kp.setAttribute('aria-label',t); }
+  syncHW();
+  if(ST.screen==='review'){ var d=document.getElementById('deck'), a=document.getElementById('archive');
+    if(d) d.innerHTML=deckHTML(); if(a) a.innerHTML=archiveHTML(); var mk=document.getElementById('mistakes'); if(mk) mk.innerHTML=mistakeBookHTML(); var cb=document.getElementById('cefrBox'); if(cb) cb.innerHTML=cefrHTML(); }
+  if(ST.screen==='highway') refreshHighway();
+}
+/* บันทึกภารกิจ 1 ครั้ง แล้วแจ้งผล */
+function recordTask(task,ev){
+  if(!IN_GAS) return;
+  ev=ev||{}; ev.task=task;
+  if(!ev.topicId&&DATA.mode==='live'&&curTopic()) ev.topicId=curTopic().id;
+  google.script.run
+    .withSuccessHandler(function(r){
+      applyProgress(r.state);
+      var req=r.state.today.required, left=req.filter(function(k){return !r.state.today.tasks[k];}).map(function(k){return TASK_TH[k];});
+      var m;
+      if(r.completedNow) m='ฝึกครบวันนี้แล้ว! +'+(r.gained+r.bonus)+' XP (โบนัส '+r.bonus+') · ไปหน้าทางหลวงเพื่อสร้างถนน +1 กม.';
+      else if(r.firstTime) m=TASK_TH[task]+' เสร็จ +'+r.gained+' XP'+(req.indexOf(task)>-1?' · ภารกิจ '+tasksDone()+'/'+req.length+(left.length?' · เหลือ: '+left.join(', '):''):'');
+      else m='บันทึกแล้ว — XP นับเฉพาะครั้งแรกของแต่ละภารกิจในวัน';
+      if(r.vocabAdded) m+=' · ศัพท์ใหม่ '+r.vocabAdded+' คำเข้าคลัง';
+      var nt=ST.aiNotice; ST.aiNotice='';
+      toast(nt?nt+' · '+m:m,!!nt);
+    })
+    .withFailureHandler(function(e){ console.error('seRecordActivity error',e); toast((e&&e.message?e.message:String(e))+' — ลองทำภารกิจนี้อีกครั้ง',true); })
+    .seRecordActivity(localYmd(),ev);
+}
+
+/* ---------- เสียงพูด (Text-to-Speech) ---------- */
+function speak(text,who,btn){
+  try{
+    if(!('speechSynthesis' in window)){alert('เบราว์เซอร์นี้ไม่รองรับการอ่านออกเสียง'); return;}
+    speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(text);
+    var vs=speechSynthesis.getVoices();
+    var v=vs.find(function(x){return /en-AU/i.test(x.lang);})||vs.find(function(x){return /en-GB/i.test(x.lang);})||vs.find(function(x){return /^en/i.test(x.lang);});
+    if(v) u.voice=v;
+    u.lang=v?v.lang:'en-GB';
+    u.rate=ST.slow?0.8:0.95;
+    var myId=(ST.speakSeq=(ST.speakSeq||0)+1);
+    u.onend=u.onerror=function(){ if(ST.speakSeq!==myId) return; if(who==='liam'&&ST.liam==='speaking') setLiam('idle'); markSpeakBtn(null); };
+    if(who==='liam') setLiam('speaking');
+    markSpeakBtn(btn||null);
+    speechSynthesis.speak(u);
+  }catch(e){console.error('speak error',e);}
+}
+
+/* ---------- รับเสียงพูด (Speech-to-Text) ---------- */
+/* เว็บแอป Apps Script ครอบหน้าไว้ใน iframe ที่ Google ไม่เปิดสิทธิ์ไมโครโฟน — แก้จากโค้ดในแอปไม่ได้ จึงแนะนำให้ใช้การพิมพ์ด้วยเสียงของเครื่อง */
+var MIC_GAS_MSG='เว็บแอปบน Google Apps Script ไม่เปิดสิทธิ์ไมค์ให้หน้าเว็บ — ใช้การพิมพ์ด้วยเสียงของเครื่องแทนได้: คลิกในช่องพิมพ์ แล้ว Mac กดปุ่ม Fn/🌐 สองครั้ง · Windows กด Win+H · มือถือแตะไมค์บนแป้นพิมพ์ (ตั้งภาษาเป็นอังกฤษก่อนพูด)';
+function listen(textarea, btn, statusEl){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){statusEl.textContent='เบราว์เซอร์นี้ยังไม่รองรับการพูด — ลองเปิดด้วย Chrome หรือพิมพ์แทน'; return;}
+  if(ST.listening){ST.listening.stop(); return;}
+  try{
+    var r=new SR(); r.lang='en-US'; r.interimResults=true; r.continuous=false;
+    var base=textarea.value?textarea.value.trim()+' ':'';
+    r.onstart=function(){btn.classList.add('live'); btn.querySelector('span').textContent='กำลังฟัง… แตะเพื่อหยุด'; statusEl.textContent='';};
+    r.onresult=function(ev){var t='';for(var i=0;i<ev.results.length;i++)t+=ev.results[i][0].transcript;textarea.value=base+t;};
+    r.onerror=function(ev){statusEl.textContent=ev.error==='not-allowed'?(IN_GAS?MIC_GAS_MSG:'ไมโครโฟนถูกปิดกั้น — อนุญาตไมค์ในเบราว์เซอร์ แล้วลองใหม่'):'รับเสียงไม่สำเร็จ ('+ev.error+') ลองพูดใหม่อีกครั้ง';};
+    r.onend=function(){ST.listening=null; btn.classList.remove('live'); btn.querySelector('span').textContent='พูด';};
+    ST.listening=r; r.start();
+  }catch(e){statusEl.textContent='เริ่มรับเสียงไม่ได้: '+e.message;}
+}
+
+function speakerBtn(text,label){
+  return '<button type="button" class="icon-btn" data-speak="'+esc(text)+'" title="ฟังเสียง" aria-label="ฟังการออกเสียง: '+esc(label)+'">'+ICON.speaker+'</button>';
+}
+
+/* ================= หน้าจอ ================= */
+var SCREENS = {};
+
+/* 0) คู่มือย่อ — หน้าแรกเสมอ */
+SCREENS.guide=function(){
+  var cats=Object.keys(CATS).map(function(k){return catChip(k);}).join('');
+  return '<h2>คู่มือการใช้งานฉบับย่อ</h2>'+
+  '<p class="lead">วันละประมาณ 10–15 นาที ระบบสุ่มเรื่องให้วันละ 1 เรื่อง ทำตามลำดับ 4 ขั้นแรก แล้วดูผลงานในขั้นที่ 5 และกลับมาดูหน้านี้ได้ทุกเมื่อจากปุ่ม "คู่มือย่อ" มุมขวาบน</p>'+
+  '<ol class="steps">'+
+   '<li><div class="n">1</div><div><b>เรื่องวันนี้ — อ่าน ฟัง แล้วลงมือ</b><span>สุ่มจาก 4 สาย: ความรู้หลัก · งานวิจัยต่างประเทศ · งานวิจัยไทย · นวัตกรรม แต่ละสายมีกิจกรรมต่างกัน — ตอบคำถาม, สรุปงานวิจัยให้ที่ปรึกษา, แปลบทคัดย่อไทยเป็นอังกฤษ หรือแสดงความเห็นต่อเทคโนโลยีใหม่ · ทำเสร็จแล้วศัพท์ของเรื่องเข้าคลังศัพท์อัตโนมัติ · เปิด "แตะคำเพื่อเก็บ" แล้วแตะคำในบทสรุปเพื่อเก็บคำอื่นเพิ่ม · ปรับบทสรุป "ง่ายลง/ลึกขึ้น" ได้ · ฝึกพูดตามทีละประโยค (Shadowing) · เปิด "โหมดฟังระหว่างเดินทาง" เพื่อฟังทั้งเรื่องต่อเนื่อง</span></div></li>'+
+   '<li><div class="n">2</div><div><b>คุยงาน — ตอบที่ปรึกษาชาวต่างชาติ</b><span>พิมพ์หรือกด "พูด" เพื่อตอบ ระบบจะแนะนำวิธีพูดที่ชัดกว่า ถ้าติดให้กด "ดูประโยคตัวอย่าง" · สลับเป็น "เขียนอีเมล/รายงาน" เพื่อฝึกเขียนงานจริง (โจทย์เปลี่ยนทุกวัน) · ฟังข้อความที่ปรึกษาได้จากปุ่มลำโพง หรือเปิด "อ่านอัตโนมัติ" (ค่าเริ่มต้นปิด) และกด "หยุดเสียง" ได้ทุกเมื่อ · ภาพที่ปรึกษาจะขยับปากเมื่อพูด เอียงหัวฟังเมื่อคุณพิมพ์ และแสดงสถานะกำลังคิดก่อนตอบ</span></div></li>'+
+   '<li><div class="n">3</div><div><b>เกมอธิบาย — อธิบายให้คนทั่วไปเข้าใจ</b><span>อธิบายหลักการทางวิศวกรรม 3–4 ประโยค แล้วรับคะแนนความชัดเจน ภาษา และความถูกต้องทางวิชาการ</span></div></li>'+
+   '<li><div class="n">4</div><div><b>ทบทวน — ควิซ คลังศัพท์ และเรื่องที่ผ่านมา</b><span>ตอบควิซสะสม XP (ตัวเลือกสลับตำแหน่งทุกรอบ กด \"ทำอีกรอบ\" เพื่อฝึกซ้ำ) กด "จำได้" หรือ "ทวนอีก" ในคลังศัพท์ (ระบบนัดทวนซ้ำที่ 1 · 2 · 4 · 7 · 15 วัน) · ดูระดับภาษาโดยประมาณ (CEFR) · สมุดข้อผิดพลาดรวมจุดที่โค้ช AI ให้แก้ กด "เข้าใจแล้ว" เมื่อจำได้ · และย้อนดูเรื่องเก่าแยกตามหมวด</span></div></li>'+
+   '<li><div class="n">5</div><div><b>ทางหลวงของฉัน — ดูผลงานสะสม</b><span>ทำครบ 3 ภารกิจของวัน (เรื่องวันนี้ · คุยงาน · เกมอธิบาย) = ฝึกครบ 1 วัน กดสร้างถนนแล้วถนนตัวต่อยาวขึ้น 1 กม. ปลดล็อกสะพาน ท่อลอด และสิ่งก่อสร้างตามหมวดที่เรียน เลื่อนตำแหน่งจาก Site Inspector ถึง Chief Engineer · มีเพลงประกอบ เปิด/ปิด และปรับระดับเสียง (−/+) ได้ในหน้านั้น · เครื่องช้าหรือไม่ชอบฉาก 3D เลือก "โหมดเรียบ (2D)" ได้</span></div></li>'+
+  '</ol>'+
+  '<h3>หมวดหมู่เนื้อหา</h3><div class="chips">'+cats+'</div>'+
+  (IN_GAS
+   ? '<div class="demo-note">งานวิจัยสรุปจาก <b>บทคัดย่อเท่านั้น</b> และแสดงวารสาร ปี และ DOI เสมอ · <b>เรื่องวันนี้เป็นของจริง</b> ระบบดึงจาก OpenAlex/Crossref/ThaiJO และข่าว RSS ทุกเช้ามืด แล้วให้ Gemini สรุปและตรวจตัวเลขกับบทคัดย่อ · <b>ผลการฝึกบันทึกจริงแล้ว</b> (XP · วันที่ฝึก · ถนน · ตำแหน่ง · คลังศัพท์ · เรื่องที่ผ่านมา) โดย XP นับเฉพาะครั้งแรกของแต่ละภารกิจในวัน · การตรวจงานเขียน บทสนทนากับที่ปรึกษา และคะแนนเกมอธิบาย <b>ใช้โค้ช AI</b> (มีเพดานต่อวัน — เกินแล้วหรือ AI ไม่ว่าง ระบบใช้การตรวจแบบพื้นฐานแทนให้เอง) · <b>ปุ่ม "พูด" ใช้ไมค์ในเว็บแอปนี้ไม่ได้</b> (ข้อจำกัดของ Google) ให้ใช้การพิมพ์ด้วยเสียงของเครื่องแทน: Mac กด Fn/🌐 สองครั้ง · Windows กด Win+H · มือถือแตะไมค์บนแป้นพิมพ์ — ปุ่มฟังเสียงอ่านยังใช้ได้ปกติ</div>'
+   : '<div class="demo-note">งานวิจัยสรุปจาก <b>บทคัดย่อเท่านั้น</b> และแสดงวารสาร ปี และ DOI เสมอ · นี่คือ <b>Demo</b> — เรื่องงานวิจัยในตัวอย่างเป็นเรื่องสมมติ ของจริงดึงจาก OpenAlex/Crossref/ThaiJO และข่าว RSS แล้วให้ Gemini สรุป · การพูดใช้ได้ดีที่สุดบน Chrome และต้องอนุญาตไมโครโฟน</div>')+
+  '<div class="row"><button type="button" class="btn primary" data-go="today">เริ่มฝึกวันนี้</button>'+
+  '<button type="button" class="btn" data-act="slow" aria-pressed="'+ST.slow+'">'+(ST.slow?'เสียงพูดช้า: เปิด':'เสียงพูดช้า: ปิด')+'</button></div>';
+};
+
+/* 1) ข่าววันนี้ */
+function catChip(k){var c=CATS[k];return '<span class="chip" style="--c:'+c.color+'"><i aria-hidden="true"></i>'+esc(c.th)+'<small>'+esc(c.en)+'</small></span>';}
+function curTopic(){return TOPICS[TODAY_IDX];}
+SCREENS.today=function(){
+  if(DATA.mode!=='live'&&DATA.mode!=='demo') return todayStateBox();
+  var t=curTopic(), s=STREAMS[t.stream], h='';
+  h+='<div class="row" style="margin-bottom:10px;justify-content:space-between"><span class="stream s-'+t.stream+'">'+esc(s.th)+' · '+esc(s.en)+'</span>'+catChip(t.cat)+'</div>';
+  h+='<div class="sign"><div class="sign-in">'+ICON.arrow+
+     '<div class="sign-title">'+esc(t.title)+'</div><div class="sign-sub">'+esc(t.sub)+'</div>'+
+     '<div class="sign-meta"><span>'+(DATA.mode==='live'?esc(thDate(t.date)):'Day '+DAY_NO)+'</span><span>~'+t.minutes+' นาที</span><span>'+esc(CATS[t.cat].en)+'</span></div></div></div>';
+  if(t.fictional) h+='<div class="demo-note">เรื่องนี้เป็น <b>ตัวอย่างสมมติ</b> เพื่อแสดงรูปแบบเท่านั้น ไม่ใช่งานวิจัยที่ตีพิมพ์จริง</div>';
+  if(t.stream==='thai'){
+    h+='<h3>บทคัดย่อ (ภาษาไทย)</h3><div class="panel"><p style="margin-top:0">'+esc(t.thaiAbstract)+'</p>'+srcBlock(t)+'</div>';
+  }else{
+    h+='<h3>'+(t.stream==='research'?'Research summary':t.stream==='innov'?'Innovation brief':'Today\'s brief')+'</h3><div class="panel"><p class="en" id="sumText" style="margin-top:0">'+sumHTML(curSummary())+'</p><p class="demo-note" id="lvNote"'+(ST.level&&ST.level!=='orig'?'':' hidden')+'>ฉบับปรับระดับโดยโค้ช AI — ข้อเท็จจริงตามต้นฉบับ</p>'+
+       (IN_GAS&&DATA.mode==='live'?'<div class="row" style="margin-bottom:8px"><span class="seg-lbl">ระดับภาษา</span><span class="seg" role="group" aria-label="ระดับภาษาของบทสรุป">'+
+         [['simple','ง่ายลง'],['orig','ต้นฉบับ'],['deeper','ลึกขึ้น']].map(function(x){return '<button type="button" data-act="level" data-lv="'+x[0]+'" aria-pressed="'+((ST.level||'orig')===x[0])+'">'+x[1]+'</button>';}).join('')+'</span>'+
+         (PROG&&PROG.cefr&&PROG.cefr.level?'<span class="seg-lbl" style="margin-left:6px">ระดับของคุณโดยประมาณ '+PROG.cefr.level+'</span>':'')+'</div>':'')+
+       '<div class="row"><button type="button" class="btn" id="sumSpeak" data-speak="'+esc(curSummary())+'">'+ICON.speaker+'ฟังทั้งย่อหน้า</button>'+
+       (IN_GAS&&DATA.mode==='live'?'<button type="button" class="btn" data-act="tapMode" aria-pressed="'+!!ST.tapMode+'">'+(ST.tapMode?'แตะคำเพื่อเก็บ: เปิด':'แตะคำเพื่อเก็บ: ปิด')+'</button>':'')+'</div>'+
+       (ST.tapMode?'<p class="demo-note" id="tapHint">แตะคำที่ขีดเส้นประเพื่อเก็บเข้าคลังศัพท์ (ความหมายจากอภิธานศัพท์กลาง หรือโค้ช AI)</p>':'')+srcBlock(t)+'</div>';
+  }
+  h+='<h3>คำศัพท์วันนี้</h3><div class="terms">';
+  t.terms.forEach(function(x){h+='<div class="term">'+speakerBtn(x.en,x.en)+'<div><strong>'+esc(x.en)+'</strong><small>'+esc(x.th)+'</small></div></div>';});
+  h+='</div>';
+  var a=t.activity;
+  if(a.type==='quiz'){
+    h+='<h3>เช็กความเข้าใจ</h3><div class="panel" id="chkPanel">'+chkPanelHTML(a)+'</div>'+RESHUFFLE_BTN('chk');
+  }else{
+    h+='<h3>'+esc(a.title)+'</h3><div class="panel"><p class="en" style="margin-top:0">'+esc(a.task)+'</p>'+
+       '<label for="wr" class="demo-note" style="display:block;margin:0 0 6px">คำตอบของคุณ (ภาษาอังกฤษ)</label><textarea id="wr" autocomplete="off"></textarea>'+
+       '<div class="row" style="margin-top:8px"><button type="button" class="btn" id="wrMic">'+ICON.mic+'<span>พูด</span></button>'+
+       '<button type="button" class="btn primary" id="wrBtn"><span>ส่งให้ตรวจ</span></button></div>'+
+       '<div class="status" id="wrStatus" role="status"></div><div id="wrResult"></div></div>';
+  }
+  h+='<h3>ฝึกพูดตาม (Shadowing)</h3><div class="panel" id="shadow">'+shadowHTML()+'</div>';
+  h+='<div class="row" style="margin-top:12px"><button type="button" class="btn" id="lsOpen" aria-expanded="false" aria-controls="listen">'+ICON.speaker+'โหมดฟังระหว่างเดินทาง</button></div>'+
+     '<div class="panel" id="listen" hidden style="margin-top:8px"></div>';
+  h+='<div class="row" style="margin-top:16px"><button type="button" class="btn primary" data-go="talk">ไปคุยงานกับที่ปรึกษา</button>'+
+     (DATA.mode==='demo'?'<button type="button" class="btn" data-act="nextTopic">ดูตัวอย่างสายถัดไป (เฉพาะ Demo)</button>':'')+'</div>';
+  return h;
+};
+/* กล่องสถานะระหว่างโหลด/ไม่มีเรื่อง/ผิดพลาด (โหมดเว็บแอปจริง) */
+function todayStateBox(){
+  var h='<h2>เรื่องวันนี้</h2><div class="panel load-box" role="status">';
+  if(DATA.mode==='loading') h+='<p style="margin:0">กำลังโหลดเรื่องของวันนี้…</p>';
+  else if(DATA.mode==='empty') h+='<p style="margin:0"><b>ยังไม่มีเรื่องสำหรับวันนี้</b></p><p class="demo-note" style="margin:0">ระบบเตรียมเรื่องทุกเช้ามืด ถ้าเพิ่งติดตั้ง ให้เปิดสเปรดชีตแล้วใช้เมนู Site English › รันรอบเช้าตอนนี้ จากนั้นกดโหลดใหม่</p>'+
+    '<div class="row"><button type="button" class="btn primary" data-act="reloadTopic">โหลดใหม่</button><button type="button" class="btn" data-act="diagnose">ตรวจหาสาเหตุ</button></div>';
+  else h+='<p style="margin:0"><b>โหลดเรื่องของวันนี้ไม่สำเร็จ</b></p><p style="margin:0">'+esc(loadHint(DATA.error))+'</p><p class="demo-note" style="margin:0">รายละเอียด: '+esc(DATA.error)+'</p>'+
+    '<div class="row"><button type="button" class="btn primary" data-act="reloadTopic">ลองอีกครั้ง</button><button type="button" class="btn" data-act="diagnose">ตรวจหาสาเหตุ</button></div>';
+  return h+'<div id="diag" aria-live="polite"></div></div>';
+}
+/* แปลข้อความ error ที่พบบ่อยเป็นวิธีแก้ภาษาไทย */
+function loadHint(m){
+  m=String(m||'');
+  if(/not found|ไม่พบฟังก์ชัน|seGetTopicForDate/i.test(m)) return 'เว็บแอปยังใช้โค้ดรุ่นเก่า — ใน Apps Script ไปที่ Deploy › Manage deployments › แก้ไข (ไอคอนดินสอ) › Version: New version › Deploy';
+  if(/ไม่พบชีต/.test(m)) return 'ยังไม่ได้สร้างชีต — เปิดสเปรดชีต ใช้เมนู Site English › 1) สร้าง/ซ่อมโครงสร้างชีต';
+  if(/ไม่พบสเปรดชีต/.test(m)) return 'เว็บแอปหาสเปรดชีตไม่เจอ — เปิดสเปรดชีตแล้วรันเมนู 1) สร้าง/ซ่อมโครงสร้างชีต อีกครั้ง 1 รอบ (ระบบจะจำสเปรดชีตไว้เอง)';
+  if(/authoriz|permission|สิทธิ์/i.test(m)) return 'สคริปต์ยังไม่ได้รับสิทธิ์ — เปิด Apps Script แล้วกด Run ฟังก์ชัน seSetup 1 ครั้งเพื่ออนุญาตสิทธิ์';
+  return 'ส่งข้อความรายละเอียดด้านล่าง หรือดูชีต ErrorLog เพื่อหาสาเหตุ';
+}
+var TH_MONTHS=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+function thDate(ymd){var p=String(ymd||'').split('-');if(p.length<3)return '';return (+p[2])+' '+TH_MONTHS[+p[1]-1]+' '+(+p[0]+543);}
+function localYmd(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
+/* ดึงเรื่องของวันจาก backend แล้ววาดหน้าเรื่องวันนี้ใหม่ถ้ากำลังเปิดอยู่ */
+function loadTodayTopic(){
+  if(!IN_GAS) return;
+  DATA.mode='loading'; DATA.error='';
+  var done=function(){ if(ST.screen==='today'){ ST.screen=null; go('today'); } };
+  google.script.run
+    .withSuccessHandler(function(t){
+      if(t&&t.activity&&CATS[t.cat]&&STREAMS[t.stream]){ TOPICS=[t]; TODAY_IDX=0; DATA.mode='live'; }
+      else if(t){ DATA.mode='error'; DATA.error='ข้อมูลเรื่องของวันนี้ไม่ครบ (หมวด/สาย/กิจกรรม) — ตรวจแถวในชีต Topics'; }
+      else DATA.mode='empty';
+      done();
+    })
+    .withFailureHandler(function(err){
+      console.error('seGetTopicForDate error',err);
+      DATA.mode='error'; DATA.error=(err&&err.message)?err.message:String(err); done();
+    })
+    .seGetTopicForDate(localYmd());
+}
+/* ตรวจหาสาเหตุ: เรียก seDiagnose() แล้วแสดงผลเฉพาะกล่อง #diag (ไม่วาดหน้าใหม่ทั้งหน้า) */
+function runDiagnose(btn){
+  var box=document.getElementById('diag'); if(!box||!IN_GAS) return;
+  btn.disabled=true; box.innerHTML='<p class="demo-note" style="margin:0">กำลังตรวจทุกขั้น… (ประมาณ 5–15 วินาที)</p>';
+  google.script.run
+    .withSuccessHandler(function(r){
+      btn.disabled=false;
+      var h='<p style="margin:4px 0 0"><b>'+esc(r.summary)+'</b></p><ol>';
+      r.items.forEach(function(x){
+        var c=x.ok===true?'ok':(x.ok===false?'bad':''), tag=x.ok===true?'ผ่าน':(x.ok===false?'ต้องแก้':'แจ้งให้ทราบ');
+        h+='<li class="'+c+'"><span class="tag">'+tag+'</span><b>'+esc(x.item)+'</b><small>'+esc(x.detail)+'</small>'+(x.fix?'<span class="fix">วิธีแก้: '+esc(x.fix)+'</span>':'')+'</li>';
+      });
+      box.innerHTML=h+'</ol>';
+    })
+    .withFailureHandler(function(err){
+      btn.disabled=false;
+      box.innerHTML='<p class="demo-note" style="margin:0">ตรวจไม่สำเร็จ: '+esc(err&&err.message?err.message:String(err))+' — '+esc(loadHint(err&&err.message))+'</p>';
+    })
+    .seDiagnose();
+}
+/* บทสรุป: โหมดเก็บคำ = ทุกคำอังกฤษแตะได้ (ปิดไว้ตามปกติ เพื่อไม่ให้มีจุดโฟกัสเกินจำเป็น) */
+function sumHTML(text){
+  if(!ST.tapMode) return esc(text);
+  return String(text).split(/(\s+)/).map(function(tok){
+    var m=tok.match(/^([^A-Za-z]*)([A-Za-z][A-Za-z'\-]*[A-Za-z]|[A-Za-z])([^A-Za-z]*)$/);
+    if(!m) return esc(tok);
+    return esc(m[1])+'<span class="tw" role="button" tabindex="0" data-w="'+esc(m[2])+'">'+esc(m[2])+'</span>'+esc(m[3]);
+  }).join('');
+}
+function saveTappedWord(el){
+  if(!IN_GAS||el.classList.contains('busy')||el.classList.contains('saved')) return;
+  var w=el.dataset.w, t=curTopic(), sents=String(curSummary()).match(/[^.!?]+[.!?]*/g)||[curSummary()], sent='';
+  for(var i=0;i<sents.length;i++) if(sents[i].toLowerCase().indexOf(w.toLowerCase())>-1){ sent=sents[i].trim(); break; }
+  el.classList.add('busy');
+  google.script.run
+    .withSuccessHandler(function(r){
+      document.querySelectorAll('#sumText .tw').forEach(function(x){ if(x.dataset.w.toLowerCase()===w.toLowerCase()){ x.classList.remove('busy'); x.classList.add('saved'); } });
+      toast(r.existed?'"'+r.en+'" อยู่ในคลังศัพท์แล้ว':'เก็บ "'+r.en+'" = '+r.th+' เข้าคลังศัพท์แล้ว'+(r.source==='ai'?' (ความหมายจากโค้ช AI)':''));
+      loadProgress();
+    })
+    .withFailureHandler(function(e){ el.classList.remove('busy'); toast((e&&e.message?e.message:String(e)).replace(/^Exception:\s*/,'').replace('QUOTA: ','โค้ช AI ครบโควตาวันนี้: '),true); })
+    .seSaveWord(localYmd(),w,sent,t.id);
+}
+/* บทสรุปตามระดับที่เลือก (ต้นฉบับ / ง่ายลง / ลึกขึ้น) */
+function curSummary(){ var t=curTopic(); return (ST.level&&ST.level!=='orig'&&ST.lvText&&ST.lvText[t.id+':'+ST.level])||t.summary; }
+function setLevel(btn){
+  var lv=btn.dataset.lv, t=curTopic(), key=t.id+':'+lv;
+  var apply=function(){
+    ST.level=lv;
+    document.querySelectorAll('[data-act="level"]').forEach(function(b){ b.setAttribute('aria-pressed',b.dataset.lv===lv); b.disabled=false; });
+    document.getElementById('sumText').innerHTML=sumHTML(curSummary());
+    document.getElementById('sumSpeak').dataset.speak=curSummary();
+    document.getElementById('lvNote').hidden=(lv==='orig');
+    var sh=document.getElementById('shadow'); if(sh){ ST.sh=null; sh.innerHTML=shadowHTML(); }
+  };
+  if(lv==='orig'||(ST.lvText&&ST.lvText[key])) return apply();
+  document.querySelectorAll('[data-act="level"]').forEach(function(b){b.disabled=true;});
+  btn.textContent=(lv==='simple'?'ง่ายลง':'ลึกขึ้น')+'…';
+  google.script.run
+    .withSuccessHandler(function(r){ btn.textContent=lv==='simple'?'ง่ายลง':'ลึกขึ้น'; (ST.lvText=ST.lvText||{})[key]=r.text; apply(); })
+    .withFailureHandler(function(e){ btn.textContent=lv==='simple'?'ง่ายลง':'ลึกขึ้น'; document.querySelectorAll('[data-act="level"]').forEach(function(b){b.disabled=false;}); aiFail(e,null); })
+    .seRewriteSummary(localYmd(),t.id,lv);
+}
+/* ---------- Shadowing: ฟังประโยค แล้วพูดตาม (พิมพ์ด้วยเสียงของเครื่อง) · ตรวจคำที่ตรงตามลำดับ ---------- */
+function shadowList(){
+  var t=curTopic(), src=t.stream==='thai'?(t.activity&&t.activity.model||''):curSummary();
+  var out=[];
+  (String(src).match(/[^.!?]+[.!?]*/g)||[]).forEach(function(x){ out=out.concat(shChunk(x.trim())); });
+  return out.filter(function(x){return x.split(/\s+/).length>=4;}).slice(0,6);
+}
+/* ประโยคยาวเกิน 20 คำ → แบ่งเป็นช่วงสั้นให้พูดตามไหว (ตัดที่จุลภาคก่อน ไม่มีจึงตัดทุก ~15 คำ) */
+function shChunk(x){
+  var w=x.split(/\s+/); if(w.length<=20) return [x];
+  var parts=x.split(/(?:,|;)\s+/);
+  if(parts.length>1&&parts.every(function(p){return p.split(/\s+/).length<=20;})) return parts;
+  var out=[]; for(var i=0;i<w.length;i+=15) out.push(w.slice(i,i+15).join(' '));
+  if(out.length>1&&out[out.length-1].split(' ').length<5) out[out.length-2]+=' '+out.pop();   /* ช่วงท้ายสั้นเกิน → รวมกับช่วงก่อน */
+  return out;
+}
+function shWords(x){ return String(x).toLowerCase().replace(/[^a-z0-9'\s-]/g,' ').split(/\s+/).filter(Boolean); }
+/* ความยาวลำดับย่อยร่วมที่ยาวที่สุด (LCS) → ระบุคำที่พูดตามตรงลำดับ */
+function shMatch(target,said){
+  var a=shWords(target), b=shWords(said), n=a.length, m=b.length, L=[], i, j;
+  for(i=0;i<=n;i++){ L[i]=[]; for(j=0;j<=m;j++) L[i][j]=(i&&j)?(a[i-1]===b[j-1]?L[i-1][j-1]+1:Math.max(L[i-1][j],L[i][j-1])):0; }
+  var hit=[]; i=n; j=m;
+  while(i>0&&j>0){ if(a[i-1]===b[j-1]){ hit[i-1]=true; i--; j--; } else if(L[i-1][j]>=L[i][j-1]) i--; else j--; }
+  return { pct:n?Math.round(L[n][m]/n*100):0, hit:hit, words:a };
+}
+function shadowHTML(){
+  if(!ST.sh) ST.sh={i:0,list:shadowList(),done:{},recorded:false};
+  var S=ST.sh, x=S.list[S.i];
+  if(!x) return '<p class="demo-note" style="margin:0">ไม่มีประโยคให้ฝึกในเรื่องนี้</p>';
+  return '<div class="row" style="justify-content:space-between"><b>ประโยค '+(S.i+1)+'/'+S.list.length+'</b><span class="seg-lbl">ฝึกแล้ว '+Object.keys(S.done).length+' ประโยค</span></div>'+
+    '<p class="en" id="shTarget">'+esc(x)+'</p>'+
+    '<div class="row"><button type="button" class="btn" data-speak="'+esc(x)+'">'+ICON.speaker+'ฟังประโยคนี้</button></div>'+
+    '<label for="shIn" class="demo-note" style="display:block;margin:10px 0 6px">พูดตาม (ใช้การพิมพ์ด้วยเสียงของเครื่อง) หรือพิมพ์ตาม</label><textarea id="shIn" autocomplete="off" style="min-height:70px"></textarea>'+
+    '<div class="row" style="margin-top:8px"><button type="button" class="btn primary" id="shCheck">ตรวจ</button>'+
+    '<button type="button" class="btn" data-act="shNav" data-d="-1"'+(S.i===0?' disabled':'')+'>ประโยคก่อนหน้า</button>'+
+    '<button type="button" class="btn" data-act="shNav" data-d="1"'+(S.i>=S.list.length-1?' disabled':'')+'>ประโยคถัดไป</button></div>'+
+    '<div id="shResult" role="status"></div>';
+}
+function shadowCheck(){
+  var S=ST.sh, said=document.getElementById('shIn').value.trim(), out=document.getElementById('shResult');
+  if(!said){ out.innerHTML='<p class="status">พูดหรือพิมพ์ตามก่อน แล้วกดตรวจ</p>'; return; }
+  var r=shMatch(S.list[S.i],said);
+  S.done[S.i]=r.pct;
+  out.innerHTML='<p style="margin:10px 0 4px"><b>ตรงตามต้นฉบับ '+r.pct+'%</b> '+(r.pct>=85?'— ยอดเยี่ยม':r.pct>=60?'— ดีแล้ว ลองอีกครั้งให้ครบทุกคำ':'— ฟังอีกรอบแล้วพูดตามช้า ๆ')+'</p>'+
+    '<p class="en sh-words" style="margin:0">'+r.words.map(function(w,k){return '<span class="w '+(r.hit[k]?'ok':'miss')+'">'+esc(w)+'</span>';}).join(' ')+'</p>'+
+    '<p class="demo-note" style="margin:6px 0 0">สีเขียว = พูดตามได้ · ขีดเส้นประ = คำที่ยังขาดหรือพูดไม่ตรง</p>';
+  var keys=Object.keys(S.done);
+  if(!S.recorded&&keys.length>=3){ S.recorded=true; var avg=Math.round(keys.reduce(function(a,k){return a+S.done[k];},0)/keys.length);
+    recordTask('shadow',{xp:Math.round(avg/5),accuracy:avg}); }
+}
+/* ---------- โหมดฟังระหว่างเดินทาง: อ่านต่อเนื่องทั้งเรื่อง (หัวข้อ · บทสรุป · คำศัพท์ อังกฤษ–ไทย · ตัวอย่างคำตอบ) ---------- */
+function lsTracks(){
+  var t=curTopic(), L=[{x:t.title,lang:'en'}];
+  if(t.stream==='thai') L.push({x:t.thaiAbstract,lang:'th'});
+  else (String(curSummary()).match(/[^.!?]+[.!?]*/g)||[]).forEach(function(x){ L.push({x:x.trim(),lang:'en'}); });
+  t.terms.forEach(function(w){ L.push({x:w.en,lang:'en'},{x:w.th,lang:'th'}); });
+  if(t.activity&&t.activity.model) L.push({x:t.activity.model,lang:'en'});
+  return L;
+}
+function lsUI(){
+  var box=document.getElementById('listen'); if(!box||!ST.ls) return;
+  var L=ST.ls.tracks, i=ST.ls.i;
+  var b=document.getElementById('lsPlay'); if(b) b.textContent=ST.ls.playing?'หยุดชั่วคราว':(i>=L.length?'ฟังใหม่ตั้งแต่ต้น':'เล่น');
+  document.querySelectorAll('#lsList li').forEach(function(li,k){ li.className=k===i&&ST.ls.playing?'now':''; if(k===i&&ST.ls.playing) li.scrollIntoView({block:'nearest'}); });
+  var st=document.getElementById('lsStat'); if(st) st.textContent=i>=L.length?'ฟังจบแล้ว':'ช่วงที่ '+(i+1)+'/'+L.length;
+}
+function lsRender(){
+  var box=document.getElementById('listen'); ST.ls={tracks:lsTracks(),i:0,playing:false,seq:0};
+  box.innerHTML='<div class="row" style="justify-content:space-between"><b>โหมดฟัง</b><span class="seg-lbl" id="lsStat" role="status"></span></div>'+
+    '<p class="demo-note" style="margin:4px 0 8px">เปิดฟังต่อเนื่องได้ระหว่างเดินทาง อังกฤษสลับไทยในส่วนคำศัพท์ · ถ้าจอดับ บางเครื่องจะหยุดอ่าน</p>'+
+    '<div class="row"><button type="button" class="btn primary" id="lsPlay">เล่น</button>'+
+    '<button type="button" class="btn" data-act="lsNav" data-d="-1">ก่อนหน้า</button><button type="button" class="btn" data-act="lsNav" data-d="1">ถัดไป</button></div>'+
+    '<ol class="ls-list" id="lsList">'+ST.ls.tracks.map(function(x){return '<li'+(x.lang==='en'?' class="en"':'')+'>'+esc(x.x)+'</li>';}).join('')+'</ol>';
+  lsUI();
+}
+function lsPlayFrom(i){
+  if(!('speechSynthesis' in window)){ toast('เบราว์เซอร์นี้อ่านออกเสียงไม่ได้',true); return; }
+  var S=ST.ls; if(!S) return;
+  stopSpeak(); S.i=Math.max(0,i); S.playing=S.i<S.tracks.length; var my=++S.seq; lsUI();
+  if(!S.playing) return;
+  var tr=S.tracks[S.i], u=new SpeechSynthesisUtterance(tr.x);
+  u.lang=tr.lang==='th'?'th-TH':'en-GB'; u.rate=ST.slow?0.8:0.95;
+  u.onend=function(){ if(!S.playing||S.seq!==my) return; setTimeout(function(){ if(S.playing&&S.seq===my) lsPlayFrom(S.i+1); },500); };
+  speechSynthesis.speak(u);
+}
+
+function srcBlock(t){
+  var s=t.source, h='<div class="src">';
+  if(s.paperTitle&&s.paperTitle!==t.title) h+='<div class="ptitle">'+esc(s.paperTitle)+'</div>';
+  if(s.journal) h+='<div><b>'+(t.stream==='innov'?'แหล่งข่าว':'วารสาร')+':</b> '+esc(s.journal)+(s.year?' · <b>ปี:</b> '+esc(s.year):'')+(s.doi?' · <b>DOI:</b> '+esc(s.doi):'')+'</div>';
+  if(s.url) h+='<div><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">เปิดอ่านต้นฉบับ</a></div>';
+  if(t.stream==='research'||t.stream==='thai') h+='<span class="badge">สรุปจากบทคัดย่อ</span> ';
+  return h+'<span>'+esc(s.note)+'</span></div>';
+}
+function initToday(){
+  var b=document.getElementById('wrBtn'); if(!b) return;
+  document.getElementById('wrMic').onclick=function(){listen(document.getElementById('wr'),this,document.getElementById('wrStatus'));};
+  b.onclick=scoreWriting;
+}
+/* ตรวจงานเขียน (จำลอง) — ของจริงส่งให้ Gemini เทียบกับบทคัดย่อ */
+function scoreWriting(){
+  if(!aiOn()||DATA.mode!=='live') return scoreWritingMock();
+  var t=curTopic(), a=t.activity, ta=document.getElementById('wr'), st=document.getElementById('wrStatus'), btn=document.getElementById('wrBtn');
+  var text=ta.value.trim(); if(!text){st.textContent='ยังไม่มีคำตอบ — พิมพ์หรือพูดก่อนส่ง'; return;}
+  st.textContent=''; btnBusy(btn,'โค้ช AI กำลังตรวจ…');
+  google.script.run
+    .withSuccessHandler(function(r){
+      var gain=Math.round((r.clarity+r.language+r.accuracy)/15);
+      recordTask('today',{xp:gain,clarity:r.clarity,language:r.language,accuracy:r.accuracy});
+      document.getElementById('wrResult').innerHTML='<h3>ผลคะแนนจากโค้ช AI · +'+gain+' XP</h3><div class="bars">'+
+        bar('ความชัดเจน',r.clarity)+bar('ภาษา / ไวยากรณ์',r.language)+bar(a.mode==='opinion'?'ความสมเหตุผลทางวิชาการ':'ตรงกับต้นฉบับ',r.accuracy)+'</div>'+
+        tipsHTML(r.tips)+
+        (r.unsupported&&r.unsupported.length?'<div class="ai-warn"><b>ข้อความที่ต้นฉบับไม่ได้บอก</b> — ตัดออกหรือเช็กให้ตรงบทคัดย่อ<ul style="margin:4px 0 0">'+r.unsupported.map(function(x){return '<li class="en">'+esc(x)+'</li>';}).join('')+'</ul></div>':'')+
+        mistakesHTML(r.mistakes)+clearerHTML(r.clearer,'วิธีเขียนที่ชัดขึ้น (จากข้อความของคุณ)')+
+        '<div class="model"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><b>ตัวอย่างคำตอบ</b>'+speakerBtn(a.model,'ตัวอย่างคำตอบ')+'</div><p class="en" style="margin:6px 0 0">'+esc(a.model)+'</p></div>';
+      fillBars('#wrResult'); btnDone(btn,'ส่งให้ตรวจอีกครั้ง');
+    })
+    .withFailureHandler(function(e){ btnReset(btn,'ส่งให้ตรวจ'); aiFail(e,scoreWritingMock); })
+    .seCoachWriting(localYmd(),t.id,text);
+}
+function scoreWritingMock(){
+  var a=curTopic().activity, ta=document.getElementById('wr'), st=document.getElementById('wrStatus'), btn=document.getElementById('wrBtn');
+  var text=ta.value.trim(); if(!text){st.textContent='ยังไม่มีคำตอบ — พิมพ์หรือพูดก่อนส่ง'; return;}
+  st.textContent=''; btn.disabled=true; btn.classList.add('busy'); btn.querySelector('span').textContent='กำลังตรวจ…';
+  setTimeout(function(){
+    var low=text.toLowerCase(), words=text.split(/\s+/).filter(Boolean).length;
+    var sents=Math.max(1,text.split(/[.!?]+/).filter(function(x){return x.trim();}).length);
+    var hits=a.keys.filter(function(k){return low.indexOf(k)>-1;}).length, thai=/[\u0E00-\u0E7F]/.test(text);
+    var clarity=clamp(100-Math.max(0,words/sents-16)*4-(words<20?25:0));
+    var lang=clamp(thai?40:72+(/^[A-Z]/.test(text)?8:0)+(/[.!?]$/.test(text)?8:0)+(sents>=2?8:0));
+    var acc=clamp(35+hits*9), gain=Math.round((clarity+lang+acc)/15); addXP(gain);
+    recordTask('today',{xp:gain,clarity:clarity,language:lang,accuracy:acc});
+    var tip={brief:'ให้ครบ 3 ส่วน: ทำอะไร (method) · พบอะไร (findings) · ข้อจำกัด (limitation) — ห้ามเติมผลที่บทคัดย่อไม่ได้พูดถึง',
+             translate:'แปลใจความ ไม่ต้องแปลทีละคำ ตัวเลขและหน่วยต้องตรงกับต้นฉบับทุกตัว',
+             opinion:'บอกความเห็นชัด ๆ ตั้งแต่ประโยคแรก แล้วตามด้วยเหตุผล 2 ข้อ (First… / Second…) และข้อกังวล 1 ข้อ'}[a.mode];
+    document.getElementById('wrResult').innerHTML='<h3>ผลคะแนน (จำลอง) · +'+gain+' XP</h3><div class="bars">'+
+      bar('ความชัดเจน',clarity)+bar('ภาษา / ไวยากรณ์',lang)+bar(a.mode==='opinion'?'ความสมเหตุผลทางวิชาการ':'ตรงกับต้นฉบับ',acc)+'</div>'+
+      '<p>'+esc(tip)+'</p><div class="model"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><b>ตัวอย่างคำตอบ</b>'+speakerBtn(a.model,'ตัวอย่างคำตอบ')+'</div><p class="en" style="margin:6px 0 0">'+esc(a.model)+'</p></div>';
+    requestAnimationFrame(function(){document.querySelectorAll('#wrResult .fill').forEach(function(f){f.style.width=f.dataset.v+'%';});});
+    btn.classList.remove('busy'); btn.classList.add('done'); btn.querySelector('span').textContent='✓ ตรวจแล้ว';
+    setTimeout(function(){btn.classList.remove('done'); btn.disabled=false; btn.querySelector('span').textContent='ส่งให้ตรวจอีกครั้ง';},2500);
+  },800);
+}
+
+/* สลับลำดับแบบสุ่ม (Fisher–Yates) · หลีกเลี่ยงลำดับเดิมของรอบก่อนเมื่อทำได้ */
+function shuffledOrder(n,key){
+  var prev=(ST.lastOrder||{})[key], ord, tries=0;
+  do{ ord=[]; for(var i=0;i<n;i++) ord.push(i);
+      for(var j=n-1;j>0;j--){ var k=Math.floor(Math.random()*(j+1)), tmp=ord[j]; ord[j]=ord[k]; ord[k]=tmp; }
+      tries++; }while(n>1&&prev&&ord.join()===prev&&tries<6);
+  (ST.lastOrder=ST.lastOrder||{})[key]=ord.join();
+  return ord;
+}
+/* ควิซ: ตัวเลือกสลับตำแหน่งทุกรอบ · data-i = ลำดับจริงของตัวเลือก ใช้ตรวจคำตอบ */
+function quizBlock(id,c){
+  var h='<div class="q" id="'+id+'"><p class="en">'+esc(c.q)+'</p><div class="opts">';
+  shuffledOrder(c.opts.length,id).forEach(function(j){h+='<button type="button" class="opt en" data-q="'+id+'" data-i="'+j+'">'+esc(c.opts[j])+'</button>';});
+  return h+'</div><div class="explain" hidden></div></div>';
+}
+function chkPanelHTML(a){ var h=''; a.checks.forEach(function(c,i){h+=quizBlock('chk'+i,c);}); return h; }
+function qzPanelHTML(){ var h=''; shuffledOrder(QUIZ.length,'qzOrder').forEach(function(i){h+=quizBlock('qz'+i,QUIZ[i]);}); return h; }
+var RESHUFFLE_BTN=function(which){ return '<div class="row" style="margin-top:10px"><button type="button" class="btn" data-act="reshuffle" data-panel="'+which+'">ทำอีกรอบ (สลับตัวเลือก)</button></div>'; };
+
+/* 2) คุยงาน */
+SCREENS.talk=function(){
+  var h='<div class="panel persona idle" id="persona">'+liamSVG()+'<div><b>'+CONSULTANT.name+'</b><small>'+CONSULTANT.role+'</small>'+
+    '<span class="liam-state" id="liamState"><i aria-hidden="true"></i>'+LIAM_TEXT.idle+'</span></div></div>'+
+  '<div class="row" style="margin-top:10px"><button type="button" class="btn" id="voiceBtn" aria-pressed="'+ST.autoVoice+'" title="อ่านข้อความที่ปรึกษาออกเสียงอัตโนมัติ">'+ICON.speaker+'<span>'+voiceLabel()+'</span></button>'+
+  '<button type="button" class="btn" id="stopVoice">'+ICON.stop+'<span>หยุดเสียง</span></button></div>'+
+  '<div class="row" style="margin-top:10px"><span class="seg" role="group" aria-label="รูปแบบการฝึก">'+
+    '<button type="button" data-act="talkMode" data-m="chat" aria-pressed="true">คุยกับที่ปรึกษา</button><button type="button" data-act="talkMode" data-m="email" aria-pressed="false">เขียนอีเมล/รายงาน</button></span></div>'+
+  '<div id="emailPane" hidden></div><div id="talkPane">'+
+  '<p class="lead" style="margin-top:12px">สถานการณ์: ผลทดสอบความแน่นชั้นพื้นทางไม่ผ่านเกณฑ์ ที่ปรึกษาต้องการคำอธิบายและแผนแก้ไข</p>'+
+  '<div class="chat" id="chat"></div>'+
+  '<div class="composer" id="composer">'+
+   '<label for="reply" class="demo-note" style="display:block;margin:0 0 6px">ตอบเป็นภาษาอังกฤษ — พิมพ์ หรือกด "พูด"</label>'+
+   '<textarea id="reply" autocomplete="off" placeholder="Type your reply here…"></textarea>'+
+   '<div class="row" style="margin-top:8px">'+
+    '<button type="button" class="btn" id="micBtn">'+ICON.mic+'<span>พูด</span></button>'+
+    '<button type="button" class="btn primary" id="sendBtn">'+ICON.send+'<span>ส่ง</span></button>'+
+    '<button type="button" class="btn" id="hintBtn">ดูประโยคตัวอย่าง</button>'+
+   '</div><div class="status" id="talkStatus" role="status"></div><div id="hintBox"></div></div></div>';
+  return h;
+};
+/* ---------- เขียนอีเมล/รายงาน ---------- */
+var EMAIL_DEMO={id:'E1',type:'อีเมล',th:'แจ้งผลทดสอบความแน่นไม่ผ่าน และแผนแก้ไข',
+  brief:'Write an email to Liam Carter (Resident Engineer). The field density test at Station 12+400 failed. Explain the cause you found and your corrective plan with dates.',
+  model:'Subject: Failed density test at Sta. 12+400 – corrective plan\n\nDear Liam,\n\nThe base course at Station 12+400 reached only 92% relative compaction. The moisture content was above optimum after rain on Monday. We will scarify the layer, dry it back and recompact it on Wednesday. We will retest on Thursday morning and send you the results the same day.\n\nBest regards,\nSomchai'};
+function emailRender(task){
+  ST.emTask=task;
+  document.getElementById('emailPane').innerHTML='<div class="panel" style="margin-top:12px"><div class="row" style="justify-content:space-between"><span class="badge">'+esc(task.type)+'</span><span class="seg-lbl">โจทย์ประจำวัน</span></div>'+
+    '<p style="margin:8px 0 4px"><b>'+esc(task.th)+'</b></p><p class="en" style="margin:0">'+esc(task.brief)+'</p>'+
+    '<label for="em" class="demo-note" style="display:block;margin:12px 0 6px">เขียน'+esc(task.type)+'ของคุณ (ภาษาอังกฤษ)</label><textarea id="em" autocomplete="off" style="min-height:160px"></textarea>'+
+    '<div class="row" style="margin-top:8px"><button type="button" class="btn primary" id="emBtn"><span>ส่งให้ตรวจ</span></button><button type="button" class="btn" id="emModel" aria-expanded="false" aria-controls="emModelBox">ดูตัวอย่าง</button></div>'+
+    '<div class="status" id="emStatus" role="status"></div><div class="model" id="emModelBox" hidden><p class="en em-model" style="margin:0">'+esc(task.model)+'</p></div><div id="emResult"></div></div>';
+}
+function emailOpen(){
+  if(ST.emTask) return;
+  if(!IN_GAS){ emailRender(EMAIL_DEMO); return; }
+  document.getElementById('emailPane').innerHTML='<p class="demo-note">กำลังโหลดโจทย์…</p>';
+  google.script.run.withSuccessHandler(emailRender)
+    .withFailureHandler(function(e){ emailRender(EMAIL_DEMO); toast('โหลดโจทย์ไม่สำเร็จ ใช้โจทย์ตัวอย่างแทน',true); })
+    .seGetEmailTask(localYmd());
+}
+function emailMock(text,task){
+  var lines=text.split(/\n/).filter(function(x){return x.trim();}), sents=text.split(/[.!?]+/).filter(function(x){return x.trim();});
+  var avg=sents.length?text.split(/\s+/).length/sents.length:0, isMail=task.type==='อีเมล';
+  var fmt=isMail?(/^\s*subject\s*:/im.test(text)?30:0)+(/\b(dear|hi|hello)\b/i.test(text)?30:0)+(/\b(regards|sincerely|thank you|best)\b/i.test(text)?30:0)+(lines.length>=4?10:0)
+             :(/:/.test(text)?40:0)+(lines.length>=4?40:lines.length*10)+(text.length>200?20:0);
+  return {clarity:clamp(100-Math.max(0,avg-18)*4-(sents.length<3?25:0)),language:clamp(55+Math.min(30,sents.length*5)-(/\bi\b/.test(text)?10:0)),format:clamp(fmt),
+    tips:[isMail?'อีเมลงานควรมี Subject · คำขึ้นต้น (Dear …) · เนื้อหา 3–5 ประโยค · คำลงท้าย':'รายงานควรแยกหัวข้อสั้น ๆ เช่น Weather / Work done / Problems / Tomorrow','ใส่ตัวเลข วันที่ และตำแหน่งให้ชัด'],clearer:'',mistakes:[],mock:true};
+}
+function emailScore(){
+  var ta=document.getElementById('em'), btn=document.getElementById('emBtn'), st=document.getElementById('emStatus'), task=ST.emTask;
+  var text=ta.value.trim(); if(!text){ st.textContent='ยังไม่มีข้อความ — เขียนก่อนส่ง'; return; }
+  st.textContent=''; btnBusy(btn,aiOn()?'โค้ช AI กำลังตรวจ…':'กำลังตรวจ…');
+  var show=function(r){
+    var gain=Math.round((r.clarity+r.language+r.format)/15);
+    recordTask('email',{xp:gain,clarity:r.clarity,language:r.language,accuracy:r.format});
+    document.getElementById('emResult').innerHTML='<h3>ผลคะแนน'+(r.mock?' (จำลอง)':'จากโค้ช AI')+' · +'+gain+' XP</h3><div class="bars">'+
+      bar('ความชัดเจน',r.clarity)+bar('ภาษา / ไวยากรณ์',r.language)+bar('รูปแบบและน้ำเสียง',r.format)+'</div>'+tipsHTML(r.tips)+mistakesHTML(r.mistakes)+
+      (r.clearer?'<div class="model"><b>ฉบับที่ชัดขึ้น (จากข้อความของคุณ)</b><p class="en em-model" style="margin:6px 0 0">'+esc(r.clearer)+'</p></div>':'');
+    fillBars('#emResult'); btnDone(btn,'ส่งให้ตรวจอีกครั้ง');
+  };
+  if(!aiOn()){ setTimeout(function(){ show(emailMock(text,task)); },500); return; }
+  google.script.run.withSuccessHandler(show)
+    .withFailureHandler(function(e){ aiFail(e,function(){ show(emailMock(text,task)); }); })
+    .seCoachEmail(localYmd(),task.id,text);
+}
+/* ภาพที่ปรึกษา Liam — สไตล์ก้อนตัวต่อมุมเฉียง (ภาษาภาพเดียวกับฉากทางหลวง) ออกแบบใหม่ของแอป
+ * หัวทรงลูกบาศก์ สีผิวคนจริง สัดส่วนผู้ใหญ่ — ไม่ใช่รูปทรงมินิฟิกเกอร์
+ * ชิ้นที่ขยับ: l-body หายใจ · l-head ส่าย/เอียง · l-eyes กะพริบ · l-brows คิ้ว · ปาก 4 แบบ (l-smile/l-open/l-o/l-mid) · l-hand ท่าจับคาง */
+function liamSVG(){
+  var SK='#E2AE86', SKD='#C98F66', SKL='#EFC4A0', HAIR='#6B4A32', INK='#22282C', MO='#7A3E2E';
+  return '<svg class="liam" id="liam" viewBox="0 0 120 96" role="img" aria-label="ภาพ '+esc(CONSULTANT.name)+' ที่ปรึกษา">'+
+   '<defs><clipPath id="liamClip"><rect x="3" y="3" width="90" height="90" rx="16"/></clipPath></defs>'+
+   '<rect x="2" y="2" width="92" height="92" rx="17" fill="#0E6B4A" stroke="#fff" stroke-width="2"/>'+
+   '<g clip-path="url(#liamClip)">'+
+    '<g class="l-body">'+
+     '<path d="M14 100V78l8-5h54v27z" fill="#2F5D7C"/><path d="M76 73l8 4v25h-8z" fill="#244A63"/>'+
+     '<path d="M18 100V80l6-4h16v24z" fill="#F07A22"/><path d="M56 76h16l4 2v22H56z" fill="#F07A22"/><path d="M76 78l6 3v19h-6z" fill="#C9621B"/>'+
+     '<rect x="18" y="87" width="22" height="4" fill="#E8EEF0"/><rect x="56" y="87" width="20" height="4" fill="#E8EEF0"/><path d="M76 88l6 3v4l-6-3z" fill="#C4CBD0"/>'+
+     '<path d="M42 73l6 8 6-8" fill="#fff"/><path d="M42 62h11v12H42z" fill="'+SKD+'"/><path d="M53 62l4-2v12l-4 2z" fill="#B27A55"/></g>'+
+    '<g class="l-head">'+
+     '<path d="M29 42h4v10h-4z" fill="'+SKD+'"/>'+
+     '<path d="M31 30h32v34H31z" fill="'+SK+'"/><path d="M63 30l8-5v34l-8 5z" fill="'+SKD+'"/><path d="M64 42l5-3v9l-5 3z" fill="#B27A55"/>'+
+     '<path d="M31 30h32v4H31z" fill="'+SKL+'"/><path d="M33 56q14 11 28 0v4q-14 8-28 0z" fill="#B98563" opacity=".35"/>'+
+     '<g class="l-brows" fill="'+HAIR+'"><path class="l-brow-l" d="M36 41h8v2.6h-8z"/><path class="l-brow-r" d="M50 41h8v2.6h-8z"/></g>'+
+     '<g class="l-eyes"><rect x="38" y="45.2" width="4.2" height="5" rx="1.4" fill="'+INK+'"/><rect x="52" y="45.2" width="4.2" height="5" rx="1.4" fill="'+INK+'"/>'+
+      '<rect x="38.8" y="45.8" width="1.4" height="1.4" fill="#fff"/><rect x="52.8" y="45.8" width="1.4" height="1.4" fill="#fff"/></g>'+
+     '<path d="M45.5 48h3.6v7h-3.6z" fill="'+SKD+'"/>'+
+     '<path class="l-smile" d="M41 58.5Q47 62 53 58.5" stroke="'+MO+'" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+     '<rect class="l-open" x="42.5" y="56.6" width="9" height="5.6" rx="2" fill="'+MO+'"/>'+
+     '<ellipse class="l-o" cx="47" cy="59" rx="2.6" ry="3" fill="'+MO+'"/>'+
+     '<rect class="l-mid" x="42.8" y="58" width="8.4" height="2.8" rx="1.3" fill="'+MO+'"/>'+
+     '<path d="M28 20h36v13H28z" fill="#F4F4F0"/><path d="M64 20l8-5v13l-8 5z" fill="#D5D5CC"/><path d="M28 20l8-5h36l-8 5z" fill="#FFFFFF"/>'+
+     '<g fill="#F4F4F0" stroke="#D5D5CC" stroke-width=".8"><path d="M38 15.5v-3a4.5 1.8 0 0 1 9 0v3a4.5 1.8 0 0 1-9 0z"/><path d="M53 15.5v-3a4.5 1.8 0 0 1 9 0v3a4.5 1.8 0 0 1-9 0z"/></g>'+
+     '<ellipse cx="42.5" cy="12.5" rx="4.5" ry="1.8" fill="#fff"/><ellipse cx="57.5" cy="12.5" rx="4.5" ry="1.8" fill="#fff"/>'+
+     '<path d="M24 31h44l6-4v4l-6 4H24z" fill="#DADAD2"/></g>'+
+    /* ท่าจับคางตอนคิด: แขนเสื้อ + มือก้อนตัวต่อ */
+    '<g class="l-hand"><path d="M16 100l14-30h10l-8 30z" fill="#2F5D7C"/><path d="M30 70h10l-1.5 4H29z" fill="#244A63"/>'+
+     '<rect x="31" y="61" width="12" height="10" rx="2.5" fill="#D99F76" stroke="#A86F4C" stroke-width="1"/><path d="M43 63l3-2v8l-3 2z" fill="#B27A55"/><path d="M33 64.5h8M33 67.5h8" stroke="#B27A55" stroke-width=".9" stroke-linecap="round"/></g>'+
+   '</g>'+
+   '<g class="l-wave" fill="none" stroke="#F2B705" stroke-width="2.5" stroke-linecap="round"><path d="M99 41q5 7 0 14"/><path d="M105 35q10 13 0 26"/></g>'+
+   '<g class="l-dots" fill="#7FB3E0"><circle cx="98" cy="22" r="2.6"/><circle cx="106" cy="22" r="2.6"/><circle cx="114" cy="22" r="2.6"/></g>'+
+  '</svg>';
+}
+var LIAM_TEXT={idle:'พร้อมคุย',speaking:'กำลังพูด…',listening:'กำลังฟังคุณ',thinking:'กำลังคิด…'};
+/* เปลี่ยนท่าทางที่ปรึกษา — แก้เฉพาะ class/ข้อความ ไม่วาดหน้าใหม่ */
+function setLiam(state,ms){
+  clearTimeout(ST.liamT); clearInterval(ST.liamW);   /* ล้างตัวจับเวลาก่อนเสมอ แม้ออกจากหน้าคุยงานแล้ว */
+  ST.liam=state;
+  var el=document.getElementById('liam'), box=document.getElementById('persona'), tx=document.getElementById('liamState');
+  if(!el) return;
+  el.setAttribute('class','liam '+state); if(box) box.className='panel persona '+state;
+  if(tx) tx.lastChild.textContent=LIAM_TEXT[state]||'';
+  if(ms) ST.liamT=setTimeout(function(){ if(ST.liam===state) setLiam('idle'); },ms);
+  if(state==='speaking'&&!ms){   /* พูดด้วยเสียงจริง: เฝ้าดูจนเสียงจบ (บางเบราว์เซอร์ไม่ส่ง onend) */
+    var quiet=0; ST.liamW=setInterval(function(){
+      var busy=('speechSynthesis' in window)&&(speechSynthesis.speaking||speechSynthesis.pending);
+      quiet=busy?0:quiet+1; if(quiet>=3&&ST.liam==='speaking') setLiam('idle');
+    },300);
+  }
+}
+function voiceLabel(){return ST.autoVoice?'อ่านอัตโนมัติ: เปิด':'อ่านอัตโนมัติ: ปิด';}
+function initTalk(){
+  ST.emTask=null;
+  ST.turn=0; ST.liam='idle'; ST.talkLog=null; ST.talkEnded=false; ST.lastClearer='';
+  document.getElementById('voiceBtn').onclick=function(){
+    ST.autoVoice=!ST.autoVoice; try{localStorage.setItem('se_talk_voice',ST.autoVoice?'1':'0');}catch(e){}
+    this.setAttribute('aria-pressed',ST.autoVoice); this.querySelector('span').textContent=voiceLabel();
+    if(!ST.autoVoice) stopSpeak();
+  };
+  document.getElementById('stopVoice').onclick=stopSpeak;
+  /* ผู้ใช้พิมพ์/พูดใส่ช่องตอบ → ที่ปรึกษาเอียงหัวฟัง */
+  document.getElementById('reply').addEventListener('input',function(){ if(ST.liam!=='speaking'&&ST.liam!=='thinking') setLiam('listening',1600); });
+  pushThem(SCRIPT[0].say);
+  document.getElementById('micBtn').onclick=function(){listen(document.getElementById('reply'),this,document.getElementById('talkStatus'));};
+  document.getElementById('sendBtn').onclick=sendReply;
+  document.getElementById('hintBtn').onclick=function(){
+    var m=(aiOn()&&ST.lastClearer)?ST.lastClearer:(SCRIPT[ST.turn]&&SCRIPT[ST.turn].model); if(!m)return;
+    document.getElementById('hintBox').innerHTML='<div class="hint"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><span class="en">'+esc(m)+'</span>'+speakerBtn(m,'ประโยคตัวอย่าง')+'</div></div>';
+  };
+}
+function pushThem(text){
+  var c=document.getElementById('chat');
+  var d=document.createElement('div'); d.className='msg them';
+  d.innerHTML='<div class="who"><span>'+CONSULTANT.name+'</span>'+speakerBtn(text,'ข้อความของ '+CONSULTANT.name).replace('<button ','<button data-who="liam" ')+'</div><div class="en">'+esc(text)+'</div>';
+  c.appendChild(d); d.scrollIntoView({block:'nearest',behavior:'smooth'});
+  if(ST.autoVoice) speak(text,'liam');
+  else setLiam('speaking',Math.min(4500,900+text.split(/\s+/).length*120));   /* ปิดเสียงไว้: ขยับปากสั้น ๆ ให้รู้ว่าพูดแล้ว */   /* อ่านเองเฉพาะเมื่อผู้ใช้เปิดไว้ · ปุ่มลำโพงที่ข้อความกดฟังได้เสมอ */
+}
+/* ฟีดแบ็กจำลอง: ตรวจแบบกฎง่าย ๆ (ของจริงให้ Gemini ประเมิน) */
+function mockFeedback(text,model){
+  var tips=[], words=text.trim().split(/\s+/).filter(Boolean);
+  var sentences=text.split(/[.!?]+/).filter(function(s){return s.trim();});
+  if(/[\u0E00-\u0E7F]/.test(text)) tips.push('มีภาษาไทยปนอยู่ ลองตอบเป็นภาษาอังกฤษทั้งประโยค');
+  if(words.length<8) tips.push('ตอบสั้นไปนิด ลองบอกทั้ง "สาเหตุ" และ "สิ่งที่จะทำต่อ"');
+  if(!/\b(because|so|due to|caused)\b/i.test(text)) tips.push('ใส่คำเชื่อมเหตุผล เช่น because / so ให้ฟังเข้าใจง่ายขึ้น');
+  if(sentences.length&&words.length/sentences.length>22) tips.push('ประโยคยาวเกินไป แบ่งเป็นประโยคสั้น ๆ ชาวต่างชาติจะตามทันกว่า');
+  if(!tips.length) tips.push('ชัดเจนดีมาก มีเหตุผลและแผนงานครบ');
+  return '<b>ฟีดแบ็ก (จำลอง)</b><ul>'+tips.map(function(t){return '<li>'+esc(t)+'</li>';}).join('')+'</ul>'+
+    (model?'<div style="margin-top:6px">วิธีพูดที่ชัดขึ้น: <span class="en">'+esc(model)+'</span></div>':'');
+}
+function sendReply(){
+  if(!aiOn()) return sendReplyMock();
+  var ta=document.getElementById('reply'), btn=document.getElementById('sendBtn'), st=document.getElementById('talkStatus');
+  var text=ta.value.trim();
+  if(!text){st.textContent='ยังไม่มีข้อความ — พิมพ์หรือกด "พูด" ก่อนส่ง'; ta.focus(); return;}
+  if(ST.talkEnded){st.textContent='จบบทสนทนาวันนี้แล้ว'; return;}
+  st.textContent=''; btnBusy(btn,'กำลังตอบ…');
+  var c=document.getElementById('chat');
+  var me=document.createElement('div'); me.className='msg me en'; me.textContent=text; c.appendChild(me);
+  var ty=document.createElement('div'); ty.className='typing'; ty.textContent=CONSULTANT.name+' is typing…'; c.appendChild(ty); setLiam('thinking');
+  ta.value=''; document.getElementById('hintBox').innerHTML='';
+  if(!ST.talkLog) ST.talkLog=[{who:'liam',text:SCRIPT[0].say}];
+  var turn=ST.turn+1;
+  google.script.run
+    .withSuccessHandler(function(r){
+      ty.remove();
+      var fb=document.createElement('div'); fb.className='fb';
+      fb.innerHTML='<b>ฟีดแบ็กจากโค้ช AI</b>'+tipsHTML(r.tips)+(r.clearer?'<div style="margin-top:6px">วิธีพูดที่ชัดขึ้น: <span class="en">'+esc(r.clearer)+'</span></div>':'')+mistakesHTML(r.mistakes);
+      c.insertBefore(fb,me.nextSibling);
+      ST.talkLog.push({who:'me',text:text},{who:'liam',text:r.reply}); ST.turn=turn; ST.lastClearer=r.clearer||'';
+      pushThem(r.reply); btn.classList.remove('busy');
+      if(r.end) endTalk(); else btnReset(btn,'ส่ง');
+    })
+    .withFailureHandler(function(e){
+      ty.remove(); me.remove(); ta.value=text; setLiam('idle'); btnReset(btn,'ส่ง');
+      aiFail(e,null); st.textContent='ข้อความยังไม่ถูกส่ง — กด "ส่ง" อีกครั้ง'+(ST.aiOff?' (ระบบจะคุยต่อแบบพื้นฐาน)':'');
+    })
+    .seCoachTalk(localYmd(),turn,ST.talkLog,text);
+}
+/* จบบทสนทนา: ใช้ทั้งโหมด AI และโหมดพื้นฐาน */
+function endTalk(){
+  var btn=document.getElementById('sendBtn'), ta=document.getElementById('reply');
+  ST.talkEnded=true;
+  recordTask('talk',{xp:15*ST.turn});
+  btn.disabled=true; btn.querySelector('span').textContent='จบบทสนทนาแล้ว'; btn.classList.add('done');
+  document.getElementById('hintBtn').hidden=true; document.getElementById('micBtn').hidden=true; ta.hidden=true;
+  var nx=document.createElement('div'); nx.className='row'; nx.innerHTML='<button type="button" class="btn primary" data-go="explain">ไปเล่นเกมอธิบาย</button>';
+  document.getElementById('composer').appendChild(nx);
+}
+function sendReplyMock(){
+  var ta=document.getElementById('reply'), btn=document.getElementById('sendBtn'), st=document.getElementById('talkStatus');
+  var text=ta.value.trim();
+  if(!text){st.textContent='ยังไม่มีข้อความ — พิมพ์หรือกด "พูด" ก่อนส่ง'; ta.focus(); return;}
+  if(ST.talkEnded||ST.turn>=SCRIPT.length-1){st.textContent='จบบทสนทนาวันนี้แล้ว'; return;}
+  st.textContent=''; btn.disabled=true; btn.classList.add('busy'); btn.querySelector('span').textContent='กำลังตอบ…';
+  var c=document.getElementById('chat');
+  var me=document.createElement('div'); me.className='msg me en'; me.textContent=text; c.appendChild(me);
+  var fb=document.createElement('div'); fb.className='fb'; fb.innerHTML=mockFeedback(text,SCRIPT[ST.turn].model); c.appendChild(fb);
+  var ty=document.createElement('div'); ty.className='typing'; ty.textContent=CONSULTANT.name+' is typing…'; c.appendChild(ty); setLiam('thinking');
+  ta.value=''; document.getElementById('hintBox').innerHTML=''; addXP(15);
+  setTimeout(function(){
+    ty.remove(); ST.turn++; pushThem(SCRIPT[ST.turn].say);
+    btn.classList.remove('busy');
+    if(SCRIPT[ST.turn].end){ endTalk(); }else{btn.disabled=false; btn.querySelector('span').textContent='ส่ง';}
+  },900);
+}
+
+/* 3) เกมอธิบาย */
+SCREENS.explain=function(){
+  return '<h2>Explain it simply</h2><p class="lead">อธิบายให้คนที่ไม่ใช่วิศวกรเข้าใจ — ฝึกทั้งภาษาและความเข้าใจหลักการไปพร้อมกัน</p>'+
+  '<div class="panel"><b style="font:700 22px var(--font-sign)">'+esc(EXPLAIN.topic)+'</b><p class="en" style="margin:6px 0 0">'+esc(EXPLAIN.task)+'</p></div>'+
+  '<div style="margin-top:14px"><label for="exp" class="demo-note" style="display:block;margin:0 0 6px">คำอธิบายของคุณ</label>'+
+  '<textarea id="exp" autocomplete="off" placeholder="CBR tells us…"></textarea>'+
+  '<div class="row" style="margin-top:8px"><button type="button" class="btn" id="expMic">'+ICON.mic+'<span>พูด</span></button>'+
+  '<button type="button" class="btn primary" id="expScore"><span>ส่งให้ตรวจ</span></button></div>'+
+  '<div class="status" id="expStatus" role="status"></div></div><div id="expResult"></div>';
+};
+function initExplain(){
+  document.getElementById('expMic').onclick=function(){listen(document.getElementById('exp'),this,document.getElementById('expStatus'));};
+  document.getElementById('expScore').onclick=scoreExplain;
+}
+function clamp(n){return Math.max(0,Math.min(100,Math.round(n)));}
+/* ---------- โค้ช AI (เว็บแอปจริง) · ล้มเหลว/เกินเพดาน = กลับไปใช้การตรวจแบบพื้นฐาน ---------- */
+function aiOn(){ return IN_GAS&&!ST.aiOff; }
+function aiFail(e,fallback){
+  var m=e&&e.message?e.message:String(e);
+  var note=m.indexOf('QUOTA:')>-1?'โค้ช AI ใช้ครบโควตาของวันนี้แล้ว — ใช้การตรวจแบบพื้นฐานแทน':'โค้ช AI ไม่ว่าง ('+m.replace(/^Exception:\s*/,'').slice(0,90)+') — ใช้การตรวจแบบพื้นฐานแทน';
+  if(m.indexOf('QUOTA:')>-1) ST.aiOff=true;
+  ST.aiNotice=note; toast(note,true);   /* ข้อความนี้ต่อท้ายแจ้งผลการบันทึกที่ตามมาด้วย ไม่ให้ถูกทับหาย */
+  if(fallback) fallback();
+}
+function mistakesHTML(list){
+  if(!list||!list.length) return '';
+  return '<div class="mk"><b>จุดที่ควรแก้</b> <small>(บันทึกลงสมุดข้อผิดพลาดแล้ว)</small><ul>'+list.map(function(m){
+    return '<li><s class="en">'+esc(m.wrong)+'</s> → <span class="en">'+esc(m.better)+'</span> <small>'+esc(m.pattern)+'</small></li>';}).join('')+'</ul></div>';
+}
+function clearerHTML(t,label){
+  return t?'<div class="model"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><b>'+esc(label)+'</b>'+speakerBtn(t,label)+'</div><p class="en" style="margin:6px 0 0">'+esc(t)+'</p></div>':'';
+}
+function tipsHTML(tips){ return tips&&tips.length?'<ul style="margin:8px 0">'+tips.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>':''; }
+function btnBusy(btn,txt){ btn.disabled=true; btn.classList.add('busy'); btn.querySelector('span').textContent=txt; }
+function btnDone(btn,again){ btn.classList.remove('busy'); btn.classList.add('done'); btn.querySelector('span').textContent='✓ ตรวจแล้ว';
+  setTimeout(function(){btn.classList.remove('done'); btn.disabled=false; btn.querySelector('span').textContent=again;},2500); }
+function btnReset(btn,txt){ btn.classList.remove('busy'); btn.disabled=false; btn.querySelector('span').textContent=txt; }
+function fillBars(sel){ requestAnimationFrame(function(){document.querySelectorAll(sel+' .fill').forEach(function(f){f.style.width=f.dataset.v+'%';});}); }
+function scoreExplain(){
+  if(!aiOn()) return scoreExplainMock();
+  var ta=document.getElementById('exp'), st=document.getElementById('expStatus'), btn=document.getElementById('expScore');
+  var text=ta.value.trim(); if(!text){st.textContent='ยังไม่มีคำอธิบาย — พิมพ์หรือพูดก่อนส่ง'; return;}
+  st.textContent=''; btnBusy(btn,'โค้ช AI กำลังตรวจ…');
+  google.script.run
+    .withSuccessHandler(function(r){
+      var gain=Math.round((r.clarity+r.language+r.accuracy)/3/5);
+      recordTask('explain',{xp:gain,clarity:r.clarity,language:r.language,accuracy:r.accuracy});
+      document.getElementById('expResult').innerHTML='<h3>ผลคะแนนจากโค้ช AI · +'+gain+' XP</h3><div class="panel"><div class="bars">'+
+        bar('ความชัดเจน — ฝรั่งฟังเข้าใจไหม',r.clarity)+bar('ภาษา / ไวยากรณ์',r.language)+bar('ความถูกต้องทางวิชาการ',r.accuracy)+
+        '</div>'+(r.tip?'<p style="margin:0 0 12px">'+esc(r.tip)+'</p>':'')+mistakesHTML(r.mistakes)+clearerHTML(r.clearer,'วิธีอธิบายที่ชัดขึ้น (จากข้อความของคุณ)')+
+        '<div class="model"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><b>ตัวอย่างคำอธิบายที่ดี</b>'+speakerBtn(EXPLAIN.model,'ตัวอย่างคำอธิบาย')+'</div><p class="en" style="margin:6px 0 0">'+esc(EXPLAIN.model)+'</p></div></div>'+
+        '<div class="row" style="margin-top:14px"><button type="button" class="btn primary" data-go="review">ไปทบทวน</button></div>';
+      fillBars('#expResult'); btnDone(btn,'ส่งให้ตรวจอีกครั้ง');
+      document.getElementById('expResult').scrollIntoView({behavior:'smooth',block:'start'});
+    })
+    .withFailureHandler(function(e){ btnReset(btn,'ส่งให้ตรวจ'); aiFail(e,scoreExplainMock); })
+    .seCoachExplain(localYmd(),text);
+}
+function scoreExplainMock(){
+  var ta=document.getElementById('exp'), st=document.getElementById('expStatus'), btn=document.getElementById('expScore');
+  var text=ta.value.trim(); if(!text){st.textContent='ยังไม่มีคำอธิบาย — พิมพ์หรือพูดก่อนส่ง'; return;}
+  st.textContent=''; btn.disabled=true; btn.classList.add('busy'); btn.querySelector('span').textContent='กำลังตรวจ…';
+  setTimeout(function(){
+    var low=text.toLowerCase(), words=text.split(/\s+/).filter(Boolean).length;
+    var sents=Math.max(1,text.split(/[.!?]+/).filter(function(s){return s.trim();}).length);
+    var hits=EXPLAIN.keys.filter(function(k){return low.indexOf(k)>-1;}).length;
+    var jar=EXPLAIN.jargon.filter(function(k){return low.indexOf(k)>-1;}).length;
+    var thai=/[\u0E00-\u0E7F]/.test(text);
+    var clarity=clamp(100-Math.max(0,words/sents-16)*4-jar*8-(words<20?25:0));
+    var lang=clamp(thai?40:72+(/^[A-Z]/.test(text)?8:0)+(/[.!?]$/.test(text)?8:0)+(sents>=3?8:0));
+    var acc=clamp(35+hits*9);
+    var avg=Math.round((clarity+lang+acc)/3), gain=Math.round(avg/5);
+    addXP(gain);
+    recordTask('explain',{xp:gain,clarity:clarity,language:lang,accuracy:acc});
+    var tip=jar?'มีศัพท์เทคนิคที่คนทั่วไปไม่รู้จัก ('+EXPLAIN.jargon.filter(function(k){return low.indexOf(k)>-1;}).join(', ')+') ถ้าจำเป็นต้องใช้ ให้อธิบายต่อท้ายสั้น ๆ':
+      hits<4?'ลองบอกให้ครบ 3 เรื่อง: ทดสอบอะไร (ดิน) · ทำอย่างไร (กดแท่งเหล็ก เทียบกับหินมาตรฐาน) · ใช้ทำอะไร (ออกแบบความหนาชั้นทาง)':
+      'ครอบคลุมหลักการครบ ลองลดความยาวประโยคให้เหลือไม่เกิน 15 คำ จะฟังง่ายขึ้นอีก';
+    document.getElementById('expResult').innerHTML='<h3>ผลคะแนน (จำลอง) · +'+gain+' XP</h3><div class="panel"><div class="bars">'+
+      bar('ความชัดเจน — ฝรั่งฟังเข้าใจไหม',clarity)+bar('ภาษา / ไวยากรณ์',lang)+bar('ความถูกต้องทางวิชาการ',acc)+
+      '</div><p style="margin:0 0 12px">'+esc(tip)+'</p><div class="model"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><b>ตัวอย่างคำอธิบายที่ดี</b>'+speakerBtn(EXPLAIN.model,'ตัวอย่างคำอธิบาย')+'</div><p class="en" style="margin:6px 0 0">'+esc(EXPLAIN.model)+'</p></div></div>'+
+      '<div class="row" style="margin-top:14px"><button type="button" class="btn primary" data-go="review">ไปทบทวน</button></div>';
+    requestAnimationFrame(function(){document.querySelectorAll('.fill').forEach(function(f){f.style.width=f.dataset.v+'%';});});
+    btn.classList.remove('busy'); btn.classList.add('done'); btn.querySelector('span').textContent='✓ ตรวจแล้ว';
+    setTimeout(function(){btn.classList.remove('done'); btn.disabled=false; btn.querySelector('span').textContent='ส่งให้ตรวจอีกครั้ง';},2500);
+    document.getElementById('expResult').scrollIntoView({behavior:'smooth',block:'start'});
+  },800);
+}
+function bar(label,v){return '<div class="bar"><label><span>'+label+'</span><b>'+v+'</b></label><div class="track"><div class="fill" data-v="'+v+'"></div></div></div>';}
+
+/* 4) ทบทวน */
+SCREENS.review=function(){
+  var h='<h2>Review</h2><p class="lead">ควิซสั้น 4 ข้อ ทวนคลังศัพท์ และย้อนดูเรื่องที่ผ่านมา</p>'+(IN_GAS?'<div class="panel cefr" id="cefrBox" style="margin-bottom:14px">'+cefrHTML()+'</div>':'')+'<div class="panel" id="qzPanel">'+qzPanelHTML();
+  return h+'</div>'+RESHUFFLE_BTN('qz')+'<h3>คลังศัพท์</h3><div class="deck" id="deck">'+deckHTML()+'</div>'+
+    (IN_GAS?'<h3>สมุดข้อผิดพลาด</h3><div id="mistakes">'+mistakeBookHTML()+'</div>':'')+
+    '<h3>เรื่องที่ผ่านมา (แยกหมวด)</h3><div class="archive" id="archive">'+archiveHTML()+'</div>';
+};
+function cefrHTML(){
+  if(!PROG) return '<p class="demo-note" style="margin:0">กำลังโหลด…</p>';
+  var c=PROG.cefr||{};
+  if(!c.level) return '<div class="lv" aria-hidden="true">?</div><div><b>ระดับภาษาโดยประมาณ</b><br><small class="demo-note">ยังประเมินไม่ได้ — ต้องมีคะแนนภาษาจากงานเขียน/เกมอธิบายอย่างน้อย 3 ครั้ง (ตอนนี้ '+(c.n||0)+' ครั้ง)</small></div>';
+  var tip={A2:'ใช้ปุ่ม "ง่ายลง" ในหน้าเรื่องวันนี้ แล้วฝึกพูดตามทีละประโยค',B1:'สลับอ่านฉบับ "ง่ายลง" กับต้นฉบับ แล้วเขียนตอบให้ครบ 3 ประโยค',B2:'ลองฉบับ "ลึกขึ้น" และฝึกเขียนอีเมล/รายงาน',C1:'ใช้ฉบับ "ลึกขึ้น" และเน้นความกระชับแบบมืออาชีพ'}[c.level];
+  return '<div class="lv" aria-hidden="true">'+c.level+'</div><div><b>ระดับภาษาโดยประมาณ '+c.level+'</b><br><small>จากคะแนนภาษา '+c.n+' ครั้งล่าสุด (เฉลี่ย '+c.avg+') · เป็นค่าประมาณเพื่อเลือกระดับเนื้อหา ไม่ใช่ผลสอบมาตรฐาน</small><br><small>แนะนำ: '+tip+'</small></div>';
+}
+function mistakeBookHTML(){
+  if(!PROG) return '<p class="demo-note">กำลังโหลด…</p>';
+  var l=PROG.mistakes||[];
+  if(!l.length) return '<p class="demo-note">ยังไม่มีจุดที่ต้องทบทวน — โค้ช AI จะบันทึกจุดที่ควรแก้จากงานเขียน บทสนทนา และเกมอธิบายไว้ที่นี่</p>';
+  return '<ul class="mkbook">'+l.map(function(m){
+    return '<li><div class="mk-t"><s class="en">'+esc(m.wrong)+'</s> → <span class="en">'+esc(m.better)+'</span><small>'+esc(m.pattern)+' · '+esc(thDate(m.date))+'</small></div>'+
+      '<button type="button" class="btn" data-mk="'+m.row+'">เข้าใจแล้ว</button></li>';}).join('')+'</ul>';
+}
+/* คลังศัพท์: เว็บแอปจริง = คำที่ถึงรอบทวน (Leitner 1·2·4·7·15 วัน) · Demo = ตัวอย่าง */
+function deckList(){ return IN_GAS?(PROG?PROG.vocab.due:null):DECK; }
+function deckHTML(){
+  var list=deckList(), h='';
+  if(!list) return '<p class="demo-note">กำลังโหลดคลังศัพท์…</p>';
+  if(!list.length) return '<p class="demo-note">ยังไม่มีคำที่ถึงรอบทวนวันนี้'+(PROG?' (คลังมี '+PROG.vocab.total+' คำ)':'')+' — ศัพท์ของเรื่องวันนี้จะเข้าคลังเมื่อทำกิจกรรมในหน้าเรื่องวันนี้เสร็จ</p>';
+  list.forEach(function(d,i){
+    h+='<div class="card"><div class="card-top">'+speakerBtn(d.en,d.en)+'<div><strong>'+esc(d.en)+'</strong><div class="due">'+esc(d.th)+'</div></div></div>'+
+       '<p class="en">'+esc(d.ex)+'</p><div class="seg">'+
+       '<button type="button" class="btn" data-deck="'+i+'" data-v="ok" aria-pressed="false">จำได้</button>'+
+       '<button type="button" class="btn" data-deck="'+i+'" data-v="again" aria-pressed="false">ทวนอีก</button>'+
+       '<span class="due" id="due'+i+'">'+(IN_GAS?'กล่อง '+d.box+' · ถึงรอบทวน':'ยังไม่ได้ทวน')+'</span></div></div>';
+  });
+  return h;
+}
+/* เรื่องที่ผ่านมา: เว็บแอปจริง = เรื่องที่ทำเสร็จแล้วจากชีต Topics · Demo = ตัวอย่าง */
+function archiveHTML(){
+  var list=IN_GAS?(PROG?PROG.archive:null):ARCHIVE, h='';
+  if(!list) return '<p class="demo-note">กำลังโหลด…</p>';
+  if(!list.length) return '<p class="demo-note">ยังไม่มีเรื่องที่ทำเสร็จ — เรื่องของวันจะมาอยู่ที่นี่เมื่อฝึกครบวัน</p>';
+  list.forEach(function(r){
+    if(!CATS[r.cat]||!STREAMS[r.stream]) return;
+    var lbl=IN_GAS?esc(thDate(r.date)):'Day '+r.day;
+    h+='<div class="arc" style="--c:'+CATS[r.cat].color+'"><div class="arc-day">'+lbl+'</div><div class="arc-body"><b>'+esc(r.title)+'</b>'+
+       '<div class="arc-meta"><span class="stream s-'+r.stream+'">'+esc(STREAMS[r.stream].th)+'</span><span>'+esc(CATS[r.cat].th)+'</span></div></div></div>';
+  });
+  return h+(IN_GAS?'':'<p class="demo-note">รายการเรื่องที่ผ่านมาเป็นข้อมูลตัวอย่าง</p>');
+}
+
+/* ================= ทางหลวงของฉัน — ฉากตัวต่อพลาสติก 3D + เสียงประกอบ ================= */
+/* สถานะความก้าวหน้า (ของจริงคำนวณจากจำนวนวันที่ฝึกครบในชีต Scores) */
+var HW = {total:30, done:12, stage:2, busy:false};
+/* โหมดเรียบ (2D): ไม่โหลด three.js · สำหรับเครื่องสเปกต่ำหรือผู้ที่ไม่ชอบฉาก 3D · จำค่าไว้ในเครื่อง */
+ST.mode2d=false; try{ ST.mode2d=localStorage.getItem('se_2d')==='1'; }catch(e){}
+if(IN_GAS){ HW.done=0; HW.stage=1; }   /* เว็บแอปจริง: รอค่าจริงจากชีต ไม่แสดงค่าตัวอย่าง */
+var RANKS = [{km:0,th:'Site Inspector'},{km:10,th:'Project Engineer'},{km:20,th:'Resident Engineer'},{km:30,th:'Chief Engineer'}];
+/* สิ่งก่อสร้างประจำหมวด: สร้างเมื่อถนนผ่านช่วงนั้น (ของจริง: ต้องทำเรื่องในหมวดนั้นครบตามเกณฑ์ด้วย) */
+var LANDMARKS = [
+  {key:'rail',   seg:[3,4,5],  cat:'safety', th:'ราวกันอันตรายช่วงทางโค้ง', need:'ทำหมวดความปลอดภัยทางถนน 3 เรื่อง'},
+  {key:'bridge1',seg:[6,7],    cat:'bridge', th:'สะพานข้ามลำน้ำแห่งแรก',   need:'ทำหมวดสะพานและโครงสร้าง 3 เรื่อง', river:true},
+  {key:'culvert',seg:[10],     cat:'drain',  th:'ท่อลอดเหลี่ยม',           need:'ทำหมวดระบายน้ำ 3 เรื่อง'},
+  {key:'slope',  seg:[15,16],  cat:'geo',    th:'หินเรียงป้องกันลาดคันทาง', need:'ทำหมวดดิน ฐานราก ลาดดิน 3 เรื่อง'},
+  {key:'sensor', seg:[19],     cat:'digital',th:'สถานีตรวจวัดอัจฉริยะ',     need:'ทำหมวดเทคโนโลยีดิจิทัล 3 เรื่อง'},
+  {key:'bridge2',seg:[24,25],  cat:'bridge', th:'สะพานแห่งที่สอง',          need:'ทำหมวดสะพานและโครงสร้าง 6 เรื่อง', river:true}
+];
+function lmAt(i){for(var k=0;k<LANDMARKS.length;k++){if(LANDMARKS[k].seg.indexOf(i)>-1)return LANDMARKS[k];}return null;}
+function isRiver(i){var l=lmAt(i);return !!(l&&l.river);}
+function rankOf(km){var r=RANKS[0];RANKS.forEach(function(x){if(km>=x.km)r=x;});return r;}
+function nextRank(km){for(var i=0;i<RANKS.length;i++){if(RANKS[i].km>km)return RANKS[i];}return null;}
+
+/* ---------- เสียง: สร้างสดด้วย Web Audio API (เพลงแต่งใหม่ ไม่มีไฟล์เสียงภายนอก) ---------- */
+var AUD = {ctx:null, music:true, sfx:true, timer:null, step:0, next:0, playing:false};
+(function(){try{var m=localStorage.getItem('se_music'),s=localStorage.getItem('se_sfx');if(m!==null)AUD.music=m==='1';if(s!==null)AUD.sfx=s==='1';}catch(e){}})();
+/* ระดับเสียงรวม (เพลง + เอฟเฟกต์) 0–10 · ค่าเริ่มต้น 8 = ความดังเดิม */
+AUD.vol=8; (function(){try{var v=localStorage.getItem('se_vol');if(v!==null&&!isNaN(+v))AUD.vol=Math.max(0,Math.min(10,Math.round(+v)));}catch(e){}})();
+function volGain(){return 0.9*AUD.vol/8;}
+function setVol(v){
+  AUD.vol=Math.max(0,Math.min(10,v)); try{localStorage.setItem('se_vol',String(AUD.vol));}catch(e){}
+  if(AUD.ctx&&AUD.master) AUD.master.gain.setTargetAtTime(volGain(),AUD.ctx.currentTime,0.05);
+  var t=document.getElementById('volVal'), f=document.getElementById('volFill');   /* อัปเดตเฉพาะจุด ไม่วาดหน้าใหม่ */
+  if(t) t.textContent=AUD.vol===0?'ปิดเสียง':AUD.vol+'/10';
+  if(f) f.style.width=(AUD.vol*10)+'%';
+  var dn=document.getElementById('volDown'), up=document.getElementById('volUp');
+  if(dn) dn.disabled=AUD.vol<=0; if(up) up.disabled=AUD.vol>=10;
+}
+function savePref(k,v){try{localStorage.setItem(k,v?'1':'0');}catch(e){}}
+function audio(){
+  try{
+    if(!AUD.ctx){
+      var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return null;
+      var c=new AC(); AUD.ctx=c;
+      AUD.master=c.createGain(); AUD.master.gain.value=volGain(); AUD.master.connect(c.destination);
+      AUD.musicBus=c.createGain(); AUD.musicBus.gain.value=0; AUD.musicBus.connect(AUD.master);
+      AUD.sfxBus=c.createGain(); AUD.sfxBus.gain.value=0.55; AUD.sfxBus.connect(AUD.master);
+      var len=c.sampleRate*0.3, buf=c.createBuffer(1,len,c.sampleRate), d=buf.getChannelData(0);
+      for(var i=0;i<len;i++) d[i]=Math.random()*2-1;
+      AUD.noise=buf;
+    }
+    if(AUD.ctx.state==='suspended') AUD.ctx.resume();
+    return AUD.ctx;
+  }catch(e){console.error('audio init error',e);return null;}
+}
+function mtof(m){return 440*Math.pow(2,(m-69)/12);}
+function tone(bus,f,t,dur,type,peak,attack){
+  var c=AUD.ctx,o=c.createOscillator(),g=c.createGain();
+  o.type=type; o.frequency.value=f;
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(peak,t+(attack||0.008));
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.connect(g); g.connect(bus); o.start(t); o.stop(t+dur+0.05);
+}
+/* เพลง: 96 BPM คอร์ด C–Am–F–G เมโลดี้เสียงไม้เคาะแบบมาริมบา + เบส + แพดนุ่ม + เชคเกอร์เบา ๆ */
+var SONG = {
+  chords:[[60,64,67],[57,60,64],[53,57,60],[55,59,62]], bass:[48,45,41,43],
+  mel:[[76,0,79,0,81,0,79,76,0,0,74,0,76,0,0,0],[81,0,79,0,76,0,74,76,0,0,72,0,0,0,69,0],
+       [72,0,77,0,81,0,77,0,76,0,74,0,72,0,0,0],[74,0,76,0,79,0,83,0,81,0,79,0,76,0,74,0]]
+};
+var STEP=60/96/2; /* โน้ตเขบ็ตหนึ่งชั้น */
+function scheduleStep(n,t){
+  var bar=Math.floor(n/16)%4, s=n%16, bus=AUD.musicBus, c=AUD.ctx;
+  var m=SONG.mel[bar][s];
+  if(m){ tone(bus,mtof(m),t,0.45,'sine',0.22); tone(bus,mtof(m+12),t,0.18,'triangle',0.05); }
+  if(s===0||s===8) tone(bus,mtof(SONG.bass[bar]-12),t,0.55,'triangle',0.28);
+  if(s===0) SONG.chords[bar].forEach(function(cm){tone(bus,mtof(cm),t,STEP*16,'sine',0.045,0.6);});
+  if(s%4===2){ /* เชคเกอร์ */
+    var src=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain();
+    src.buffer=AUD.noise; bp.type='highpass'; bp.frequency.value=6000;
+    g.gain.setValueAtTime(0.05,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.05);
+    src.connect(bp); bp.connect(g); g.connect(bus); src.start(t); src.stop(t+0.06);
+  }
+}
+function musicStart(){
+  if(!AUD.music||AUD.playing) return;
+  var c=audio(); if(!c) return;
+  AUD.playing=true; AUD.next=c.currentTime+0.08;
+  AUD.musicBus.gain.cancelScheduledValues(c.currentTime);
+  AUD.musicBus.gain.setTargetAtTime(0.5,c.currentTime,0.6);
+  AUD.timer=setInterval(function(){
+    while(AUD.next<AUD.ctx.currentTime+0.15){scheduleStep(AUD.step,AUD.next);AUD.step++;AUD.next+=STEP;}
+  },30);
+}
+function musicStop(){
+  if(!AUD.playing) return;
+  AUD.playing=false; clearInterval(AUD.timer);
+  var c=AUD.ctx; AUD.musicBus.gain.cancelScheduledValues(c.currentTime);
+  AUD.musicBus.gain.setTargetAtTime(0,c.currentTime,0.25);
+}
+function sfxSnap(){
+  if(!AUD.sfx) return; var c=audio(); if(!c) return; var t=c.currentTime;
+  var src=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain();
+  src.buffer=AUD.noise; bp.type='bandpass'; bp.frequency.value=2600; bp.Q.value=2.5;
+  g.gain.setValueAtTime(0.6,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.05);
+  src.connect(bp); bp.connect(g); g.connect(AUD.sfxBus); src.start(t); src.stop(t+0.06);
+  var o=c.createOscillator(),g2=c.createGain(); o.type='square';
+  o.frequency.setValueAtTime(1500,t); o.frequency.exponentialRampToValueAtTime(420,t+0.035);
+  g2.gain.setValueAtTime(0.12,t); g2.gain.exponentialRampToValueAtTime(0.0001,t+0.04);
+  o.connect(g2); g2.connect(AUD.sfxBus); o.start(t); o.stop(t+0.05);
+}
+function sfxReward(){
+  if(!AUD.sfx) return; var c=audio(); if(!c) return; var t=c.currentTime+0.02;
+  [72,76,79,84,88].forEach(function(m,i){tone(AUD.sfxBus,mtof(m),t+i*0.09,0.5,'triangle',0.25);});
+  tone(AUD.sfxBus,mtof(96),t+0.5,0.8,'sine',0.12);
+}
+document.addEventListener('visibilitychange',function(){ if(document.hidden) musicStop(); else if(ST.screen==='highway') musicStart(); });
+
+/* ---------- หน้าจอ ---------- */
+var LOCK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+var CHECK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+SCREENS.highway=function(){
+  return '<h2>ทางหลวงของฉัน</h2><p class="lead">ฝึกครบ 1 วัน ถนนยาวขึ้น 1 กม. ตามลำดับงานจริง — ดินคันทาง รองพื้นทาง พื้นทาง ผิวทาง และตีเส้น</p>'+
+  '<div class="stage'+(ST.mode2d?' flat':'')+'" id="stage">'+
+    '<div class="hud" id="hud"></div>'+
+    (ST.mode2d?'<div class="hw2d" id="hw2d"></div>':'<div class="gl-hint">ลากเพื่อหมุนมุมมอง · ถ่างนิ้วหรือหมุนล้อเพื่อซูม</div>')+
+    '<div class="reward" id="reward" hidden role="dialog" aria-modal="false" aria-labelledby="rwTitle"></div>'+
+  '</div>'+
+  '<div class="row" style="margin-top:12px">'+
+    '<button type="button" class="btn primary" id="hwDone"'+(hwDoneState().dis?' disabled':'')+'><span>'+hwDoneState().txt+'</span></button>'+
+    '<button type="button" class="btn" id="hwMusic" aria-pressed="'+AUD.music+'">'+(AUD.music?'เพลง: เปิด':'เพลง: ปิด')+'</button>'+
+    '<button type="button" class="btn" id="hwSfx" aria-pressed="'+AUD.sfx+'">'+(AUD.sfx?'เสียงเอฟเฟกต์: เปิด':'เสียงเอฟเฟกต์: ปิด')+'</button>'+
+    (ST.mode2d?'':'<button type="button" class="btn" id="hwView" disabled title="กลับมุมกล้องเดิม หลังลากหมุนหรือซูม">มุมมองเริ่มต้น</button>')+
+    '<button type="button" class="btn" id="hwMode" aria-pressed="'+ST.mode2d+'">'+(ST.mode2d?'เปลี่ยนเป็นโหมด 3D':'โหมดเรียบ (2D)')+'</button>'+
+  '</div>'+
+  '<div class="vol" role="group" aria-label="ระดับเสียงเพลงและเอฟเฟกต์">'+
+    '<button type="button" class="icon-btn" id="volDown" title="ลดเสียง" aria-label="ลดเสียง"'+(AUD.vol<=0?' disabled':'')+'>'+ICON.minus+'</button>'+
+    '<div class="vol-meter"><span class="vol-label">ระดับเสียง</span><div class="vol-bar" aria-hidden="true"><i id="volFill" style="width:'+(AUD.vol*10)+'%"></i></div><b id="volVal" aria-live="polite">'+(AUD.vol===0?'ปิดเสียง':AUD.vol+'/10')+'</b></div>'+
+    '<button type="button" class="icon-btn" id="volUp" title="เพิ่มเสียง" aria-label="เพิ่มเสียง"'+(AUD.vol>=10?' disabled':'')+'>'+ICON.plus+'</button>'+
+  '</div>'+
+  (IN_GAS?'<div class="tasks" id="hwTasks">'+tasksHTML()+'</div>':'')+
+  '<h3>เส้นทางอาชีพ</h3><div class="ranks" id="ranks"></div>'+
+  '<h3>สิ่งก่อสร้างประจำหมวด</h3><div class="lms" id="lms"></div>'+
+  (IN_GAS
+    ? '<p class="demo-note">ทำภารกิจของวันครบ ถนนจะพร้อมสร้าง +1 กม. — กดปุ่มสร้างถนนเพื่อดูการก่อสร้าง · ภารกิจที่ทำแล้วจะเห็นเป็นชั้นทางของช่วงวันนี้ · เพลงและเสียงสร้างสดในเบราว์เซอร์ และจะเงียบเมื่อกลับไปหน้าเรียน</p>'
+    : '<p class="demo-note">Demo: ปุ่ม "จบภารกิจวันนี้" จำลองการฝึกครบ 1 วัน · ของจริงถนนจะต่อเองเมื่อทำครบทุกขั้นของวัน · เพลงและเสียงสร้างสดในเบราว์เซอร์ และจะเงียบเมื่อกลับไปหน้าเรียน</p>');
+};
+/* ปุ่มสร้างถนน: Demo = กดได้เสมอ · เว็บแอปจริง = กดได้เมื่อฝึกครบวันแล้วและยังไม่ได้ดูการก่อสร้าง */
+function hwDoneState(){
+  if(HW.done>=HW.total&&!HW.pending) return {txt:'ครบ '+HW.total+' กม. แล้ว',dis:true};
+  if(!IN_GAS) return {txt:'จบภารกิจวันนี้ (Demo)',dis:false};
+  if(!PROG) return {txt:'กำลังโหลดผลการฝึก…',dis:true};
+  if(HW.pending) return {txt:'สร้างถนนวันนี้ +1 กม.',dis:false};
+  if(PROG.today.complete) return {txt:'วันนี้สร้างเสร็จแล้ว',dis:true};
+  return {txt:'ทำภารกิจให้ครบก่อน ('+tasksDone()+'/'+PROG.today.required.length+')',dis:true};
+}
+function tasksHTML(){
+  if(!PROG) return '<span class="t-lbl">กำลังโหลดภารกิจวันนี้…</span>';
+  return '<span class="t-lbl">ภารกิจวันนี้</span>'+PROG.today.required.map(function(k){
+    var d=PROG.today.tasks[k]; return '<span class="t'+(d?' done':'')+'">'+CHECK_SVG+esc(TASK_TH[k])+'<span class="sr-only">'+(d?' (เสร็จแล้ว)':' (ยังไม่ทำ)')+'</span></span>';
+  }).join('');
+}
+/* ข้อมูลผลการฝึกมาถึงระหว่างเปิดหน้าทางหลวง → อัปเดตฉากและปุ่มเฉพาะจุด */
+function refreshHighway(){
+  var b=document.getElementById('hwDone'), ts=document.getElementById('hwTasks');
+  if(ts) ts.innerHTML=tasksHTML();
+  if(b&&!HW.busy){ var st=hwDoneState(); b.disabled=st.dis; b.querySelector('span').textContent=st.txt; }
+  if(ST.mode2d&&!HW.busy) render2D();
+  if(G&&G.renderer&&!HW.busy){ rebuildStatic(); drawSign(); if(!G.viewDirty) resetView(true); else { G.view.tx=segX(Math.min(HW.done,HW.total-1))+1; applyView(); } }
+  refreshHWText();
+}
+/* แผนภาพ 2 มิติของถนน 30 กม. — 2 แถว แถวละ 15 กม. (ช่วงละ 1 กม.) ให้อ่านชัดบนมือถือ */
+function render2D(){
+  var box=document.getElementById('hw2d'); if(!box) return;
+  var n=HW.total, per=Math.ceil(n/2), x0=14, w=(606-x0)/per, h='';
+  var layer=['#3FA34D','#9A6534','#D9B46C','#A9ADB1'];
+  var rowY=function(i){ return 58+Math.floor(i/per)*118; }, colX=function(i){ return x0+(i%per)*w; };
+  for(var i=0;i<n;i++){
+    var x=colX(i), y=rowY(i);
+    if(isRiver(i)) h+='<rect x="'+(x-1)+'" y="'+(y-10)+'" width="'+(w+2)+'" height="46" fill="#5BB6E8"/>';
+    if(i<HW.done) h+='<rect x="'+x+'" y="'+y+'" width="'+(w-2)+'" height="26" rx="3" fill="#3A4148"/><rect x="'+(x+w*0.28)+'" y="'+(y+12)+'" width="'+(w*0.36)+'" height="3" fill="#F2B705"/>';
+    else if(i===HW.done&&HW.done<n) h+='<rect class="seg-now" x="'+x+'" y="'+y+'" width="'+(w-2)+'" height="26" rx="3" fill="'+layer[Math.max(0,Math.min(3,HW.stage))]+'" stroke="#F2B705" stroke-width="3"/>'+
+      '<path d="M'+(x+w/2-7)+' '+(y+40)+'l7 -9l7 9z" fill="#F2B705"/><text x="'+(x+w/2)+'" y="'+(y+56)+'" font-size="13" font-weight="700" text-anchor="middle" fill="#1D2A31">วันนี้</text>';
+    else h+='<rect x="'+x+'" y="'+y+'" width="'+(w-2)+'" height="26" rx="3" fill="none" stroke="#8C979E" stroke-dasharray="4 3"/>';
+    if(i%5===0&&i!==HW.done) h+='<text x="'+(x+2)+'" y="'+(y+44)+'" font-size="12" fill="#1D2A31">'+i+'</text>';
+  }
+  LANDMARKS.forEach(function(l){
+    var s0=l.seg[0], s1=l.seg[l.seg.length-1], built=HW.done>s1, cx=colX(s0)+(s1-s0+1)*w/2-1, y=rowY(s0);
+    h+='<g><title>'+esc(l.th)+(built?' (สร้างแล้ว)':' (ยังไม่สร้าง)')+'</title><line x1="'+cx+'" y1="'+(y-4)+'" x2="'+cx+'" y2="'+(y-22)+'" stroke="'+(built?CATS[l.cat].color:'#8C979E')+'" stroke-width="2.5"/>'+
+      '<circle cx="'+cx+'" cy="'+(y-31)+'" r="10" fill="'+(built?CATS[l.cat].color:'#fff')+'" stroke="'+CATS[l.cat].color+'" stroke-width="2.5"/></g>';
+  });
+  box.innerHTML='<svg viewBox="0 0 620 240" role="img" aria-label="แผนภาพ 2 มิติ: ถนนสร้างแล้ว '+HW.done+' จาก '+n+' กม. จุดวงกลมคือสิ่งก่อสร้างประจำหมวด (สีเต็ม = สร้างแล้ว)">'+h+'</svg>';
+}
+function hudHTML(){
+  var r=rankOf(HW.done), nx=nextRank(HW.done), pct=Math.round(HW.done/HW.total*100);
+  return '<div class="hud-km"><b>'+HW.done+'</b><span>/ '+HW.total+' กม.</span></div>'+
+    '<div class="track"><div class="fill" style="width:'+pct+'%"></div></div>'+
+    '<div class="hud-rank">'+esc(r.th)+(nx?'<small> · อีก '+(nx.km-HW.done)+' กม. เป็น '+esc(nx.th)+'</small>':'')+'</div>';
+}
+function ranksHTML(){
+  var cur=rankOf(HW.done);
+  return RANKS.map(function(r){var on=r.km<=HW.done;return '<div class="rk'+(r===cur?' cur':'')+(on?' on':'')+'"><b>'+esc(r.th)+'</b><small>กม. '+r.km+'</small></div>';}).join('');
+}
+function lmsHTML(){
+  return LANDMARKS.map(function(l){
+    var built=HW.done>l.seg[l.seg.length-1], c=CATS[l.cat];
+    return '<div class="lm'+(built?' built':'')+'" style="--c:'+c.color+'"><span class="lm-ic">'+(built?CHECK_SVG:LOCK_SVG)+'</span>'+
+      '<div><b>'+esc(l.th)+'</b><small>'+esc(c.th)+' · กม. '+(l.seg[0])+
+      (IN_GAS?(built?' · สร้างแล้ว':' · สร้างเมื่อถนนถึง กม. '+(l.seg[l.seg.length-1]+1))+' · ทำหมวดนี้แล้ว '+((PROG&&PROG.catCounts&&PROG.catCounts[l.cat])||0)+' เรื่อง'
+             :(built?' · สร้างแล้ว':' · '+esc(l.need)))+'</small></div></div>';
+  }).join('');
+}
+function refreshHWText(){
+  var h=document.getElementById('hud'); if(h) h.innerHTML=hudHTML();
+  var r=document.getElementById('ranks'); if(r) r.innerHTML=ranksHTML();
+  var l=document.getElementById('lms'); if(l) l.innerHTML=lmsHTML();
+}
+
+/* ---------- โหลด three.js เฉพาะเมื่อเข้าหน้านี้ ---------- */
+function loadThree(cb){
+  if(window.THREE) return cb();
+  var s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  s.onload=cb;
+  s.onerror=function(){var st=document.getElementById('stage');if(st)st.insertAdjacentHTML('beforeend','<div class="gl-fail">โหลดโมดูล 3D ไม่สำเร็จ — ตรวจการเชื่อมต่ออินเทอร์เน็ตแล้วเปิดหน้านี้ใหม่</div>');};
+  document.head.appendChild(s);
+}
+function initHighway(){
+  refreshHWText();
+  document.getElementById('hwMusic').onclick=function(){
+    AUD.music=!AUD.music; savePref('se_music',AUD.music);
+    this.setAttribute('aria-pressed',AUD.music); this.textContent=AUD.music?'เพลง: เปิด':'เพลง: ปิด';
+    if(AUD.music) musicStart(); else musicStop();
+  };
+  document.getElementById('volDown').onclick=function(){setVol(AUD.vol-1); if(AUD.sfx&&AUD.vol>0) sfxSnap();};
+  document.getElementById('volUp').onclick=function(){setVol(AUD.vol+1); if(AUD.sfx) sfxSnap();};
+  document.getElementById('hwSfx').onclick=function(){
+    AUD.sfx=!AUD.sfx; savePref('se_sfx',AUD.sfx);
+    this.setAttribute('aria-pressed',AUD.sfx); this.textContent=AUD.sfx?'เสียงเอฟเฟกต์: เปิด':'เสียงเอฟเฟกต์: ปิด';
+    if(AUD.sfx) sfxSnap();
+  };
+  var hv=document.getElementById('hwView'); if(hv) hv.onclick=function(){ if(G.cam) resetView(false,true); };
+  document.getElementById('hwDone').onclick=completeDay;
+  musicStart(); /* ผู้ใช้กดเข้ามาหน้านี้ = มี user gesture แล้ว เบราว์เซอร์จึงยอมให้เล่นเสียง */
+  if(ST.mode2d){ render2D(); return; }
+  loadThree(function(){ try{ if(ST.screen==='highway') buildScene(); }catch(e){ console.error('3D error',e); var st=document.getElementById('stage'); if(st) st.insertAdjacentHTML('beforeend','<div class="gl-fail">อุปกรณ์นี้แสดงฉาก 3D ไม่ได้ — <button type="button" class="btn" data-act="to2d" style="min-height:36px;padding:4px 10px">ใช้โหมดเรียบ (2D)</button> ('+esc(e.message)+')</div>'); } });
+}
+
+/* ================= ฉาก 3D ================= */
+var G = {};
+var REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+function lin(hex){return new THREE.Color(hex).convertSRGBToLinear();}
+function rng(seed){var s=seed>>>0;return function(){s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
+var COL = {grass:'#3FA34D',grassStud:'#43AB52',sub:'#9A6534',subb:'#D9B46C',base:'#A9ADB1',asph:'#3B4147',white:'#F4F4F0',yellow:'#F2B705',
+  water:'#2F8FD8',concrete:'#BFC4C8',pier:'#8E969D',trunk:'#7A4A26',leaf:['#2E8B3A','#3DA84B','#23733A'],orange:'#F07A22',rip:['#7D8489','#969CA1','#6B7176']};
+
+/* Merger: ยุบก้อนต่อที่อยู่นิ่งทั้งหมดเป็น BufferGeometry ก้อนเดียว (vertexColors) — ลด draw call */
+function Merger(){this.p=[];this.n=[];this.c=[];}
+Merger.prototype.box=function(x,y,z,w,h,d,hex,gap){
+  if(!G.unit){var g=new THREE.BoxGeometry(1,1,1);G.unit={p:g.attributes.position,n:g.attributes.normal,i:g.index};}
+  var U=G.unit, gp=(gap===undefined?0.05:gap), sw=w-gp, sh=h-0.012, sd=d-gp, cy=y+h/2, c=lin(hex), top=c.clone().multiplyScalar(1.12);
+  for(var k=0;k<U.i.count;k++){
+    var a=U.i.getX(k), ny=U.n.getY(a), cc=ny>0.5?top:c; /* แถบบนสว่างกว่า จำลองแสงตกกระทบ */
+    this.p.push(U.p.getX(a)*sw+x,U.p.getY(a)*sh+cy,U.p.getZ(a)*sd+z);
+    this.n.push(U.n.getX(a),ny,U.n.getZ(a));
+    this.c.push(cc.r,cc.g,cc.b);
+  }
+};
+Merger.prototype.build=function(mat){
+  var g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.Float32BufferAttribute(this.p,3));
+  g.setAttribute('normal',new THREE.Float32BufferAttribute(this.n,3));
+  g.setAttribute('color',new THREE.Float32BufferAttribute(this.c,3));
+  var m=new THREE.Mesh(g,mat); m.castShadow=true; m.receiveShadow=true; return m;
+};
+
+/* ชิ้นส่วนของถนน 1 ช่วง (1 กม. = กว้าง 2 ปุ่มตามแกน x) ตามขั้นงาน 1..4 */
+function segX(i){return -30+2*i;}
+function segPieces(i,s0,s1){
+  var P=[], x=segX(i)+1, lm=lmAt(i), river=isRiver(i);
+  function add(z0,z1,y,h,hex,w,xc){for(var z=z0;z<z1;z+=2){P.push({x:xc===undefined?x:xc,y:y,z:z+1,w:w||2,h:h,d:2,hex:hex,layer:s});}}
+  for(var s=s0+1;s<=s1;s++){
+    if(river){
+      if(s===1){P.push({x:x,y:0.8,z:-2,w:1.2,h:0.6,d:1.2,hex:COL.pier,layer:s});P.push({x:x,y:0.8,z:2,w:1.2,h:0.6,d:1.2,hex:COL.pier,layer:s});}
+      if(s===2) add(-4,4,1.4,0.4,COL.concrete);
+      if(s===3){P.push({x:x,y:1.8,z:-3.7,w:2,h:0.6,d:0.6,hex:COL.white,layer:s});P.push({x:x,y:1.8,z:3.7,w:2,h:0.6,d:0.6,hex:COL.white,layer:s});}
+    }else{
+      if(s===1){ add(-5,5,0.6,0.4,COL.sub);
+        if(lm&&lm.key==='slope'){[-5.5,5.5].forEach(function(z){P.push({x:x-0.5,y:0.6,z:z,w:1,h:0.4,d:1,hex:COL.rip[i%3],layer:s});P.push({x:x+0.5,y:0.6,z:z,w:1,h:0.4,d:1,hex:COL.rip[(i+1)%3],layer:s});});}
+        if(lm&&lm.key==='culvert'){[-5.45,5.45].forEach(function(z){P.push({x:x,y:0.6,z:z,w:1.8,h:1.0,d:0.9,hex:COL.concrete,layer:s});P.push({x:x,y:0.66,z:z+(z<0?-0.42:0.42),w:1.0,h:0.62,d:0.08,hex:'#1B2226',layer:s});});}
+      }
+      if(s===2) add(-4,4,1.0,0.4,COL.subb);
+      if(s===3) add(-3,3,1.4,0.4,COL.base);
+    }
+    if(s===4){
+      add(-3,3,1.8,0.3,COL.asph);
+      [-2.75,2.75].forEach(function(z){P.push({x:x,y:2.1,z:z,w:2,h:0.05,d:0.2,hex:COL.white,layer:s,flat:true});});
+      P.push({x:x,y:2.1,z:0,w:1,h:0.05,d:0.2,hex:COL.yellow,layer:s,flat:true});
+      if(lm&&lm.key==='rail'){[-3.25,3.25].forEach(function(z){P.push({x:x-0.5,y:2.1,z:z,w:0.2,h:0.55,d:0.2,hex:COL.pier,layer:s});P.push({x:x+0.5,y:2.1,z:z,w:0.2,h:0.55,d:0.2,hex:COL.pier,layer:s});P.push({x:x,y:2.45,z:z,w:2,h:0.18,d:0.12,hex:'#D5DADE',layer:s,flat:true});});}
+      if(lm&&lm.key==='sensor'){var sx=x-0.5;P.push({x:sx,y:0.6,z:-6.5,w:0.3,h:3.4,d:0.3,hex:COL.pier,layer:s});P.push({x:sx,y:3.3,z:-6.5,w:0.9,h:0.6,d:0.6,hex:COL.white,layer:s});P.push({x:sx,y:4.0,z:-6.5,w:1.4,h:0.1,d:1.2,hex:'#1E3E7A',layer:s,flat:true});}
+    }
+  }
+  return P;
+}
+/* ปุ่มกลมด้านบนของชั้นที่มองเห็น */
+function segStuds(i,stage,out){
+  if(isRiver(i)) return;
+  var x0=segX(i), lm=lmAt(i);
+  function row(zs){[x0+0.5,x0+1.5].forEach(function(x){zs.forEach(function(z){out.push([x,z]);});});}
+  var tops={1:[0.6,1.0],2:[1.0,1.4],3:[1.4,1.8]};
+  if(stage>=4){ row([-4.5,4.5]); row([-3.5,3.5]); }
+  else if(stage===3){ row([-4.5,4.5]); row([-3.5,3.5]); row([-2.5,-1.5,-0.5,0.5,1.5,2.5]); }
+  else if(stage===2){ row([-4.5,4.5]); row([-3.5,-2.5,-1.5,-0.5,0.5,1.5,2.5,3.5]); }
+  else if(stage===1){ row([-4.5,-3.5,-2.5,-1.5,-0.5,0.5,1.5,2.5,3.5,4.5]); }
+  if(stage>=1&&lm&&lm.key==='slope') row([-5.5,5.5]);
+}
+function studY(i,stage,z){var a=Math.abs(z);if(a>=5)return 1.0;if(stage>=4)return a>=4?1.0:1.4;if(stage===3)return a>=4?1.0:(a>=3?1.4:1.8);if(stage===2)return a>=4?1.0:1.4;return 1.0;}
+
+function buildWorld(){
+  var M=new Merger(), studs=[], R=rng(2570), cover={};
+  function key(x,z){return x.toFixed(1)+','+z.toFixed(1);}
+  function covRect(x0,x1,z0,z1){for(var x=Math.floor(x0)+0.5;x<x1;x+=1)for(var z=Math.floor(z0)+0.5;z<z1;z+=1)cover[key(x,z)]=1;}
+  /* แผ่นฐานหญ้า */
+  M.box(0,0,0,76,0.6,28,COL.grass,0);
+  /* ลำน้ำ 2 สาย + ลำห้วยที่ท่อลอด */
+  LANDMARKS.forEach(function(l){ if(!l.river) return;
+    var x0=segX(l.seg[0]), x1=segX(l.seg[l.seg.length-1])+2;
+    for(var x=x0;x<x1;x+=2)for(var z=-14;z<14;z+=2) M.box(x+1,0.6,z+1,2,0.2,2,COL.water);
+    covRect(x0,x1,-14,14);
+  });
+  var cx=segX(10)+1;
+  for(var z=-14;z<-6;z+=1){M.box(cx,0.6,z+0.5,1,0.12,1,COL.water);} for(z=6;z<14;z+=1){M.box(cx,0.6,z+0.5,1,0.12,1,COL.water);}
+  covRect(cx-0.5,cx+0.5,-14,-6); covRect(cx-0.5,cx+0.5,6,14);
+  /* ถนน */
+  for(var i=0;i<HW.total;i++){
+    var st=i<HW.done?4:(i===HW.done?HW.stage:0);
+    if(st>0){
+      segPieces(i,0,st).forEach(function(p){M.box(p.x,p.y,p.z,p.w,p.h,p.d,p.hex,p.flat?0.02:0.05);});
+      if(!isRiver(i)) covRect(segX(i),segX(i)+2,-5,5);
+      var L=lmAt(i); if(L&&(L.key==='slope'||L.key==='culvert')){covRect(segX(i),segX(i)+2,-6,-5);covRect(segX(i),segX(i)+2,5,6);} if(L&&L.key==='sensor'&&st>=4) covRect(segX(i),segX(i)+1,-7,-6);
+      var ss=[]; segStuds(i,st,ss); ss.forEach(function(q){studs.push({x:q[0],y:studY(i,st,q[1]),z:q[1],hex:st>=4&&Math.abs(q[1])<5&&Math.abs(q[1])>=4?COL.sub:null,i:i,st:st});});
+    }
+    /* หลักสำรวจแนวทางช่วงอนาคต */
+    if(i>HW.done&&i%2===0&&!isRiver(i)){[-5.5,5.5].forEach(function(z){M.box(segX(i)+0.5,0.6,z,0.3,1.3,0.3,COL.orange);M.box(segX(i)+0.5,1.9,z,0.3,0.2,0.3,COL.white);covRect(segX(i),segX(i)+1,z-0.5,z+0.5);});}
+  }
+  /* สีปุ่มตามชั้นที่อยู่ */
+  studs.forEach(function(s){ if(s.hex) return; var y=s.y; s.hex=y<=1.0?COL.sub:(y<=1.4?COL.subb:COL.base); if(Math.abs(s.z)>=5) s.hex=COL.rip[Math.abs(Math.round(s.x))%3]; });
+  /* กรวยจราจรรอบหน้างานวันนี้ */
+  if(HW.done<HW.total&&!isRiver(HW.done)){var cxx=segX(HW.done);[cxx+0.5,cxx+1.5].forEach(function(x){[-6.5,6.5].forEach(function(z){M.box(x,0.6,z,0.5,0.75,0.5,COL.orange);M.box(x,1.05,z,0.52,0.14,0.52,COL.white,0.03);covRect(x-0.5,x+0.5,z-0.5,z+0.5);});});}
+  /* ป้ายแนะนำทางต้นสาย */
+  M.box(-31.5,0.6,-8.5,0.4,5.8,0.4,COL.pier); M.box(-26.5,0.6,-8.5,0.4,5.8,0.4,COL.pier); covRect(-32,-26,-9,-8);
+  /* ต้นไม้ (เว้นระยะจากถนน ลำน้ำ และป้าย) */
+  function clearOf(x,z){
+    if(Math.abs(z)<7.5&&x>=segX(0)-1&&x<=segX(HW.total)) return false;
+    if(Math.abs(x)>36||Math.abs(z)>12.5) return false;
+    for(var k=0;k<LANDMARKS.length;k++){var l=LANDMARKS[k];if(!l.river&&l.key!=='culvert')continue;var a=segX(l.seg[0])-1.5,b=segX(l.seg[l.seg.length-1])+3.5;if(x>a&&x<b)return false;}
+    if(x>-34&&x<-24&&z<-5) return false;
+    return true;
+  }
+  function tree(x,z,col){
+    M.box(x,0.6,z,1,1.2,1,COL.trunk); M.box(x,1.8,z,1,1.2,1,COL.trunk);
+    M.box(x,3.0,z,3,1.2,3,col); M.box(x,4.2,z,1,1.2,1,col);
+    for(var a=-1;a<=1;a++)for(var b=-1;b<=1;b++){ if(a===0&&b===0) continue; studs.push({x:x+a,y:4.2,z:z+b,hex:col}); }
+    studs.push({x:x,y:5.4,z:z,hex:col}); covRect(x-0.5,x+0.5,z-0.5,z+0.5);
+  }
+  var placed=[];
+  for(var t=0;t<260&&placed.length<34;t++){
+    var tx=Math.floor(R()*72)-36+0.5, tz=(R()<0.5?-1:1)*(Math.floor(R()*5)+8)+0.5;
+    if(!clearOf(tx,tz)) continue;
+    if(tz>0&&(tz<10.5||R()<0.5)) continue; /* ฝั่งใกล้กล้อง: ต้นไม้ห่างถนนและบางลง ไม่บังสิ่งที่ต้องดู */
+    if(placed.some(function(p){return Math.abs(p[0]-tx)<4&&Math.abs(p[1]-tz)<4;})) continue;
+    placed.push([tx,tz]); tree(tx,tz,COL.leaf[placed.length%3]);
+  }
+  /* ต้นไม้ในแนวทางที่ยังไม่ถางช่วงอนาคต */
+  for(i=HW.done+4;i<HW.total;i++){ if(isRiver(i)||R()<0.45) continue; var pz=[-2.5,0.5,2.5][Math.floor(R()*3)]; tree(segX(i)+(R()<0.5?0.5:1.5),pz,COL.leaf[i%3]); }
+  /* ปุ่มบนหญ้าที่ว่าง (มีดอกไม้สีสดประปราย) */
+  for(var gx=-37.5;gx<38;gx+=1)for(var gz=-13.5;gz<14;gz+=1){
+    if(cover[key(gx,gz)]) continue;
+    var f=R(); studs.push({x:gx,y:0.6,z:gz,hex:f<0.012?'#E23B3B':(f<0.022?'#FFD23F':(f<0.028?'#FFFFFF':COL.grassStud))});
+  }
+  return {M:M,studs:studs};
+}
+
+function buildScene(){
+  var stage=document.getElementById('stage'); if(!stage||G.renderer) return;
+  var gl=document.createElement('canvas'); gl.className='gl'; gl.setAttribute('role','img');
+  gl.setAttribute('aria-label','ฉาก 3 มิติของทางหลวงที่สร้างไปแล้ว '+HW.done+' จาก '+HW.total+' กิโลเมตร');
+  stage.insertBefore(gl,stage.firstChild);
+  var r=new THREE.WebGLRenderer({canvas:gl,antialias:true,alpha:true});
+  r.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  r.outputEncoding=THREE.sRGBEncoding; r.toneMapping=THREE.ACESFilmicToneMapping; r.toneMappingExposure=1.0;
+  r.shadowMap.enabled=true; r.shadowMap.type=THREE.PCFShadowMap;
+  G.renderer=r; G.scene=new THREE.Scene();
+  /* แสงสะท้อนจากท้องฟ้า (ทำให้พลาสติกดูเงา) */
+  var cv=document.createElement('canvas'); cv.width=256; cv.height=128; var cx=cv.getContext('2d');
+  var gr=cx.createLinearGradient(0,0,0,128); gr.addColorStop(0,'#6FB6FF'); gr.addColorStop(0.48,'#EAF6FF'); gr.addColorStop(0.52,'#C9CFC4'); gr.addColorStop(1,'#5E6A5A');
+  cx.fillStyle=gr; cx.fillRect(0,0,256,128); cx.fillStyle='#FFFFFF'; cx.beginPath(); cx.arc(70,30,10,0,7); cx.fill();
+  var et=new THREE.CanvasTexture(cv); et.mapping=THREE.EquirectangularReflectionMapping; et.encoding=THREE.sRGBEncoding;
+  var pm=new THREE.PMREMGenerator(r); G.scene.environment=pm.fromEquirectangular(et).texture; pm.dispose(); et.dispose();
+  /* แสง 3 ชั้น: แดดอุ่น + ฟ้า/พื้น + rim เย็นด้านหลัง */
+  var sun=new THREE.DirectionalLight(lin('#FFE9C7'),1.25); sun.position.set(-18,34,22); sun.castShadow=true;
+  sun.shadow.mapSize.set(2048,2048); sun.shadow.radius=3; sun.shadow.bias=-0.0005;
+  var sc=sun.shadow.camera; sc.left=-42; sc.right=42; sc.top=24; sc.bottom=-24; sc.near=1; sc.far=100;
+  G.scene.add(sun);
+  G.scene.add(new THREE.HemisphereLight(lin('#D6ECFF'),lin('#6B7A55'),0.5));
+  var rim=new THREE.DirectionalLight(lin('#BFD8FF'),0.35); rim.position.set(10,14,-30); G.scene.add(rim);
+  G.mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.33,metalness:0,envMapIntensity:0.75});
+  G.studGeo=new THREE.CylinderGeometry(0.3,0.3,0.17,14);
+  G.studMat=new THREE.MeshStandardMaterial({roughness:0.3,metalness:0,envMapIntensity:0.8});
+  G.cam=new THREE.PerspectiveCamera(38,1,0.5,300);
+  buildSign(); buildMachines(); rebuildStatic(); resetView(true);
+  /* ปรับขนาดตามกล่อง */
+  G.ro=new ResizeObserver(function(){var w=stage.clientWidth,h=stage.clientHeight;if(!w||!h)return;r.setSize(w,h,false);G.cam.aspect=w/h;G.cam.updateProjectionMatrix();});
+  G.ro.observe(stage);
+  bindControls(gl);
+  G.t0=performance.now();
+  (function loop(){ G.raf=requestAnimationFrame(loop); tick(); r.render(G.scene,G.cam); })();
+}
+function rebuildStatic(){
+  if(G.static){G.scene.remove(G.static);G.static.geometry.dispose();}
+  if(G.studs){G.scene.remove(G.studs);G.studs.dispose&&G.studs.dispose();}
+  var W=buildWorld();
+  G.static=W.M.build(G.mat); G.scene.add(G.static);
+  var n=W.studs.length, im=new THREE.InstancedMesh(G.studGeo,G.studMat,n), m=new THREE.Matrix4();
+  W.studs.forEach(function(s,k){m.makeTranslation(s.x,s.y+0.085,s.z);im.setMatrixAt(k,m);im.setColorAt(k,lin(s.hex));});
+  im.instanceMatrix.needsUpdate=true; if(im.instanceColor) im.instanceColor.needsUpdate=true;
+  im.receiveShadow=true; G.studs=im; G.scene.add(im); G.studCount=n;
+  placeMachines();
+}
+/* ป้ายแนะนำทาง: ข้อความวาดด้วย CanvasTexture ฟอนต์ Sarabun */
+function buildSign(){
+  var cv=document.createElement('canvas'); cv.width=1024; cv.height=512; G.signCv=cv;
+  var tex=new THREE.CanvasTexture(cv); tex.encoding=THREE.sRGBEncoding; tex.anisotropy=4; G.signTex=tex;
+  var mesh=new THREE.Mesh(new THREE.BoxGeometry(6,3,0.25),[
+    new THREE.MeshStandardMaterial({color:lin('#0E6B4A'),roughness:0.4}),new THREE.MeshStandardMaterial({color:lin('#0E6B4A'),roughness:0.4}),
+    new THREE.MeshStandardMaterial({color:lin('#0E6B4A'),roughness:0.4}),new THREE.MeshStandardMaterial({color:lin('#0E6B4A'),roughness:0.4}),
+    new THREE.MeshStandardMaterial({map:tex,roughness:0.45}),new THREE.MeshStandardMaterial({color:lin('#0E6B4A'),roughness:0.4})]);
+  mesh.position.set(-29,5.1,-8.5); mesh.castShadow=true; G.sign=mesh; G.scene.add(mesh);
+  drawSign(); if(document.fonts&&document.fonts.ready) document.fonts.ready.then(drawSign);
+}
+function drawSign(){
+  var c=G.signCv.getContext('2d'); c.fillStyle='#0E6B4A'; c.fillRect(0,0,1024,512);
+  c.strokeStyle='#fff'; c.lineWidth=16; c.beginPath(); c.rect(24,24,976,464); c.stroke();
+  c.fillStyle='#fff'; c.textAlign='center'; c.font='700 96px Sarabun, sans-serif'; c.fillText('Site English Hwy',512,200);
+  c.font='600 84px Sarabun, sans-serif'; c.fillText('กม. '+HW.done+' / '+HW.total,512,340);
+  c.font='500 44px Sarabun, sans-serif'; c.fillText(rankOf(HW.done).th,512,430);
+  G.signTex.needsUpdate=true;
+}
+/* เครื่องจักร (แยก mesh เพราะต้องขยับ) */
+function part(geo,hex,x,y,z,grp,rough){var m=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:lin(hex),roughness:rough||0.32,envMapIntensity:0.8}));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;grp.add(m);return m;}
+function buildMachines(){
+  var ro=new THREE.Group(), B=THREE.BoxGeometry, C=THREE.CylinderGeometry;
+  part(new B(2.0,0.9,1.7),'#F2B705',0.2,0.75,0,ro);
+  part(new B(1.1,0.9,1.4),'#25343D',0.5,1.65,0,ro,0.12);
+  part(new B(1.3,0.18,1.6),'#F2B705',0.5,2.18,0,ro);
+  var drum=part(new C(0.55,0.55,1.9,20),'#8C939A',-1.35,0.55,0,ro); drum.rotation.x=Math.PI/2;
+  var wh=part(new C(0.45,0.45,1.8,16),'#1E2226',1.1,0.45,0,ro); wh.rotation.x=Math.PI/2;
+  G.roller=ro; G.drum=drum; G.scene.add(ro);
+  buildPaver(); buildBackhoe(); buildWorkers();
+}
+/* รวม geometry ใด ๆ (เช่น ทรงกระบอก) เข้า Merger พร้อมหมุน/ย้าย */
+Merger.prototype.geo=function(geo,mtx,hex){
+  var g=geo.index?geo.toNonIndexed():geo, p=g.attributes.position, n=g.attributes.normal, c=lin(hex), v=new THREE.Vector3(), nm=new THREE.Matrix3().getNormalMatrix(mtx);
+  for(var k=0;k<p.count;k++){
+    v.set(p.getX(k),p.getY(k),p.getZ(k)).applyMatrix4(mtx); this.p.push(v.x,v.y,v.z);
+    v.set(n.getX(k),n.getY(k),n.getZ(k)).applyMatrix3(nm).normalize(); this.n.push(v.x,v.y,v.z);
+    this.c.push(c.r,c.g,c.b);
+  }
+};
+/* กล่องที่หมุนได้ (ใช้กับแขนขุด) */
+Merger.prototype.rbox=function(x,y,z,w,h,d,rz,hex){
+  var m=new THREE.Matrix4().makeRotationZ(rz); m.setPosition(x,y,z);
+  this.geo(new THREE.BoxGeometry(w,h,d),m,hex);
+};
+/* ทรงกระบอกวางตามแกน z (ล้อ ลูกบด) หรือแกน x */
+Merger.prototype.cyl=function(r,len,x,y,z,axis,hex){
+  var m=new THREE.Matrix4(); if(axis==='z') m.makeRotationX(Math.PI/2); else m.makeRotationZ(Math.PI/2);
+  m.setPosition(x,y,z); this.geo(new THREE.CylinderGeometry(r,r,len,16),m,hex);
+};
+function machineMesh(M){var mesh=M.build(G.mat);return mesh;}
+
+/* เครื่องปูแอสฟัลต์ (หน้าเครื่องหันไปทาง +x = ทิศที่ถนนกำลังต่อ) */
+function buildPaver(){
+  var M=new Merger(), Y='#F2B705', D='#2A2F33', S='#8C939A';
+  [-0.8,0.8].forEach(function(z){M.box(0.5,0,z,2.6,0.5,0.45,D,0);});
+  M.box(0.5,0.5,0,2.2,0.9,2.0,Y,0);
+  M.box(2.3,0.5,0,0.8,0.4,2.2,Y,0);
+  [-1.05,1.05].forEach(function(z){M.box(2.3,0.9,z,0.8,0.5,0.14,Y,0);});
+  M.box(2.66,0.9,0,0.1,0.5,2.2,Y,0);
+  M.box(2.28,0.9,0,0.6,0.25,1.9,'#1C1F22',0);
+  M.box(0.5,1.4,0,1.2,0.15,2.0,S,0);
+  M.box(0.3,1.55,0.3,0.5,0.45,0.5,D,0);
+  M.box(0.95,1.55,-0.4,0.35,0.5,0.6,D,0);
+  [[-0.05,-0.9],[-0.05,0.9],[1.05,-0.9],[1.05,0.9]].forEach(function(q){M.box(q[0],1.55,q[1],0.1,1.1,0.1,Y,0);});
+  M.box(0.5,2.65,0,1.4,0.12,2.1,Y,0);
+  M.box(-1.05,0.08,0,0.6,0.5,3.0,S,0);
+  M.cyl(0.15,3.0,-0.55,0.3,0,'z','#6B7176');
+  G.paver=machineMesh(M); G.scene.add(G.paver);
+}
+/* รถขุดตักหน้าขุดหลัง (backhoe) — หน้ารถหันไป -x แขนขุดอยู่ท้ายรถด้าน +x */
+function buildBackhoe(){
+  var M=new Merger(), Y='#F2B705', D='#1E2226', G2='#25343D';
+  M.cyl(0.6,0.4,0.7,0.6,-0.95,'z',D); M.cyl(0.6,0.4,0.7,0.6,0.95,'z',D);
+  M.cyl(0.42,0.35,-0.8,0.42,-0.9,'z',D); M.cyl(0.42,0.35,-0.8,0.42,0.9,'z',D);
+  M.box(0,0.5,0,2.4,0.6,1.5,Y,0);
+  M.box(-0.9,1.1,0,0.9,0.5,1.2,Y,0);
+  M.box(-0.95,1.6,0.35,0.12,0.4,0.12,'#555B60',0);
+  M.box(0.35,1.1,0,1.0,1.1,1.2,G2,0);
+  [[-0.12,-0.62],[-0.12,0.62],[0.82,-0.62],[0.82,0.62]].forEach(function(q){M.box(q[0],1.1,q[1],0.1,1.1,0.1,Y,0);});
+  M.box(0.35,2.2,0,1.25,0.12,1.4,Y,0);
+  [-0.85,0.85].forEach(function(z){M.box(-1.2,0.75,z,1.2,0.16,0.14,Y,0);});
+  M.box(-1.95,0.12,0,0.5,0.55,1.9,'#D9A400',0);
+  M.box(1.3,0.6,0,0.4,0.6,0.9,Y,0);
+  /* กองดินที่ขุดขึ้นมา */
+  [[2.7,-0.9],[3.3,-0.9],[3.0,-0.2],[2.6,0.3],[3.4,0.3]].forEach(function(q,i){M.box(q[0],0,q[1],0.7,0.35,0.7,i%2?'#8A5A2E':'#9A6534');});
+  M.box(3.0,0.35,-0.5,0.7,0.3,0.7,'#8A5A2E');
+  G.backhoe=machineMesh(M); G.scene.add(G.backhoe);
+  /* แขนขุด: แยก mesh เพราะต้องขยับ — จุดหมุนอยู่ที่ฐานแขน */
+  var A=new Merger();
+  A.rbox(0.62,0.55,0,1.7,0.28,0.3,0.72,Y);
+  A.rbox(1.62,0.35,0,1.6,0.24,0.26,-1.05,Y);
+  A.box(2.05,-0.55,0,0.55,0.5,0.6,'#D9A400',0);
+  A.box(2.05,-0.62,0,0.6,0.08,0.66,'#555B60',0);
+  G.bArm=machineMesh(A); G.bArm.position.set(1.45,1.15,0); G.backhoe.add(G.bArm);
+}
+/* คนงาน (ออกแบบใหม่ ตัวทรงเหลี่ยม เสื้อกั๊กสะท้อนแสง หมวกนิรภัย) — ด้านหน้าหันไปทาง +z
+   ยุบเหลือ 2–3 mesh ต่อคน: ลำตัว · ศีรษะ · แขนที่ใช้ทำท่า */
+function worker(o){
+  var grp=new THREE.Group(), B=new Merger(), H=new Merger();
+  [-0.14,0.14].forEach(function(x){B.box(x,0,0.02,0.22,0.18,0.3,'#3A2A1E',0);B.box(x,0.18,0,0.22,0.42,0.24,'#2F4A6B',0);});
+  B.box(0,0.6,0,0.6,0.46,0.34,o.shirt||'#E9EDF0',0);
+  B.box(0,0.62,0,0.64,0.4,0.38,'#F07A22',0);
+  B.box(0,0.76,0,0.66,0.07,0.4,'#E8EEF2',0);
+  var arms=o.wave?[-0.38]:[-0.38,0.38];
+  arms.forEach(function(x){B.box(x,0.62,0,0.14,0.44,0.16,o.shirt||'#E9EDF0',0);B.box(x,0.52,0,0.13,0.1,0.14,o.skin,0);});
+  if(o.tool==='rake'){B.box(0.46,0.02,0.18,0.06,1.4,0.06,'#8B5A2B',0);B.box(0.46,0.02,0.36,0.5,0.08,0.12,'#5E6469',0);}
+  if(o.tool==='tablet'){B.box(0,0.7,0.26,0.36,0.26,0.04,'#1E2A33',0);}
+  H.box(0,1.06,0,0.3,0.3,0.3,o.skin,0);
+  H.box(-0.07,1.18,0.151,0.05,0.05,0.01,'#1E2226',0); H.box(0.07,1.18,0.151,0.05,0.05,0.01,'#1E2226',0);
+  H.box(0,1.36,0,0.36,0.14,0.36,o.hat,0); H.box(0,1.34,0.04,0.44,0.04,0.46,o.hat,0);
+  grp.add(B.build(G.mat)); grp.add(H.build(G.mat));
+  if(o.wave){
+    var A=new Merger();
+    A.box(0,-0.44,0,0.14,0.44,0.16,o.shirt||'#E9EDF0',0); A.box(0,-0.54,0,0.13,0.1,0.14,o.skin,0);
+    A.box(0,-1.0,0,0.05,0.5,0.05,'#8B5A2B',0); A.box(0.18,-1.05,0,0.34,0.24,0.02,'#E23B3B',0);
+    var arm=A.build(G.mat); arm.position.set(0.38,1.06,0); grp.add(arm); grp.userData.arm=arm;
+  }
+  G.scene.add(grp); return grp;
+}
+function buildWorkers(){
+  G.wFlag=worker({skin:'#C98E62',hat:'#F2B705',wave:true});
+  G.wRake=worker({skin:'#A86F4C',hat:'#F07A22',tool:'rake'});
+  G.wSurvey=worker({skin:'#E0B08A',hat:'#F4F4F0',shirt:'#5B8DB8',tool:'tablet'});
+}
+function topY(i){ if(i<0) return 0.6; if(i<HW.done) return 2.1; var s=HW.stage; return isRiver(i)&&s<2?0.8:[0.6,1.0,1.4,1.8,2.1][s]; }
+function placeMachines(){
+  var i=Math.min(HW.done,HW.total-1), active=HW.done<HW.total;
+  G.roller.visible=active&&!(isRiver(i)&&HW.stage<2);
+  /* รถบดทำงานบนหน้างานวันนี้ ไม่ถอยเข้าช่วงที่ปูยางแล้ว: ท้ายล้อบด (−2.13 จากจุดวาง) + ระยะแกว่ง อยู่หน้าเส้นแบ่งเสมอ */
+  G.rSway=0.3; G.rBase={x:segX(i)+0.2+2.13+G.rSway,y:topY(i),z:-1.2};
+  G.roller.position.set(G.rBase.x,G.rBase.y,G.rBase.z);
+  /* เครื่องปู + คนงานเกลี่ย อยู่บนผิวทางที่ปูเสร็จแล้วเท่านั้น (ตัวรถปูยาว x−1.35…x+2.71)
+   * ปกติถอยห่างหน้างาน 6 หน่วย · ช่วงแรกที่ทางยังสั้น ลดระยะลงจนชิดเส้นแบ่งหน้างาน แต่ไม่ล้นหัวถนน
+   * วันแรก (ทางเสร็จ 1 กม. = 2 หน่วย) รถปูยาวเกินผิวทาง จึงยังไม่แสดง */
+  var S=segX(i), px=Math.max(S-6, segX(0)+1.35), okP=HW.done>0&&px+2.71<=S+0.1;
+  G.paver.visible=G.wRake.visible=okP;
+  if(okP){ G.paver.position.set(px,2.1,-1.5); G.wRake.position.set(Math.max(px-1.7,segX(0)+0.7),2.1,1.3); G.wRake.rotation.y=-0.7; }
+  /* คนโบกธงอยู่ข้างทางหน้างานวันนี้ หันหน้าออกหาผู้ชม/รถที่สัญจร */
+  G.wFlag.visible=active; G.wFlag.position.set(segX(i)-0.4,0.6,6.7); G.wFlag.rotation.y=0.35;
+  /* รถขุด + ช่างสำรวจ อยู่ช่วงข้างหน้าที่กำลังเตรียมพื้นที่ (ข้ามช่วงลำน้ำ)
+   * อยู่ช่วงที่ 3 ถัดจากหน้างาน (ปุ้งกี๋หน้ารถ −2.2 จากจุดวาง) ให้ห่างหัวรถบด ≥0.3 หน่วย · ต้นไม้แนวทางอนาคตเริ่มช่วงถัดจากรถขุด */
+  var k=HW.done+3; while(k<HW.total&&(isRiver(k-1)||isRiver(k)||isRiver(k+1)||isRiver(k+2))) k++;   /* ตัวรถ+แขนคลุมช่วง k−1…k+2 ห้ามคร่อมลำน้ำ */
+  var okB=active&&k<HW.total; G.backhoe.visible=G.wSurvey.visible=okB;
+  if(okB){ G.backhoe.position.set(segX(k)+1.0,0.6,0.2); G.wSurvey.position.set(segX(k)+2.1,0.6,-6.8); G.wSurvey.rotation.y=0.2; }
+}
+function tick(){
+  stepTween();
+  var t=(performance.now()-G.t0)/1000;
+  if(!REDUCED&&G.roller.visible&&!HW.busy){ var dx=Math.sin(t*0.7)*G.rSway; G.roller.position.x=G.rBase.x+dx; G.drum.rotation.y=-dx*2; }
+  if(!REDUCED){
+    if(G.bArm) G.bArm.rotation.z=-0.25+Math.sin(t*1.1)*0.3;
+    var fa=G.wFlag&&G.wFlag.userData.arm; if(fa) fa.rotation.z=2.5+Math.sin(t*3.2)*0.35;
+  } else { var fb=G.wFlag&&G.wFlag.userData.arm; if(fb) fb.rotation.z=2.5; }
+  if(G.drops) stepDrops();
+}
+/* กล้อง: หมุนรอบหน้างานวันนี้ */
+/* มุมกล้องเริ่มต้น (ตามขนาดจอ) */
+function homeView(){
+  var i=Math.min(HW.done,HW.total-1), v={tx:segX(i)+1,ty:1.6,tz:0,az:0.55,pol:1.0,rad:38};
+  if(stageNarrow()){v.az=1.05;v.pol=0.88;v.rad=40;} return v;
+}
+/* กลับมุมเริ่มต้น · กดจากปุ่ม = กล้องเลื่อนกลับอย่างนุ่มนวล 0.7 วินาที ให้เห็นว่ากำลังกลับ */
+function resetView(first,animate){
+  var to=homeView();
+  if(animate&&!REDUCED&&G.view){
+    var from={}; for(var k in to) from[k]=G.view[k];
+    var d=to.az-from.az; d=Math.atan2(Math.sin(d),Math.cos(d)); to.az=from.az+d;   /* หมุนทางที่สั้นกว่า */
+    G.tween={from:from,to:to,t0:performance.now(),dur:700};
+  } else { G.tween=null; G.view=to; applyView(); }
+  setViewDirty(false);
+}
+/* ปุ่ม "มุมมองเริ่มต้น" กดได้เมื่อผู้ใช้หมุน/ซูมไปแล้วเท่านั้น — กันกดแล้วไม่เห็นอะไรเปลี่ยน */
+function setViewDirty(on){
+  G.viewDirty=on; var b=document.getElementById('hwView'); if(b) b.disabled=!on;
+}
+function stepTween(){
+  var w=G.tween; if(!w) return;
+  var k=Math.min(1,(performance.now()-w.t0)/w.dur), e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+  for(var p in w.to) G.view[p]=w.from[p]+(w.to[p]-w.from[p])*e;
+  applyView(); if(k>=1) G.tween=null;
+}
+function stageNarrow(){var s=document.getElementById('stage');return s&&s.clientWidth<600;}
+function applyView(){var v=G.view,s=Math.sin(v.pol);G.cam.position.set(v.tx+v.rad*s*Math.sin(v.az),v.ty+v.rad*Math.cos(v.pol),v.tz+v.rad*s*Math.cos(v.az));G.cam.lookAt(v.tx,v.ty,v.tz);}
+function bindControls(el){
+  var pts={},last=0;
+  el.addEventListener('pointerdown',function(e){pts[e.pointerId]={x:e.clientX,y:e.clientY};try{el.setPointerCapture(e.pointerId);}catch(_){}});
+  el.addEventListener('pointermove',function(e){
+    var p=pts[e.pointerId]; if(!p) return; var ids=Object.keys(pts);
+    if(ids.length===1){ G.view.az-=(e.clientX-p.x)*0.008; if(e.pointerType==='mouse') G.view.pol=Math.max(0.45,Math.min(1.35,G.view.pol-(e.clientY-p.y)*0.006)); }
+    else if(ids.length===2){ var o=pts[ids[0]==e.pointerId?ids[1]:ids[0]]; var d0=Math.hypot(p.x-o.x,p.y-o.y),d1=Math.hypot(e.clientX-o.x,e.clientY-o.y); if(d0>0) G.view.rad=Math.max(16,Math.min(75,G.view.rad*d0/d1)); }
+    pts[e.pointerId]={x:e.clientX,y:e.clientY}; G.tween=null; applyView(); if(!G.viewDirty) setViewDirty(true);
+  });
+  function up(e){delete pts[e.pointerId];}
+  el.addEventListener('pointerup',up); el.addEventListener('pointercancel',up);
+  el.addEventListener('wheel',function(e){e.preventDefault();G.tween=null;G.view.rad=Math.max(16,Math.min(75,G.view.rad*(1+e.deltaY*0.001)));applyView();if(!G.viewDirty) setViewDirty(true);},{passive:false});
+}
+/* ---------- จบภารกิจ: ก้อนต่อหล่นลงมาประกอบทีละชิ้น ---------- */
+function completeDay(){
+  var btn=document.getElementById('hwDone');
+  if(HW.busy||HW.done>=HW.total||(!G.renderer&&!ST.mode2d)) return;
+  if(IN_GAS&&!HW.pending) return;   /* เว็บแอปจริง: สร้างได้เฉพาะเมื่อฝึกครบวันแล้ว */
+  if(ST.mode2d){ HW.busy=true; btn.disabled=true; btn.classList.add('busy'); btn.querySelector('span').textContent='กำลังก่อสร้าง…'; audio(); sfxSnap();
+    var sn=document.querySelector('#hw2d .seg-now'); if(sn&&!REDUCED) sn.classList.add('grow'); setTimeout(finishDay,REDUCED?0:700); return; }
+  HW.busy=true; btn.disabled=true; btn.classList.add('busy'); btn.querySelector('span').textContent='กำลังก่อสร้าง…';
+  audio();
+  var pieces=segPieces(HW.done,HW.stage,4);
+  if(REDUCED){ sfxSnap(); finishDay(); return; }
+  G.drops=[]; var now=performance.now();
+  pieces.forEach(function(p,k){
+    var m=new THREE.Mesh(new THREE.BoxGeometry(p.w-(p.flat?0.02:0.05),p.h-0.012,p.d-(p.flat?0.02:0.05)),new THREE.MeshStandardMaterial({color:lin(p.hex),roughness:0.33,envMapIntensity:0.75}));
+    m.castShadow=true; m.visible=false; m.position.set(p.x,p.y+p.h/2+7,p.z); G.scene.add(m);
+    var delay=(p.layer-HW.stage-1)*420+(k%6)*70;
+    G.drops.push({m:m,y1:p.y+p.h/2,t0:now+delay,snd:false});
+  });
+}
+function stepDrops(){
+  var now=performance.now(), all=true;
+  G.drops.forEach(function(d){
+    var u=(now-d.t0)/340; if(u<0){all=false;return;} d.m.visible=true;
+    if(u>=1){ d.m.position.y=d.y1; if(!d.snd){d.snd=true;sfxSnap();} return; }
+    all=false; var e=1-Math.pow(1-u,3); d.m.position.y=d.y1+7*(1-e)+(u>0.85?Math.sin((u-0.85)/0.15*Math.PI)*0.12:0);
+  });
+  if(all){ var ds=G.drops; G.drops=null; setTimeout(function(){ds.forEach(function(d){G.scene.remove(d.m);d.m.geometry.dispose();d.m.material.dispose();});finishDay();},120); }
+}
+function finishDay(){
+  var before=rankOf(HW.done), newLm=lmAt(HW.done);
+  HW.done++; HW.stage=0; addXP(50);
+  if(IN_GAS){ HW.pending=false; try{localStorage.setItem(builtKey(),'1');}catch(e){} HW.stage=1; }
+  var lmDone=newLm&&newLm.seg[newLm.seg.length-1]===HW.done-1?newLm:null;
+  if(G.renderer){ rebuildStatic(); drawSign(); G.view.tx=segX(Math.min(HW.done,HW.total-1))+1; applyView(); } else render2D();
+  refreshHWText();
+  var after=rankOf(HW.done), up=after!==before;
+  sfxReward();
+  var btn=document.getElementById('hwDone'); HW.busy=false;
+  btn.classList.remove('busy'); btn.classList.add('done'); btn.querySelector('span').textContent='✓ ก่อสร้างเสร็จ';
+  setTimeout(function(){btn.classList.remove('done'); var st=hwDoneState(); btn.disabled=st.dis; btn.querySelector('span').textContent=st.txt;},2500);
+  var rw=document.getElementById('reward');
+  rw.innerHTML='<div class="rw-in"><div class="rw-brick" aria-hidden="true"><i></i><i></i></div><h4 id="rwTitle">+1 กม. · ทางหลวงยาว '+HW.done+' กม.</h4>'+
+    '<p>'+(IN_GAS?'ฝึกครบวันที่ '+(PROG?PROG.km:HW.done):'+50 XP')+' · '+(up?'<b>เลื่อนตำแหน่งเป็น '+esc(after.th)+'</b>':'ตำแหน่ง '+esc(after.th))+'</p>'+
+    (lmDone?'<p class="rw-unlock" style="--c:'+CATS[lmDone.cat].color+'">สร้างเสร็จ: '+esc(lmDone.th)+'</p>':'')+
+    '<button type="button" class="btn primary" id="rwOk">ไปต่อ</button></div>';
+  rw.hidden=false; var ok=document.getElementById('rwOk'); ok.focus({preventScroll:true});
+  ok.onclick=function(){rw.hidden=true; var b=document.getElementById('hwDone'); if(b&&!b.disabled) b.focus({preventScroll:true});};
+}
+function destroyHighway(){
+  musicStop();
+  if(!G.renderer) return;
+  cancelAnimationFrame(G.raf); if(G.ro) G.ro.disconnect();
+  G.scene.traverse(function(o){if(o.geometry)o.geometry.dispose();if(o.material){[].concat(o.material).forEach(function(m){if(m.map)m.map.dispose();m.dispose();});}});
+  G.renderer.dispose(); G={}; HW.busy=false;
+}
+/* ใช้ตรวจงบการเรนเดอร์ */
+function hwStats(){var meshes=0,casters=0;G.scene.traverse(function(o){if(o.isMesh){meshes++;if(o.castShadow)casters++;}});return {meshes:meshes,casters:casters,calls:G.renderer.info.render.calls,triangles:G.renderer.info.render.triangles,studs:G.studCount};}
+
+/* ================= ตัวควบคุมหน้าจอ ================= */
+function go(name){
+  if(!SCREENS[name]) return;
+  if(ST.listening) ST.listening.stop();
+  if(ST.screen==='highway'&&name!=='highway') destroyHighway();
+  var changed=ST.screen!==name; ST.screen=name;
+  if(changed) stopSpeak();   /* ไม่ให้เสียงพูดจากหน้าก่อนดังค้าง */
+  main.innerHTML=SCREENS[name]();
+  if(name==='today'){ ST.sh=null; ST.ls=null; }
+  if(name==='today') initToday();
+  if(name==='highway') initHighway();
+  if(name==='talk') initTalk();
+  if(name==='explain') initExplain();
+  document.getElementById('tabs').hidden=(name==='guide');
+  document.querySelectorAll('nav.tabs button').forEach(function(b){
+    if(b.dataset.go===name) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+  });
+  if(changed) window.scrollTo(0,0);   /* เลื่อนขึ้นบนสุดเฉพาะตอนเปลี่ยนหน้าจริง */
+}
+
+/* จับเหตุการณ์คลิกทั้งแอป (event delegation) — อัปเดต DOM เฉพาะจุด ไม่วาดใหม่ทั้งหน้า */
+document.addEventListener('click',function(e){
+  var t=e.target.closest('button'); if(!t) return;
+  try{
+    if(t.dataset.go){go(t.dataset.go); return;}
+    if(t.dataset.speak){ if(ST.speakBtn===t){ stopSpeak(); return; } speak(t.dataset.speak,t.dataset.who,t); return; }
+    if(t.dataset.act==='diagnose'){runDiagnose(t); return;}
+    if(t.dataset.act==='level'){ setLevel(t); return; }
+    if(t.dataset.act==='shNav'){ ST.sh.i=Math.max(0,Math.min(ST.sh.list.length-1,ST.sh.i+(+t.dataset.d))); document.getElementById('shadow').innerHTML=shadowHTML();
+      var nb=document.querySelector('#shadow [data-act="shNav"][data-d="'+t.dataset.d+'"]'); if(nb&&!nb.disabled) nb.focus({preventScroll:true}); else document.getElementById('shIn').focus({preventScroll:true}); return; }
+    if(t.id==='shCheck'){ shadowCheck(); return; }
+    if(t.id==='lsOpen'){ var lb=document.getElementById('listen'), open=lb.hidden; lb.hidden=!open; t.setAttribute('aria-expanded',open); if(open) lsRender(); else stopSpeak(); return; }
+    if(t.id==='lsPlay'){ if(ST.ls.playing){ stopSpeak(); } else lsPlayFrom(ST.ls.i>=ST.ls.tracks.length?0:ST.ls.i); return; }
+    if(t.dataset.act==='lsNav'){ var ni=Math.max(0,Math.min(ST.ls.tracks.length-1,ST.ls.i+(+t.dataset.d))); if(ST.ls.playing) lsPlayFrom(ni); else { ST.ls.i=ni; lsUI(); } return; }
+    if(t.dataset.act==='talkMode'){ var em=t.dataset.m==='email';
+      document.querySelectorAll('[data-act="talkMode"]').forEach(function(b){b.setAttribute('aria-pressed',b===t);});
+      document.getElementById('talkPane').hidden=em; document.getElementById('emailPane').hidden=!em; if(em) emailOpen(); stopSpeak(); return; }
+    if(t.id==='emBtn'){ emailScore(); return; }
+    if(t.id==='emModel'){ var mb=document.getElementById('emModelBox'); mb.hidden=!mb.hidden; t.setAttribute('aria-expanded',!mb.hidden); return; }
+    if(t.dataset.act==='reshuffle'){   /* วาดใหม่เฉพาะแผงควิซ · XP นับครั้งแรกของวันเท่านั้น */
+      var pn=document.getElementById(t.dataset.panel==='chk'?'chkPanel':'qzPanel'); if(!pn) return;
+      pn.innerHTML=t.dataset.panel==='chk'?chkPanelHTML(curTopic().activity):qzPanelHTML();
+      var first=pn.querySelector('.opt'); if(first) first.focus({preventScroll:true});
+      return;
+    }
+    if(t.dataset.act==='tapMode'){
+      ST.tapMode=!ST.tapMode; t.setAttribute('aria-pressed',ST.tapMode); t.textContent=ST.tapMode?'แตะคำเพื่อเก็บ: เปิด':'แตะคำเพื่อเก็บ: ปิด';
+      var sp=document.getElementById('sumText'); if(sp) sp.innerHTML=sumHTML(curSummary());
+      var hn=document.getElementById('tapHint');
+      if(ST.tapMode&&!hn) t.parentNode.insertAdjacentHTML('afterend','<p class="demo-note" id="tapHint">แตะคำที่ขีดเส้นประเพื่อเก็บเข้าคลังศัพท์ (ความหมายจากอภิธานศัพท์กลาง หรือโค้ช AI)</p>');
+      if(!ST.tapMode&&hn) hn.remove();
+      return;
+    }
+    if(t.dataset.mk){
+      var li=t.closest('li'); t.disabled=true;
+      google.script.run.withSuccessHandler(function(){ if(PROG) PROG.mistakes=PROG.mistakes.filter(function(m){return String(m.row)!==t.dataset.mk;}); li.remove();
+          var mk=document.getElementById('mistakes'); if(mk&&!mk.querySelector('li')) mk.innerHTML=mistakeBookHTML(); })
+        .withFailureHandler(function(e){ t.disabled=false; toast(e&&e.message?e.message:String(e),true); })
+        .seResolveMistake(+t.dataset.mk);
+      return;
+    }
+    if(t.dataset.act==='to2d'||t.id==='hwMode'){ ST.mode2d=t.id==='hwMode'?!ST.mode2d:true; savePref('se_2d',ST.mode2d); destroyHighway(); ST.screen=null; go('highway'); return; }
+    if(t.dataset.act==='reloadTopic'){loadTodayTopic(); ST.screen=null; go('today'); return;}
+    if(t.dataset.act==='nextTopic'){TODAY_IDX=(TODAY_IDX+1)%TOPICS.length; ST.screen=null; go('today'); return;}
+    if(t.dataset.act==='slow'){
+      ST.slow=!ST.slow; t.setAttribute('aria-pressed',ST.slow); t.textContent=ST.slow?'เสียงพูดช้า: เปิด':'เสียงพูดช้า: ปิด'; return;
+    }
+    if(t.dataset.q){ /* ตอบคำถาม */
+      var id=t.dataset.q, box=document.getElementById(id);
+      if(box.dataset.done) return;
+      var src=id.indexOf('chk')===0?curTopic().activity.checks[+id.slice(3)]:QUIZ[+id.slice(2)];
+      var pick=+t.dataset.i;
+      box.querySelector('.opt[data-i="'+src.a+'"]').classList.add('right');   /* ตัวเลือกถูกสลับตำแหน่ง → หาจากลำดับจริง */
+      if(pick!==src.a) t.classList.add('wrong'); else addXP(10);
+      box.dataset.done='1'; if(pick===src.a) box.dataset.ok='1';
+      var pre=id.indexOf('chk')===0?'chk':'qz', boxes=document.querySelectorAll('.q[id^="'+pre+'"]');
+      var all=[].every.call(boxes,function(b){return b.dataset.done;}), okN=[].filter.call(boxes,function(b){return b.dataset.ok;}).length;
+      if(all) recordTask(pre==='chk'?'today':'review',{xp:10*okN,quizCorrect:okN});
+      var ex=box.querySelector('.explain'); ex.hidden=false; ex.textContent=(pick===src.a?'ถูกต้อง +10 XP · ':'ยังไม่ถูก · ')+src.why;
+      return;
+    }
+    if(t.dataset.deck&&IN_GAS){ /* ทวนศัพท์ (บันทึกลงชีต) */
+      var di=+t.dataset.deck, w=deckList()&&deckList()[di], pair=t.parentNode.querySelectorAll('[data-deck]'), dueEl=document.getElementById('due'+di);
+      if(!w) return;
+      [].forEach.call(pair,function(b){b.disabled=true; b.setAttribute('aria-pressed',b===t);});
+      dueEl.textContent='กำลังบันทึก…';
+      google.script.run
+        .withSuccessHandler(function(r){ dueEl.textContent='ทวนครั้งถัดไป: อีก '+r.days+' วัน (กล่อง '+r.box+')'; })
+        .withFailureHandler(function(e){ [].forEach.call(pair,function(b){b.disabled=false;b.setAttribute('aria-pressed','false');}); dueEl.textContent='บันทึกไม่สำเร็จ — ลองกดอีกครั้ง'; toast(e&&e.message?e.message:String(e),true); })
+        .seReviewVocab(localYmd(),w.en,t.dataset.v);
+      return;
+    }
+    if(t.dataset.deck){ /* ทวนศัพท์ */
+      var i=t.dataset.deck;
+      t.parentNode.querySelectorAll('[data-deck]').forEach(function(b){b.setAttribute('aria-pressed',b===t);});
+      document.getElementById('due'+i).textContent=t.dataset.v==='ok'?'ทวนครั้งถัดไป: อีก 3 วัน':'ทวนครั้งถัดไป: พรุ่งนี้';
+      return;
+    }
+  }catch(err){console.error('click handler error',err);}
+});
+/* คำที่แตะได้ในบทสรุป (span role=button) */
+document.addEventListener('click',function(e){ var w=e.target.closest&&e.target.closest('.tw'); if(w) saveTappedWord(w); });
+document.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('tw')){ e.preventDefault(); saveTappedWord(e.target); } });
+/* Ctrl/⌘+Enter เพื่อส่งในช่องพิมพ์ */
+document.addEventListener('keydown',function(e){
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+    if(e.target.id==='reply') sendReply();
+    if(e.target.id==='exp') scoreExplain();
+    if(e.target.id==='wr') scoreWriting();
+  }
+});
+if('speechSynthesis' in window) speechSynthesis.onvoiceschanged=function(){};
+go('guide');
+loadTodayTopic();
+loadProgress();
+/* แจ้งหน้าแอป PWA (ที่ฝังเว็บแอปนี้ไว้) ว่าเปิดสำเร็จแล้ว · ส่งแค่สัญญาณ ไม่มีข้อมูลผู้ใช้ */
+(function(){ try{ if(window.top!==window) window.top.postMessage('site-english:ready','*'); }catch(e){} })();
+</script>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
