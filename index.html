@@ -354,7 +354,7 @@ nav.tabs button[aria-current="page"]{color:var(--mark);box-shadow:inset 0 3px 0 
  * ║  EXEC_URL = ลิงก์ /exec ของ deployment แบบ "Who has access: Anyone"      ║
  * ║  ⚠️ อัปโหลด index.html ใหม่ทับ → ต้องกรอก EXEC_URL ใหม่ทุกครั้ง            ║
  * ╚════════════════════════════════════════════════════════════════════╝ */
-var EXEC_URL = 'https://script.google.com/macros/s/AKfycbxEZtmvZDSyRwJXkUFaMTDQSw2IFRIGFLaQkvNglunK2kjp9a0IEBLbLwnEuZOCdd4SZA/exec';
+var EXEC_URL = '';
 /* ═══════════════════════════ จบส่วนตั้งค่า ═══════════════════════════ */
 </script>
 <div id="seGate" role="dialog" aria-modal="true" aria-labelledby="gTitle" hidden>
@@ -694,26 +694,52 @@ function pickVoice(lang){
   if(lang==='th') return vs.filter(function(x){return /^th/i.test(x.lang);})[0]||null;
   return vs.filter(function(x){return /en-AU/i.test(x.lang);})[0]||vs.filter(function(x){return /en-GB/i.test(x.lang);})[0]||vs.filter(function(x){return /^en/i.test(x.lang);})[0]||null;
 }
-var NO_TH_VOICE='เครื่องนี้ไม่มีเสียงภาษาไทย — เพิ่มได้ที่ ตั้งค่าระบบ › การช่วยการเข้าถึง › เนื้อหาที่พูด › จัดการเสียง (Mac: Kanya · iPhone: เสียงไทย)';
+/* วิธีเพิ่มเสียงไทยตามชนิดเครื่อง · iPhone มีเสียงไทยในตัว · Mac/Windows ต้องดาวน์โหลดเอง แล้วปิด-เปิดเบราว์เซอร์ใหม่ */
+var IS_IOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+var IS_MAC=!IS_IOS&&/Mac/.test(navigator.platform||navigator.userAgent), IS_WIN=/Win/.test(navigator.platform||navigator.userAgent);
+var NO_TH_VOICE='เครื่องนี้ไม่มีเสียงภาษาไทยให้เบราว์เซอร์ใช้ — '+(IS_MAC
+  ?'Mac: การตั้งค่าระบบ › การช่วยการเข้าถึง › เนื้อหาที่พูด (Spoken Content) › เสียงของระบบ › จัดการเสียง… › ไทย › ติ๊ก Kanya ให้ดาวน์โหลด แล้วปิด Chrome ทั้งหมดด้วย ⌘Q แล้วเปิดใหม่'
+  :IS_IOS?'ตั้งค่า › การช่วยการเข้าถึง › เนื้อหาที่พูด › เสียง › ไทย'
+  :IS_WIN?'Windows: ตั้งค่า › เวลาและภาษา › เสียงพูด › เพิ่มเสียง › ไทย แล้วปิด-เปิดเบราว์เซอร์ใหม่'
+  :'เพิ่มเสียงภาษาไทยในการตั้งค่าเสียงพูดของเครื่อง แล้วปิด-เปิดเบราว์เซอร์ใหม่');
 /* รายชื่อเสียงโหลดแล้วหรือยัง (Chrome โหลดช้า — ยังว่าง = ยังไม่รู้ ให้เบราว์เซอร์เลือกเสียงตามภาษาเอง) */
 function voicesKnown(){ return ('speechSynthesis' in window)&&speechSynthesis.getVoices().length>0; }
+/* ข้อความไทย: รอรายชื่อเสียงโหลดเสร็จก่อน (สูงสุด 2 วินาที) — ไม่อย่างนั้น Chrome จะใช้เสียงเริ่มต้น (อังกฤษ) อ่านภาษาไทย */
+function withVoices(cb){
+  if(!('speechSynthesis' in window)||voicesKnown()) return cb();
+  var done=false, fire=function(){ if(done) return; done=true; try{ speechSynthesis.removeEventListener('voiceschanged',fire); }catch(e){} cb(); };
+  try{ speechSynthesis.addEventListener('voiceschanged',fire); }catch(e){}
+  setTimeout(fire,2000);
+}
+/* บอกในโหมดไทยว่าใช้เสียงอะไรอ่าน หรือบอกวิธีเพิ่มเสียงไทย */
+function thVoiceText(){
+  if(!('speechSynthesis' in window)) return 'เบราว์เซอร์นี้อ่านออกเสียงไม่ได้';
+  if(!voicesKnown()) return '';
+  var v=pickVoice('th');
+  return v?'เสียงอ่านภาษาไทย: '+v.name:NO_TH_VOICE;
+}
+function thVoiceNoteHTML(){ var x=thVoiceText(); return '<p class="demo-note" id="thVoiceNote"'+(x?'':' hidden')+'>'+esc(x)+'</p>'; }
 function hasTH(s){ return /[\u0E00-\u0E7F]/.test(String(s||'')); }
 /* ข้อความไทย = เสียงไทย · ข้อความอังกฤษ = เสียงอังกฤษ (ไม่มีเสียงไทยในเครื่อง → แจ้ง ไม่ให้เสียงอังกฤษอ่านภาษาไทย) */
 function speak(text,who,btn){
   try{
     if(!('speechSynthesis' in window)){alert('เบราว์เซอร์นี้ไม่รองรับการอ่านออกเสียง'); return;}
     speechSynthesis.cancel();
-    var th=hasTH(text), v=pickVoice(th?'th':'en');
-    if(th&&!v&&voicesKnown()){ markSpeakBtn(null); toast(NO_TH_VOICE,true); return; }
-    var u=new SpeechSynthesisUtterance(text);
-    if(v) u.voice=v;
-    u.lang=v?v.lang:(th?'th-TH':'en-GB');
-    u.rate=ST.slow?0.8:0.95;
-    var myId=(ST.speakSeq=(ST.speakSeq||0)+1);
-    u.onend=u.onerror=function(){ if(ST.speakSeq!==myId) return; if(who==='liam'&&ST.liam==='speaking') setLiam('idle'); markSpeakBtn(null); };
-    if(who==='liam') setLiam('speaking');
-    markSpeakBtn(btn||null);
-    speechSynthesis.speak(u);
+    var th=hasTH(text), myId=(ST.speakSeq=(ST.speakSeq||0)+1);
+    var run=function(){
+      if(ST.speakSeq!==myId) return;   /* ถูกหยุด/กดอันอื่นระหว่างรอรายชื่อเสียง */
+      var v=pickVoice(th?'th':'en');
+      if(th&&!v&&voicesKnown()){ markSpeakBtn(null); toast(NO_TH_VOICE,true); return; }
+      var u=new SpeechSynthesisUtterance(text);
+      if(v) u.voice=v;
+      u.lang=v?v.lang:(th?'th-TH':'en-GB');
+      u.rate=ST.slow?0.8:0.95;
+      u.onend=u.onerror=function(){ if(ST.speakSeq!==myId) return; if(who==='liam'&&ST.liam==='speaking') setLiam('idle'); markSpeakBtn(null); };
+      if(who==='liam') setLiam('speaking');
+      markSpeakBtn(btn||null);
+      speechSynthesis.speak(u);
+    };
+    if(th) withVoices(run); else run();
   }catch(e){console.error('speak error',e);}
 }
 
@@ -850,7 +876,7 @@ function knowTH(){
     h+='<h3>'+(t.stream==='thai'?'บทคัดย่อ (ภาษาไทย)':'สรุปความรู้ (ภาษาไทย)')+'</h3><div class="panel"><p id="sumText" class="th-sum" style="margin-top:0">'+esc(lines.join(' '))+'</p>'+
        (t.stream==='thai'?'':'<p class="demo-note">'+(DATA.mode==='live'?'ฉบับภาษาไทยเรียบเรียงโดยโค้ช AI จากบทสรุปภาษาอังกฤษ — ข้อเท็จจริงและตัวเลขตรวจกับต้นฉบับแล้ว':'ตัวอย่างฉบับภาษาไทย — ของจริงเรียบเรียงโดยโค้ช AI และตรวจตัวเลขกับต้นฉบับ')+'</p>')+
        '<div class="row"><button type="button" class="btn" id="sumSpeak" data-speak="'+esc(lines.join(' '))+'">'+ICON.speaker+'ฟังทั้งย่อหน้า</button></div>'+
-       (voicesKnown()&&!pickVoice('th')?'<p class="demo-note" id="thVoiceNote">'+esc(NO_TH_VOICE)+'</p>':'')+srcBlock(t)+'</div>';
+       thVoiceNoteHTML()+srcBlock(t)+'</div>';
   }else{
     var st=(ST.thai&&ST.thai.id===t.id)?ST.thai:null;
     h+='<h3>สรุปความรู้ (ภาษาไทย)</h3><div class="panel load-box" role="status">';
@@ -1095,15 +1121,20 @@ function lsPlayFrom(i){
   var S=ST.ls; if(!S) return;
   stopSpeak(); S.i=Math.max(0,i); S.playing=S.i<S.tracks.length; var my=++S.seq; lsUI();
   if(!S.playing) return;
-  var tr=S.tracks[S.i], u=new SpeechSynthesisUtterance(tr.x), vo=pickVoice(tr.lang);
-  if(tr.lang==='th'&&!vo&&voicesKnown()){   /* ไม่มีเสียงไทยในเครื่อง → ข้ามภาษาไทย ไม่ให้เสียงอังกฤษอ่านภาษาไทย */
-    if(!S.noTh){ S.noTh=true; toast(NO_TH_VOICE+' — ข้ามส่วนภาษาไทย',true); }
-    setTimeout(function(){ if(S.playing&&S.seq===my) lsPlayFrom(S.i+1); },50); return;
-  }
-  if(vo) u.voice=vo;
-  u.lang=vo?vo.lang:(tr.lang==='th'?'th-TH':'en-GB'); u.rate=ST.slow?0.8:0.95;
-  u.onend=function(){ if(!S.playing||S.seq!==my) return; setTimeout(function(){ if(S.playing&&S.seq===my) lsPlayFrom(S.i+1); },500); };
-  speechSynthesis.speak(u);
+  var tr=S.tracks[S.i];
+  var run=function(){
+    if(!S.playing||S.seq!==my) return;
+    var u=new SpeechSynthesisUtterance(tr.x), vo=pickVoice(tr.lang);
+    if(tr.lang==='th'&&!vo&&voicesKnown()){   /* ไม่มีเสียงไทยในเครื่อง → ข้ามภาษาไทย ไม่ให้เสียงอังกฤษอ่านภาษาไทย */
+      if(!S.noTh){ S.noTh=true; toast(NO_TH_VOICE+' — ข้ามส่วนภาษาไทย',true); }
+      setTimeout(function(){ if(S.playing&&S.seq===my) lsPlayFrom(S.i+1); },50); return;
+    }
+    if(vo) u.voice=vo;
+    u.lang=vo?vo.lang:(tr.lang==='th'?'th-TH':'en-GB'); u.rate=ST.slow?0.8:0.95;
+    u.onend=function(){ if(!S.playing||S.seq!==my) return; setTimeout(function(){ if(S.playing&&S.seq===my) lsPlayFrom(S.i+1); },500); };
+    speechSynthesis.speak(u);
+  };
+  if(tr.lang==='th') withVoices(run); else run();
 }
 
 function srcBlock(t){
@@ -2337,11 +2368,10 @@ document.addEventListener('keydown',function(e){
     if(e.target.id==='wr') scoreWriting();
   }
 });
-/* รายชื่อเสียงโหลดช้า (Chrome) → โหลดเสร็จแล้วค่อยบอกว่าไม่มีเสียงไทย (เฉพาะโหมดภาษาไทย · เพิ่มข้อความจุดเดียว ไม่วาดหน้าใหม่) */
+/* รายชื่อเสียงโหลดช้า (Chrome) → โหลดเสร็จแล้วอัปเดตบรรทัดบอกเสียงไทยจุดเดียว ไม่วาดหน้าใหม่ */
 if('speechSynthesis' in window) speechSynthesis.onvoiceschanged=function(){
-  if(ST.screen!=='today'||!isTH()) return;
-  var sp=document.getElementById('sumSpeak');
-  if(sp&&!document.getElementById('thVoiceNote')&&voicesKnown()&&!pickVoice('th')) sp.parentNode.insertAdjacentHTML('afterend','<p class="demo-note" id="thVoiceNote">'+esc(NO_TH_VOICE)+'</p>');
+  var n=document.getElementById('thVoiceNote'); if(!n) return;
+  var x=thVoiceText(); n.textContent=x; n.hidden=!x;
 };
 go('guide');
 loadTodayTopic();
