@@ -132,6 +132,15 @@ h3{font-size:17px;margin:22px 0 8px}
 .seg button:last-child{border-right:0}
 .seg button[aria-pressed="true"]{background:var(--mark);color:#1D2A31;font-weight:700}
 .seg-lbl{font-size:14px;color:var(--muted);margin-right:6px}
+/* แถบออฟไลน์/รอส่ง · สรุป 7 วัน · ปุ่มแจ้งเนื้อหาผิด */
+.net-bar{background:var(--mark);color:#1D2A31;font-size:14px;line-height:1.5;padding:6px 16px;text-align:center}
+.week-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+.week-grid div{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:8px 6px;text-align:center;min-width:0}
+.week-grid b{display:block;font:700 22px/1.2 var(--font-sign)}
+.week-grid small{display:block;color:var(--muted);font-size:12px;line-height:1.3}
+@media (max-width:420px){.week-grid{grid-template-columns:repeat(2,1fr)}}
+.linkish{background:none;border:0;color:var(--muted);text-decoration:underline;font:inherit;font-size:14px;padding:8px 0;min-height:40px;cursor:pointer}
+.report{margin-top:6px}
 /* โหมดภาษาเนื้อหา · ข้อความไทยใช้ฟอนต์ไทยและระยะบรรทัดที่ไม่ตัดสระบน/ล่าง */
 .lang-bar{margin:0 0 12px;gap:6px}
 .lang-bar .seg{margin-top:0}
@@ -348,15 +357,8 @@ nav.tabs button[aria-current="page"]{color:var(--mark);box-shadow:inset 0 3px 0 
 </style>
 </head>
 <body>
-<script>
-/* ╔════════════════════════════════════════════════════════════════════╗
- * ║  ⚙️  ตั้งค่า (CONFIG) — แก้บรรทัดเดียว                                    ║
- * ║  EXEC_URL = ลิงก์ /exec ของ deployment แบบ "Who has access: Anyone"      ║
- * ║  ⚠️ อัปโหลด index.html ใหม่ทับ → ต้องกรอก EXEC_URL ใหม่ทุกครั้ง            ║
- * ╚════════════════════════════════════════════════════════════════════╝ */
-var EXEC_URL = 'https://script.google.com/macros/s/AKfycbxEZtmvZDSyRwJXkUFaMTDQSw2IFRIGFLaQkvNglunK2kjp9a0IEBLbLwnEuZOCdd4SZA/exec';
-/* ═══════════════════════════ จบส่วนตั้งค่า ═══════════════════════════ */
-</script>
+<!-- ⚙️ ลิงก์แอปอยู่ในไฟล์ config.js (แยกจากไฟล์นี้) — อัปโหลด index.html ใหม่ทับได้เลย ไม่ต้องกรอกอะไรใหม่ -->
+<script src="config.js"></script>
 <div id="seGate" role="dialog" aria-modal="true" aria-labelledby="gTitle" hidden>
   <form class="g-in" id="gForm" novalidate>
     <img src="icons/icon-512.png" alt="">
@@ -373,14 +375,15 @@ var EXEC_URL = 'https://script.google.com/macros/s/AKfycbxEZtmvZDSyRwJXkUFaMTDQS
  * หน้าเว็บส่วนที่เหลือเหมือนกับ Index.html ของ Apps Script ทุกอย่าง */
 (function(){
   window.SE_HOST='app';
-  var FNS=["seGetTopicForDate", "seGetProgress", "seRecordActivity", "seReviewVocab", "seCoachWriting", "seCoachTalk", "seCoachExplain", "seSaveWord", "seResolveMistake", "seGetEmailTask", "seCoachEmail", "seRewriteSummary", "seDiagnose", "seGetThaiBrief"], KEY='se_app_code';
+  var EXEC_URL=(typeof window.EXEC_URL==='string')?window.EXEC_URL.trim():'';   /* มาจาก config.js · ไม่มีไฟล์ = ว่าง */
+  var FNS=["seGetTopicForDate", "seGetProgress", "seRecordActivity", "seReviewVocab", "seCoachWriting", "seCoachTalk", "seCoachExplain", "seSaveWord", "seResolveMistake", "seGetEmailTask", "seCoachEmail", "seRewriteSummary", "seDiagnose", "seGetThaiBrief", "seBootstrap", "seGetPractice", "seReportTopic"], KEY='se_app_code';
   var URL_OK=/^https:\/\/script\.google\.com\/macros\/s\/[^\/]+\/exec$/;
   function code(){ try{ return localStorage.getItem(KEY)||''; }catch(e){ return ''; } }
   function $(id){ return document.getElementById(id); }
   function gate(msg){
     var g=$('seGate'); if(!g) return;
     if(!URL_OK.test(EXEC_URL)){
-      $('gLead').innerHTML='ยังไม่ได้ตั้งค่าลิงก์แอป — เปิด <b>index.html</b> ใน GitHub แล้ววางลิงก์ที่ลงท้ายด้วย <b>/exec</b> ในบรรทัด <b>EXEC_URL</b> ด้านบนสุด';
+      $('gLead').innerHTML='ยังไม่ได้ตั้งค่าลิงก์แอป — ใน GitHub เปิดไฟล์ <b>config.js</b> แล้ววางลิงก์ที่ลงท้ายด้วย <b>/exec</b> ในบรรทัด <b>EXEC_URL</b> (ยังไม่มีไฟล์ config.js ให้อัปโหลดจากชุดไฟล์ก่อน)';
       $('gCode').disabled=true; $('gBtn').disabled=true;
     }
     $('gErr').textContent=msg||'';
@@ -396,7 +399,7 @@ var EXEC_URL = 'https://script.google.com/macros/s/AKfycbxEZtmvZDSyRwJXkUFaMTDQS
       var r=null; try{ r=JSON.parse(x.responseText); }catch(e){}
       done(r||{ok:false,error:'แอปตอบกลับผิดรูปแบบ — ตรวจว่า deploy แบบ Who has access: Anyone และใช้ลิงก์ /exec ของ deployment นั้น'});
     };
-    x.onerror=x.ontimeout=function(){ done({ok:false,error:'เชื่อมต่อไม่ได้ — ตรวจอินเทอร์เน็ต หรือ deploy แบบ Who has access: Anyone'}); };
+    x.onerror=x.ontimeout=function(){ done({ok:false,net:true,error:'เชื่อมต่อไม่ได้ — ตรวจอินเทอร์เน็ต หรือ deploy แบบ Who has access: Anyone'}); };
     x.send(JSON.stringify(body));
   }
   function call(fn,args,ok,fail){
@@ -447,6 +450,7 @@ var EXEC_URL = 'https://script.google.com/macros/s/AKfycbxEZtmvZDSyRwJXkUFaMTDQS
   </div>
 </header>
 
+<div id="netBar" class="net-bar" role="status" aria-live="polite" hidden></div>
 <main id="main"></main>
 
 <nav class="tabs" aria-label="เมนูหลัก" id="tabs" hidden>
@@ -583,13 +587,40 @@ var EXPLAIN = {
   model:"CBR tells us how strong the soil under a road is. We push a small steel rod into a soil sample and measure the force it needs. Then we compare that force with the force needed for a standard crushed rock, and give the result as a percentage. A higher CBR means stronger soil, so the road layers above it can be thinner."
 };
 
-/* ---------- คำถามทบทวน ---------- */
+/* ---------- โจทย์ฝึกของวัน (คุยงาน + เกมอธิบาย) ----------
+ * เว็บแอปจริง: backend ส่งมาพร้อมเรื่องวันนี้ — เปลี่ยนทุกวัน (ตามเรื่องของวัน สลับกับสถานการณ์หน้างาน/หลักการจากคลัง)
+ * Demo: ใช้ชุดตัวอย่างด้านบน */
+var PRACTICE = {
+  talk: {id:'TB01', source:'bank', situation_th:'ผลทดสอบความแน่นชั้นพื้นทางไม่ผ่านเกณฑ์ ที่ปรึกษาต้องการคำอธิบายและแผนแก้ไข', script:SCRIPT},
+  explain: {id:'EB01', source:'bank', concept:EXPLAIN.topic, task:EXPLAIN.task, keys:EXPLAIN.keys, jargon:EXPLAIN.jargon, model:EXPLAIN.model,
+    hint_th:'บอกให้ครบ 3 เรื่อง: ทดสอบอะไร (ดิน) · ทำอย่างไร (กดแท่งเหล็ก เทียบกับหินมาตรฐาน) · ใช้ทำอะไร (ออกแบบความหนาชั้นทาง)'}
+};
+function TALK(){ return PRACTICE.talk.script; }
+function EX(){ return PRACTICE.explain; }
+/* โจทย์ใหม่มาถึงตอนหน้าคุยงาน/เกมอธิบายเปิดอยู่ → วาดใหม่เฉพาะเมื่อผู้ใช้ยังไม่ได้เริ่ม (ไม่ลบสิ่งที่พิมพ์ไว้) */
+function applyPractice(p){
+  if(!p||!p.talk||!p.explain||!p.talk.script||p.talk.script.length<2||!p.explain.concept) return;
+  var old=PRACTICE; PRACTICE=p;
+  if(ST.screen==='talk'&&old.talk.id!==p.talk.id){
+    var rp=document.getElementById('reply'), em=document.getElementById('emailPane');
+    if(!ST.talkLog&&ST.turn===0&&rp&&!rp.value.trim()&&em&&em.hidden){ ST.screen=null; go('talk'); }
+  }
+  if(ST.screen==='explain'&&old.explain.id!==p.explain.id){
+    var ex=document.getElementById('exp'), rs=document.getElementById('expResult');
+    if(ex&&!ex.value.trim()&&rs&&!rs.innerHTML){ ST.screen=null; go('explain'); }
+  }
+}
+
+/* ---------- คำถามทบทวนทั่วไป (ใช้เติมเมื่อคลังศัพท์ยังน้อย) ---------- */
 var QUIZ = [
   {q:'"Relative compaction" compares the field dry density with…',opts:['the maximum dry density from the lab test','the density of water','the density of the asphalt layer'],a:0,why:'Relative compaction = field dry density ÷ maximum dry density × 100'},
   {q:'A foreign engineer says "alligator cracking". In Thai this is…',opts:['รอยแตกตามขวาง','รอยแตกหนังจระเข้','ร่องล้อ'],a:1,why:'Alligator (fatigue) cracking = รอยแตกหนังจระเข้ เกิดจากความล้า'},
   {q:'Which sentence is clearest for a foreign consultant?',opts:['Base not pass because wet, will do again.','The base failed because it was too wet. We will dry it and recompact it.','Due to the aforementioned moisture non-conformance, remedial works shall be undertaken.'],a:1,why:'ประโยคสั้น มีเหตุ + สิ่งที่จะทำ ไม่ใช้ภาษาทางการเกินจำเป็น'},
   {q:'"Tack coat" is sprayed…',opts:['on the subgrade before the subbase','between asphalt layers to bond them','on the finished surface to add colour'],a:1,why:'Tack coat ใช้ยึดชั้นแอสฟัลต์เข้าด้วยกัน (ต่างจาก prime coat ที่พ่นบนพื้นทาง)'}
 ];
+/* คำศัพท์งานทางพื้นฐาน — ใช้ทำตัวเลือกหลอกในควิซเมื่อคลังศัพท์ของผู้ใช้ยังมีไม่พอ */
+var EXTRA_TERMS = [{en:'subgrade',th:'ดินคันทาง'},{en:'culvert',th:'ท่อลอด'},{en:'guardrail',th:'ราวกันอันตราย'},{en:'embankment',th:'คันทาง'},
+  {en:'aggregate',th:'มวลรวม (หิน ทราย)'},{en:'curing',th:'การบ่มคอนกรีต'},{en:'bearing',th:'แผ่นรองคานสะพาน'},{en:'drainage',th:'การระบายน้ำ'}];
 var DECK = [
   {en:'rutting',th:'ร่องล้อ',ex:'Rutting appears in the wheel paths after heavy truck traffic.'},
   {en:'scarify',th:'คราด/ขุดคุ้ยผิวชั้นวัสดุ',ex:'We will scarify the base and recompact it.'},
@@ -643,6 +674,90 @@ function loadProgress(){
     .withFailureHandler(function(e){ console.error('seGetProgress error',e); toast('โหลดผลการฝึกไม่สำเร็จ: '+(e&&e.message?e.message:e),true); })
     .seGetProgress(localYmd());
 }
+/* ---------- เปิดเร็ว + ใช้ได้แม้เน็ตหลุด ----------
+ * - เปิดแอป: เรียก seBootstrap() คำสั่งเดียว (เรื่อง · ผลการฝึก · โจทย์ฝึก · ของพรุ่งนี้) และแสดงของที่เก็บในเครื่องทันทีระหว่างรอ
+ * - ไม่มีเน็ต: ใช้ของในเครื่อง (รวมเรื่องพรุ่งนี้ที่โหลดไว้) · ผลการฝึกที่ส่งไม่ได้เข้าคิว ส่งให้เองเมื่อเน็ตกลับ
+ * - backend รุ่นเก่าที่ยังไม่มี seBootstrap → ใช้วิธีเดิม (เรียกแยก) */
+var CACHE_KEY='se_cache_v1', QUEUE_KEY='se_queue_v1';
+function lsGet(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+function cachePatch(o){ if(!IN_GAS) return; var c=lsGet(CACHE_KEY); if(!c||c.date!==localYmd()) return; for(var k in o) c[k]=o[k]; lsSet(CACHE_KEY,c); }
+function isNetErr(e){
+  var m=String(e&&e.message?e.message:(e||''));
+  return navigator.onLine===false||/เชื่อมต่อไม่ได้|NetworkError|network error|Failed to fetch|HTTP 0|Connection failure/i.test(m);
+}
+function queue(){ return lsGet(QUEUE_KEY)||[]; }
+function queuePush(fn,args){ var q=queue(); q.push({fn:fn,args:args,at:Date.now()}); lsSet(QUEUE_KEY,q.slice(-100)); netUI(); }
+function flushQueue(){
+  if(!IN_GAS||ST.flushing||!queue().length) return;
+  ST.flushing=true; var item=queue()[0];
+  var r=google.script.run
+    .withSuccessHandler(function(res){
+      var rest=queue().slice(1); lsSet(QUEUE_KEY,rest); ST.flushing=false;
+      if(item.fn==='seRecordActivity'&&res&&res.state) applyProgress(res.state);
+      netUI(); if(rest.length) flushQueue(); else toast('ส่งผลการฝึกที่เก็บไว้ในเครื่องครบแล้ว');
+    })
+    .withFailureHandler(function(e){
+      ST.flushing=false;
+      if(!isNetErr(e)){ lsSet(QUEUE_KEY,queue().slice(1)); console.error('queue item dropped',item.fn,e); flushQueue(); }   /* ข้อมูลผิด (ไม่ใช่เน็ต) → ทิ้งรายการนั้น ไม่ให้คิวค้างตลอดไป */
+      netUI();
+    });
+  if(typeof r[item.fn]!=='function'){ lsSet(QUEUE_KEY,queue().slice(1)); ST.flushing=false; return; }
+  r[item.fn].apply(r,item.args);
+}
+function netUI(){
+  var b=document.getElementById('netBar'); if(!b) return;
+  var off=navigator.onLine===false||!!DATA.offline, n=queue().length;
+  if(!off&&!n){ b.hidden=true; return; }
+  b.hidden=false;
+  b.textContent=(off?'ออฟไลน์ — ใช้เรื่องและผลการฝึกที่เก็บไว้ในเครื่อง':'กำลังส่งผลการฝึกที่เก็บไว้')+(n?' · รอส่ง '+n+' รายการ (ส่งให้เองเมื่อเน็ตกลับ)':'');
+}
+/* ใส่เรื่องของวันนี้ · หน้าเรื่องวันนี้เปิดอยู่ → วาดใหม่เฉพาะเมื่อเรื่องเปลี่ยน (คำตอบที่พิมพ์ค้างไว้ไม่หาย) */
+function setTopic(t){
+  var prevId=(DATA.mode==='live'&&TOPICS[0])?TOPICS[0].id:null, prevMode=DATA.mode;
+  if(t&&t.activity&&CATS[t.cat]&&STREAMS[t.stream]){
+    if(prevId===t.id&&TOPICS[0].summaryTh&&!t.summaryTh){ t.titleTh=TOPICS[0].titleTh; t.subTh=TOPICS[0].subTh; t.summaryTh=TOPICS[0].summaryTh; }
+    TOPICS=[t]; TODAY_IDX=0; DATA.mode='live';
+  }else if(t){ DATA.mode='error'; DATA.error='ข้อมูลเรื่องของวันนี้ไม่ครบ (หมวด/สาย/กิจกรรม) — ตรวจแถวในชีต Topics'; }
+  else DATA.mode='empty';
+  var nowId=DATA.mode==='live'?TOPICS[0].id:null;
+  if(ST.screen==='today'&&(prevMode!==DATA.mode||prevId!==nowId)){ ST.screen=null; go('today'); }
+}
+function topicFail(err){
+  console.error('load topic error',err);
+  DATA.mode='error'; DATA.error=(err&&err.message)?err.message:String(err);
+  if(ST.screen==='today'){ ST.screen=null; go('today'); }
+}
+function boot(){
+  if(!IN_GAS) return;
+  var today=localYmd(), c=lsGet(CACHE_KEY);
+  if(c&&DATA.mode==='loading'){   /* แสดงของที่เก็บไว้ทันที (ของวันนี้ หรือเรื่องพรุ่งนี้ที่โหลดไว้เมื่อวาน) */
+    if(c.date===today){ if(c.practice) applyPractice(c.practice); if(c.progress) applyProgress(c.progress); if(c.topic) setTopic(c.topic); }
+    else if(c.next&&c.next.date===today){ if(c.nextPractice) applyPractice(c.nextPractice); setTopic(c.next); }
+  }
+  var legacy=function(){ loadTodayTopic(); loadProgress(); };
+  if(!google.script.run.seBootstrap) return legacy();
+  google.script.run
+    .withSuccessHandler(function(b){
+      DATA.offline=false;
+      if(b.practice) applyPractice(b.practice);
+      setTopic(b.topic);
+      if(b.progress) applyProgress(b.progress);
+      var prev=lsGet(CACHE_KEY);
+      if(b.topic&&prev&&prev.topic&&prev.topic.id===b.topic.id&&prev.topic.summaryTh&&!b.topic.summaryTh){ b.topic.titleTh=prev.topic.titleTh; b.topic.subTh=prev.topic.subTh; b.topic.summaryTh=prev.topic.summaryTh; }
+      lsSet(CACHE_KEY,{date:today,topic:b.topic,progress:b.progress,practice:b.practice,next:b.next||null,nextPractice:b.nextPractice||null,at:Date.now()});
+      netUI(); flushQueue();
+    })
+    .withFailureHandler(function(e){
+      var m=String(e&&e.message||e);
+      if(!isNetErr(e)&&/ไม่รู้จักคำสั่ง|seBootstrap/.test(m)) return legacy();
+      if(isNetErr(e)){ DATA.offline=true; netUI(); if(DATA.mode==='live') return; }
+      topicFail(e);
+    })
+    .seBootstrap(today);
+}
+window.addEventListener('online',function(){ netUI(); flushQueue(); if(DATA.offline){ DATA.offline=false; boot(); } });
+window.addEventListener('offline',netUI);
 function tasksDone(){ if(!PROG) return 0; return PROG.today.required.filter(function(k){return PROG.today.tasks[k];}).length; }
 function builtKey(){ return 'se_built_'+(PROG?PROG.today.date:''); }
 function builtShown(){ try{ return localStorage.getItem(builtKey())==='1'; }catch(e){ return true; } }
@@ -663,7 +778,10 @@ function applyProgress(s){
   if(kp){ var t='วันที่ฝึก '+s.day+' · ฝึกครบต่อเนื่อง '+s.streak+' วัน'; kp.title=t; kp.setAttribute('aria-label',t); }
   syncHW();
   if(ST.screen==='review'){ var d=document.getElementById('deck'), a=document.getElementById('archive');
-    if(d) d.innerHTML=deckHTML(); if(a) a.innerHTML=archiveHTML(); var mk=document.getElementById('mistakes'); if(mk) mk.innerHTML=mistakeBookHTML(); var cb=document.getElementById('cefrBox'); if(cb) cb.innerHTML=cefrHTML(); }
+    if(d) d.innerHTML=deckHTML(); if(a) a.innerHTML=archiveHTML(); var mk=document.getElementById('mistakes'); if(mk) mk.innerHTML=mistakeBookHTML(); var cb=document.getElementById('cefrBox'); if(cb) cb.innerHTML=cefrHTML();
+    var wb=document.getElementById('weekBox'); if(wb) wb.innerHTML=weekHTML();
+    var qp=document.getElementById('qzPanel'); if(qp&&!ST.qzProg&&!qp.querySelector('.q[data-done]')){ ST.qz=null; qp.innerHTML=qzPanelHTML(); } }   /* ควิซที่สร้างก่อนข้อมูลมา → สร้างใหม่จากคลังศัพท์จริง */
+  cachePatch({progress:s});
   if(ST.screen==='highway') refreshHighway();
 }
 /* บันทึกภารกิจ 1 ครั้ง แล้วแจ้งผล */
@@ -683,7 +801,14 @@ function recordTask(task,ev){
       var nt=ST.aiNotice; ST.aiNotice='';
       toast(nt?nt+' · '+m:m,!!nt);
     })
-    .withFailureHandler(function(e){ console.error('seRecordActivity error',e); toast((e&&e.message?e.message:String(e))+' — ลองทำภารกิจนี้อีกครั้ง',true); })
+    .withFailureHandler(function(e){
+      if(isNetErr(e)){   /* ไม่มีเน็ต → เก็บไว้ในเครื่อง ส่งให้เองเมื่อเน็ตกลับ */
+        queuePush('seRecordActivity',[localYmd(),ev]);
+        if(PROG&&PROG.today&&PROG.today.tasks) PROG.today.tasks[task]=true;
+        toast('ยังไม่มีเน็ต — เก็บผล "'+TASK_TH[task]+'" ไว้ในเครื่องแล้ว จะส่งให้เองเมื่อเน็ตกลับ'); return;
+      }
+      console.error('seRecordActivity error',e); toast((e&&e.message?e.message:String(e))+' — ลองทำภารกิจนี้อีกครั้ง',true);
+    })
     .seRecordActivity(localYmd(),ev);
 }
 
@@ -691,6 +816,7 @@ function recordTask(task,ev){
 /* เลือกเสียงตามภาษา · อังกฤษ: ออสเตรเลีย > อังกฤษ > อเมริกัน · ไทย: เสียงไทยของเครื่อง (Mac = Kanya) · ไม่มี = null */
 function pickVoice(lang){
   var vs=('speechSynthesis' in window)?speechSynthesis.getVoices():[];
+  if(navigator.onLine===false){ var loc=vs.filter(function(x){return x.localService!==false;}); if(loc.length) vs=loc; }   /* ออฟไลน์ → ใช้เสียงในเครื่อง */
   if(lang==='th') return vs.filter(function(x){return /^th/i.test(x.lang);})[0]||null;
   return vs.filter(function(x){return /en-AU/i.test(x.lang);})[0]||vs.filter(function(x){return /en-GB/i.test(x.lang);})[0]||vs.filter(function(x){return /^en/i.test(x.lang);})[0]||null;
 }
@@ -747,7 +873,7 @@ function speak(text,who,btn){
 /* เว็บแอป Apps Script ครอบหน้าไว้ใน iframe ที่ Google ไม่เปิดสิทธิ์ไมโครโฟน — แก้จากโค้ดในแอปไม่ได้ จึงแนะนำให้ใช้การพิมพ์ด้วยเสียงของเครื่อง */
 var MIC_NOTE=IN_APP?'<b>ปุ่ม "พูด" ใช้ไมค์ได้</b> (ครั้งแรกเบราว์เซอร์จะขออนุญาตใช้ไมค์ — กดอนุญาต) · ใช้ได้ดีที่สุดบน Chrome':'<b>ปุ่ม "พูด" ใช้ไมค์ในเว็บแอปนี้ไม่ได้</b> (ข้อจำกัดของ Google) ให้ใช้การพิมพ์ด้วยเสียงของเครื่องแทน: Mac กด Fn/🌐 สองครั้ง · Windows กด Win+H · มือถือแตะไมค์บนแป้นพิมพ์ — หรือเปิดจากแอปบน GitHub ซึ่งใช้ไมค์ได้';
 var MIC_GAS_MSG='เว็บแอปบน Google Apps Script ไม่เปิดสิทธิ์ไมค์ให้หน้าเว็บ — ใช้การพิมพ์ด้วยเสียงของเครื่องแทนได้: คลิกในช่องพิมพ์ แล้ว Mac กดปุ่ม Fn/🌐 สองครั้ง · Windows กด Win+H · มือถือแตะไมค์บนแป้นพิมพ์ (ตั้งภาษาเป็นอังกฤษก่อนพูด)';
-function listen(textarea, btn, statusEl){
+function listen(textarea, btn, statusEl, onDone){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){statusEl.textContent='เบราว์เซอร์นี้ยังไม่รองรับการพูด — ลองเปิดด้วย Chrome หรือพิมพ์แทน'; return;}
   if(ST.listening){ST.listening.stop(); return;}
@@ -756,8 +882,8 @@ function listen(textarea, btn, statusEl){
     var base=textarea.value?textarea.value.trim()+' ':'';
     r.onstart=function(){btn.classList.add('live'); btn.querySelector('span').textContent='กำลังฟัง… แตะเพื่อหยุด'; statusEl.textContent='';};
     r.onresult=function(ev){var t='';for(var i=0;i<ev.results.length;i++)t+=ev.results[i][0].transcript;textarea.value=base+t;};
-    r.onerror=function(ev){statusEl.textContent=ev.error==='not-allowed'?((IN_GAS&&!IN_APP)?MIC_GAS_MSG:'ไมโครโฟนถูกปิดกั้น — อนุญาตไมค์ในเบราว์เซอร์ แล้วลองใหม่'):'รับเสียงไม่สำเร็จ ('+ev.error+') ลองพูดใหม่อีกครั้ง';};
-    r.onend=function(){ST.listening=null; btn.classList.remove('live'); btn.querySelector('span').textContent='พูด';};
+    r.onerror=function(ev){r.failed=true; statusEl.textContent=ev.error==='not-allowed'?((IN_GAS&&!IN_APP)?MIC_GAS_MSG:'ไมโครโฟนถูกปิดกั้น — อนุญาตไมค์ในเบราว์เซอร์ แล้วลองใหม่'):'รับเสียงไม่สำเร็จ ('+ev.error+') ลองพูดใหม่อีกครั้ง';};
+    r.onend=function(){ST.listening=null; btn.classList.remove('live'); btn.querySelector('span').textContent='พูด'; if(onDone&&!r.failed) onDone();};
     ST.listening=r; r.start();
   }catch(e){statusEl.textContent='เริ่มรับเสียงไม่ได้: '+e.message;}
 }
@@ -775,15 +901,15 @@ SCREENS.guide=function(){
   return '<h2>คู่มือการใช้งานฉบับย่อ</h2>'+
   '<p class="lead">วันละประมาณ 10–15 นาที ระบบสุ่มเรื่องให้วันละ 1 เรื่อง ทำตามลำดับ 4 ขั้นแรก แล้วดูผลงานในขั้นที่ 5 และกลับมาดูหน้านี้ได้ทุกเมื่อจากปุ่ม "คู่มือย่อ" มุมขวาบน</p>'+
   '<ol class="steps">'+
-   '<li><div class="n">1</div><div><b>เรื่องวันนี้ — อ่าน ฟัง แล้วลงมือ</b><span>สุ่มจาก 4 สาย: ความรู้หลัก · งานวิจัยต่างประเทศ · งานวิจัยไทย · นวัตกรรม แต่ละสายมีกิจกรรมต่างกัน — ตอบคำถาม, สรุปงานวิจัยให้ที่ปรึกษา, แปลบทคัดย่อไทยเป็นอังกฤษ หรือแสดงความเห็นต่อเทคโนโลยีใหม่ · สลับ <b>ภาษาเนื้อหา English / ไทย</b> เพื่ออ่านและฟังความรู้ของเรื่องเป็นภาษาไทยก่อน แล้วสลับกลับมาฝึกภาษาอังกฤษ (เสียงอ่านเปลี่ยนตามภาษา: ไทยใช้เสียงไทยของเครื่อง · กิจกรรมฝึกยังเป็นภาษาอังกฤษ) · ทำเสร็จแล้วศัพท์ของเรื่องเข้าคลังศัพท์อัตโนมัติ · เปิด "แตะคำเพื่อเก็บ" แล้วแตะคำในบทสรุปเพื่อเก็บคำอื่นเพิ่ม · ปรับบทสรุป "ง่ายลง/ลึกขึ้น" ได้ · ฝึกพูดตามทีละประโยค (Shadowing) · เปิด "โหมดฟังระหว่างเดินทาง" เพื่อฟังทั้งเรื่องต่อเนื่อง</span></div></li>'+
-   '<li><div class="n">2</div><div><b>คุยงาน — ตอบที่ปรึกษาชาวต่างชาติ</b><span>พิมพ์หรือกด "พูด" เพื่อตอบ ระบบจะแนะนำวิธีพูดที่ชัดกว่า ถ้าติดให้กด "ดูประโยคตัวอย่าง" · สลับเป็น "เขียนอีเมล/รายงาน" เพื่อฝึกเขียนงานจริง (โจทย์เปลี่ยนทุกวัน) · ฟังข้อความที่ปรึกษาได้จากปุ่มลำโพง หรือเปิด "อ่านอัตโนมัติ" (ค่าเริ่มต้นปิด) และกด "หยุดเสียง" ได้ทุกเมื่อ · ภาพที่ปรึกษาจะขยับปากเมื่อพูด เอียงหัวฟังเมื่อคุณพิมพ์ และแสดงสถานะกำลังคิดก่อนตอบ</span></div></li>'+
-   '<li><div class="n">3</div><div><b>เกมอธิบาย — อธิบายให้คนทั่วไปเข้าใจ</b><span>อธิบายหลักการทางวิศวกรรม 3–4 ประโยค แล้วรับคะแนนความชัดเจน ภาษา และความถูกต้องทางวิชาการ</span></div></li>'+
-   '<li><div class="n">4</div><div><b>ทบทวน — ควิซ คลังศัพท์ และเรื่องที่ผ่านมา</b><span>ตอบควิซสะสม XP (ตัวเลือกสลับตำแหน่งทุกรอบ กด \"ทำอีกรอบ\" เพื่อฝึกซ้ำ) กด "จำได้" หรือ "ทวนอีก" ในคลังศัพท์ (ระบบนัดทวนซ้ำที่ 1 · 2 · 4 · 7 · 15 วัน) · ดูระดับภาษาโดยประมาณ (CEFR) · สมุดข้อผิดพลาดรวมจุดที่โค้ช AI ให้แก้ กด "เข้าใจแล้ว" เมื่อจำได้ · และย้อนดูเรื่องเก่าแยกตามหมวด</span></div></li>'+
+   '<li><div class="n">1</div><div><b>เรื่องวันนี้ — อ่าน ฟัง แล้วลงมือ</b><span>สุ่มจาก 4 สาย: ความรู้หลัก · งานวิจัยต่างประเทศ · งานวิจัยไทย · นวัตกรรม แต่ละสายมีกิจกรรมต่างกัน — ตอบคำถาม, สรุปงานวิจัยให้ที่ปรึกษา, แปลบทคัดย่อไทยเป็นอังกฤษ หรือแสดงความเห็นต่อเทคโนโลยีใหม่ · สลับ <b>ภาษาเนื้อหา English / ไทย</b> เพื่ออ่านและฟังความรู้ของเรื่องเป็นภาษาไทยก่อน แล้วสลับกลับมาฝึกภาษาอังกฤษ (เสียงอ่านเปลี่ยนตามภาษา: ไทยใช้เสียงไทยของเครื่อง · กิจกรรมฝึกยังเป็นภาษาอังกฤษ) · ทำเสร็จแล้วศัพท์ของเรื่องเข้าคลังศัพท์อัตโนมัติ · เปิด "แตะคำเพื่อเก็บ" แล้วแตะคำในบทสรุปเพื่อเก็บคำอื่นเพิ่ม · ปรับบทสรุป "ง่ายลง/ลึกขึ้น" ได้ · ฝึกพูดตามทีละประโยค (Shadowing) กด "พูด" แล้วระบบตรวจให้เมื่อพูดจบ · เปิด "โหมดฟังระหว่างเดินทาง" เพื่อฟังทั้งเรื่องต่อเนื่อง · พบเนื้อหาผิดกด "แจ้งที่นี่" ใต้เนื้อหา</span></div></li>'+
+   '<li><div class="n">2</div><div><b>คุยงาน — ตอบที่ปรึกษาชาวต่างชาติ</b><span>สถานการณ์เปลี่ยนทุกวัน: คุยเรื่องของวันนี้ สลับกับสถานการณ์หน้างาน (ขอขยายเวลา · NCR · ความปลอดภัย · ตรวจรับงาน ฯลฯ) · พิมพ์หรือกด "พูด" เพื่อตอบ ระบบจะแนะนำวิธีพูดที่ชัดกว่า ถ้าติดให้กด "ดูประโยคตัวอย่าง" · สลับเป็น "เขียนอีเมล/รายงาน" เพื่อฝึกเขียนงานจริง (โจทย์เปลี่ยนทุกวัน) · ฟังข้อความที่ปรึกษาได้จากปุ่มลำโพง หรือเปิด "อ่านอัตโนมัติ" (ค่าเริ่มต้นปิด) และกด "หยุดเสียง" ได้ทุกเมื่อ · ภาพที่ปรึกษาจะขยับปากเมื่อพูด เอียงหัวฟังเมื่อคุณพิมพ์ และแสดงสถานะกำลังคิดก่อนตอบ</span></div></li>'+
+   '<li><div class="n">3</div><div><b>เกมอธิบาย — อธิบายให้คนทั่วไปเข้าใจ</b><span>หลักการเปลี่ยนทุกวันตามเรื่องที่เรียน (หรือจากคลังหลักการงานทาง 30 เรื่อง) · อธิบาย 3–4 ประโยค แล้วรับคะแนนความชัดเจน ภาษา และความถูกต้องทางวิชาการ · นึกไม่ออกกด "ดูคำใบ้"</span></div></li>'+
+   '<li><div class="n">4</div><div><b>ทบทวน — ควิซ คลังศัพท์ และเรื่องที่ผ่านมา</b><span>ควิซสร้างจากศัพท์ที่ถึงรอบทวน (อังกฤษ→ไทย · ไทย→อังกฤษ · ฟังเสียงแล้วเลือกความหมาย) และคำถามจากเรื่องที่ผ่านมา — ตอบข้อศัพท์แล้วระบบทวนคำนั้นให้เลย (ตัวเลือกสลับตำแหน่งทุกรอบ กด \"ทำอีกรอบ\" เพื่อฝึกซ้ำ) · ดูสรุป 7 วันล่าสุด · กด "จำได้" หรือ "ทวนอีก" ในคลังศัพท์ (ระบบนัดทวนซ้ำที่ 1 · 2 · 4 · 7 · 15 วัน) · ดูระดับภาษาโดยประมาณ (CEFR) · สมุดข้อผิดพลาดรวมจุดที่โค้ช AI ให้แก้ กด "เข้าใจแล้ว" เมื่อจำได้ · และย้อนดูเรื่องเก่าแยกตามหมวด</span></div></li>'+
    '<li><div class="n">5</div><div><b>ทางหลวงของฉัน — ดูผลงานสะสม</b><span>ทำครบ 3 ภารกิจของวัน (เรื่องวันนี้ · คุยงาน · เกมอธิบาย) = ฝึกครบ 1 วัน กดสร้างถนนแล้วถนนตัวต่อยาวขึ้น 1 กม. ปลดล็อกสะพาน ท่อลอด และสิ่งก่อสร้างตามหมวดที่เรียน เลื่อนตำแหน่งจาก Site Inspector ถึง Chief Engineer · มีเพลงประกอบ เปิด/ปิด และปรับระดับเสียง (−/+) ได้ในหน้านั้น · เครื่องช้าหรือไม่ชอบฉาก 3D เลือก "โหมดเรียบ (2D)" ได้</span></div></li>'+
   '</ol>'+
   '<h3>หมวดหมู่เนื้อหา</h3><div class="chips">'+cats+'</div>'+
   (IN_GAS
-   ? '<div class="demo-note">งานวิจัยสรุปจาก <b>บทคัดย่อเท่านั้น</b> และแสดงวารสาร ปี และ DOI เสมอ · <b>เรื่องวันนี้เป็นของจริง</b> ระบบดึงจาก OpenAlex/Crossref/ThaiJO และข่าว RSS ทุกเช้ามืด แล้วให้ Gemini สรุปและตรวจตัวเลขกับบทคัดย่อ · <b>ผลการฝึกบันทึกจริงแล้ว</b> (XP · วันที่ฝึก · ถนน · ตำแหน่ง · คลังศัพท์ · เรื่องที่ผ่านมา) โดย XP นับเฉพาะครั้งแรกของแต่ละภารกิจในวัน · การตรวจงานเขียน บทสนทนากับที่ปรึกษา และคะแนนเกมอธิบาย <b>ใช้โค้ช AI</b> (มีเพดานต่อวัน — เกินแล้วหรือ AI ไม่ว่าง ระบบใช้การตรวจแบบพื้นฐานแทนให้เอง) · <b>ฉบับภาษาไทย</b>เรียบเรียงโดยโค้ช AI จากบทสรุปภาษาอังกฤษ ตรวจตัวเลขกับต้นฉบับ แล้วเก็บไว้ใช้ซ้ำ · '+MIC_NOTE+'</div>'
+   ? '<div class="demo-note">งานวิจัยสรุปจาก <b>บทคัดย่อเท่านั้น</b> และแสดงวารสาร ปี และ DOI เสมอ · <b>เรื่องวันนี้เป็นของจริง</b> ระบบดึงจาก OpenAlex/Crossref/ThaiJO และข่าว RSS ทุกเช้ามืด แล้วให้ Gemini สรุปและตรวจตัวเลขกับบทคัดย่อ · <b>ผลการฝึกบันทึกจริงแล้ว</b> (XP · วันที่ฝึก · ถนน · ตำแหน่ง · คลังศัพท์ · เรื่องที่ผ่านมา) โดย XP นับเฉพาะครั้งแรกของแต่ละภารกิจในวัน · การตรวจงานเขียน บทสนทนากับที่ปรึกษา และคะแนนเกมอธิบาย <b>ใช้โค้ช AI</b> (มีเพดานต่อวัน — เกินแล้วหรือ AI ไม่ว่าง ระบบใช้การตรวจแบบพื้นฐานแทนให้เอง) · <b>ฉบับภาษาไทย</b>เรียบเรียงโดยโค้ช AI จากบทสรุปภาษาอังกฤษ ตรวจตัวเลขกับต้นฉบับ แล้วเก็บไว้ใช้ซ้ำ · <b>เน็ตหลุดก็ใช้ได้</b> แอปเก็บเรื่องวันนี้และพรุ่งนี้ไว้ในเครื่อง ผลการฝึกที่ส่งไม่ได้จะส่งให้เองเมื่อเน็ตกลับ · ตั้งค่า LINE แล้วได้สรุป 7 วันทุกวันอาทิตย์ · '+MIC_NOTE+'</div>'
    : '<div class="demo-note">งานวิจัยสรุปจาก <b>บทคัดย่อเท่านั้น</b> และแสดงวารสาร ปี และ DOI เสมอ · นี่คือ <b>Demo</b> — เรื่องงานวิจัยในตัวอย่างเป็นเรื่องสมมติ ของจริงดึงจาก OpenAlex/Crossref/ThaiJO และข่าว RSS แล้วให้ Gemini สรุป · การพูดใช้ได้ดีที่สุดบน Chrome และต้องอนุญาตไมโครโฟน</div>')+
   '<div class="row"><button type="button" class="btn primary" data-go="today">เริ่มฝึกวันนี้</button>'+
   '<button type="button" class="btn" data-act="slow" aria-pressed="'+ST.slow+'">'+(ST.slow?'เสียงพูดช้า: เปิด':'เสียงพูดช้า: ปิด')+'</button></div>';
@@ -796,7 +922,7 @@ SCREENS.today=function(){
   if(DATA.mode!=='live'&&DATA.mode!=='demo') return todayStateBox();
   var t=curTopic(), s=STREAMS[t.stream], h='';
   h+='<div class="row" style="margin-bottom:10px;justify-content:space-between"><span class="stream s-'+t.stream+'">'+esc(s.th)+' · '+esc(s.en)+'</span>'+catChip(t.cat)+'</div>';
-  h+=langBarHTML()+'<div id="knowBox">'+knowHTML()+'</div>';
+  h+=langBarHTML()+'<div id="knowBox">'+knowHTML()+'</div>'+reportHTML();
   var a=t.activity;
   if(a.type==='quiz'){
     h+='<h3>เช็กความเข้าใจ</h3><div class="panel" id="chkPanel">'+chkPanelHTML(a)+'</div>'+RESHUFFLE_BTN('chk');
@@ -863,6 +989,28 @@ function langBarHTML(){
     '</span><span class="seg-lbl lang-hint" id="langHint">'+langHint()+'</span></div>';
 }
 function knowHTML(){ return isTH()?knowTH():knowEN(); }
+/* ปุ่มแจ้งเนื้อหาผิด (เรื่องจริงเท่านั้น) — บันทึกในชีต Topics คอลัมน์ user_flag · เรื่องที่ถูกแจ้งไม่ถูกใช้ทำควิซทบทวน */
+function reportHTML(){
+  if(!IN_GAS||DATA.mode!=='live') return '';
+  return '<div class="report"><button type="button" class="linkish" data-act="report" id="reportBtn" aria-expanded="false" aria-controls="reportBox">พบเนื้อหาผิด? แจ้งที่นี่</button>'+
+    '<div class="panel" id="reportBox" hidden><label for="reportNote" class="demo-note" style="display:block;margin:0 0 6px">ผิดตรงไหน (ไม่บังคับ)</label>'+
+    '<textarea id="reportNote" autocomplete="off" style="min-height:60px"></textarea>'+
+    '<div class="row" style="margin-top:8px"><button type="button" class="btn primary" id="reportSend">ส่งแจ้ง</button><button type="button" class="btn" data-act="report">ยกเลิก</button></div>'+
+    '<div class="status" id="reportStatus" role="status"></div></div></div>';
+}
+function sendReport(btn){
+  var t=curTopic(), note=document.getElementById('reportNote').value.trim(), st=document.getElementById('reportStatus');
+  var done=function(msg){ var bx=document.getElementById('reportBox'); bx.innerHTML='<p style="margin:0" role="status">'+esc(msg)+'</p>';
+    var rb=document.getElementById('reportBtn'); rb.disabled=true; rb.textContent='แจ้งแล้ว'; rb.setAttribute('aria-expanded','true'); };
+  btn.disabled=true; st.textContent='กำลังส่ง…';
+  google.script.run
+    .withSuccessHandler(function(){ done('ขอบคุณ — บันทึกแล้ว เรื่องนี้จะไม่ถูกใช้ทำควิซทบทวน และจะแสดงในปุ่มตรวจสุขภาพระบบให้ตรวจแก้'); })
+    .withFailureHandler(function(e){
+      if(isNetErr(e)){ queuePush('seReportTopic',[localYmd(),t.id,note]); done('ยังไม่มีเน็ต — เก็บการแจ้งไว้ในเครื่องแล้ว จะส่งให้เองเมื่อเน็ตกลับ'); return; }
+      btn.disabled=false; st.textContent='ส่งไม่สำเร็จ: '+(e&&e.message?e.message:String(e));
+    })
+    .seReportTopic(localYmd(),t.id,note);
+}
 /* เนื้อหาความรู้ฉบับภาษาไทย */
 function knowTH(){
   var t=curTopic(), T=thaiOf(t), h='';
@@ -899,7 +1047,9 @@ function ensureThai(force){
   ST.thai={id:t.id,state:'loading',err:''};
   var back=function(){ if(ST.screen==='today'&&curTopic()===t&&isTH()) renderKnow(false); };
   google.script.run
-    .withSuccessHandler(function(r){ t.titleTh=r.title; t.subTh=r.sub; t.summaryTh=r.summary; ST.thai={id:t.id,state:'ok',err:''}; back(); })
+    .withSuccessHandler(function(r){ t.titleTh=r.title; t.subTh=r.sub; t.summaryTh=r.summary; ST.thai={id:t.id,state:'ok',err:''};
+      var c=lsGet(CACHE_KEY); if(c&&c.topic&&c.topic.id===t.id){ c.topic.titleTh=r.title; c.topic.subTh=r.sub; c.topic.summaryTh=r.summary; lsSet(CACHE_KEY,c); }
+      back(); })
     .withFailureHandler(function(e){
       var m=(e&&e.message?e.message:String(e)).replace(/^Exception:\s*/,'');
       if(/^QUOTA/.test(m)) m='โค้ช AI ครบโควตาของวันนี้แล้ว — อ่านฉบับ English ไปก่อน แล้วลองใหม่พรุ่งนี้';
@@ -953,18 +1103,9 @@ function localYmd(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth
 function loadTodayTopic(){
   if(!IN_GAS) return;
   DATA.mode='loading'; DATA.error='';
-  var done=function(){ if(ST.screen==='today'){ ST.screen=null; go('today'); } };
   google.script.run
-    .withSuccessHandler(function(t){
-      if(t&&t.activity&&CATS[t.cat]&&STREAMS[t.stream]){ TOPICS=[t]; TODAY_IDX=0; DATA.mode='live'; }
-      else if(t){ DATA.mode='error'; DATA.error='ข้อมูลเรื่องของวันนี้ไม่ครบ (หมวด/สาย/กิจกรรม) — ตรวจแถวในชีต Topics'; }
-      else DATA.mode='empty';
-      done();
-    })
-    .withFailureHandler(function(err){
-      console.error('seGetTopicForDate error',err);
-      DATA.mode='error'; DATA.error=(err&&err.message)?err.message:String(err); done();
-    })
+    .withSuccessHandler(function(t){ setTopic(t); if(ST.screen==='today'&&DATA.mode!=='live'){ ST.screen=null; go('today'); } })
+    .withFailureHandler(topicFail)
     .seGetTopicForDate(localYmd());
 }
 /* ตรวจหาสาเหตุ: เรียก seDiagnose() แล้วแสดงผลเฉพาะกล่อง #diag (ไม่วาดหน้าใหม่ทั้งหน้า) */
@@ -1062,11 +1203,11 @@ function shadowHTML(){
   return '<div class="row" style="justify-content:space-between"><b>ประโยค '+(S.i+1)+'/'+S.list.length+'</b><span class="seg-lbl">ฝึกแล้ว '+Object.keys(S.done).length+' ประโยค</span></div>'+
     '<p class="en" id="shTarget">'+esc(x)+'</p>'+
     '<div class="row"><button type="button" class="btn" data-speak="'+esc(x)+'">'+ICON.speaker+'ฟังประโยคนี้</button></div>'+
-    '<label for="shIn" class="demo-note" style="display:block;margin:10px 0 6px">พูดตาม (ใช้การพิมพ์ด้วยเสียงของเครื่อง) หรือพิมพ์ตาม</label><textarea id="shIn" autocomplete="off" style="min-height:70px"></textarea>'+
-    '<div class="row" style="margin-top:8px"><button type="button" class="btn primary" id="shCheck">ตรวจ</button>'+
+    '<label for="shIn" class="demo-note" style="display:block;margin:10px 0 6px">พูดตาม (กด "พูด" แล้วพูดตามประโยค — พูดจบแล้วตรวจให้เอง) หรือพิมพ์ตาม</label><textarea id="shIn" autocomplete="off" style="min-height:70px"></textarea>'+
+    '<div class="row" style="margin-top:8px"><button type="button" class="btn" id="shMic">'+ICON.mic+'<span>พูด</span></button><button type="button" class="btn primary" id="shCheck">ตรวจ</button>'+
     '<button type="button" class="btn" data-act="shNav" data-d="-1"'+(S.i===0?' disabled':'')+'>ประโยคก่อนหน้า</button>'+
     '<button type="button" class="btn" data-act="shNav" data-d="1"'+(S.i>=S.list.length-1?' disabled':'')+'>ประโยคถัดไป</button></div>'+
-    '<div id="shResult" role="status"></div>';
+    '<div class="status" id="shStatus" role="status"></div><div id="shResult" role="status"></div>';
 }
 function shadowCheck(){
   var S=ST.sh, said=document.getElementById('shIn').value.trim(), out=document.getElementById('shResult');
@@ -1207,12 +1348,52 @@ function shuffledOrder(n,key){
 }
 /* ควิซ: ตัวเลือกสลับตำแหน่งทุกรอบ · data-i = ลำดับจริงของตัวเลือก ใช้ตรวจคำตอบ */
 function quizBlock(id,c){
-  var h='<div class="q" id="'+id+'"><p class="en">'+esc(c.q)+'</p><div class="opts">';
+  var h='<div class="q" id="'+id+'"><p class="en">'+esc(c.q)+(c.say?' '+speakerBtn(c.say,'คำศัพท์ในข้อนี้'):'')+'</p><div class="opts">';
   shuffledOrder(c.opts.length,id).forEach(function(j){h+='<button type="button" class="opt en" data-q="'+id+'" data-i="'+j+'">'+esc(c.opts[j])+'</button>';});
   return h+'</div><div class="explain" hidden></div></div>';
 }
 function chkPanelHTML(a){ var h=''; a.checks.forEach(function(c,i){h+=quizBlock('chk'+i,c);}); return h; }
-function qzPanelHTML(){ var h=''; shuffledOrder(QUIZ.length,'qzOrder').forEach(function(i){h+=quizBlock('qz'+i,QUIZ[i]);}); return h; }
+function qzPanelHTML(){ var L=qzList(), h=''; shuffledOrder(L.length,'qzOrder').forEach(function(i){h+=quizBlock('qz'+i,L[i]);}); return h; }
+/* ---------- ควิซทบทวน: สร้างจากศัพท์ที่ถึงรอบทวน (อังกฤษ→ไทย · ไทย→อังกฤษ · ฟังแล้วเลือก) + คำถามจากเรื่องที่ผ่านมา ----------
+ * ตอบข้อศัพท์ครั้งแรก = ทวนศัพท์คำนั้นในคลัง (ถูก → ขึ้นกล่องถัดไป · ผิด → กลับกล่อง 1) · คลังยังน้อย → เติมด้วยคำถามทั่วไป */
+function qzList(){ if(!ST.qz) ST.qz=buildReviewQuiz(); return ST.qz; }
+function pick2(list,seed){
+  var n=list.length, a=list[seed%n], b=list[(seed+1+Math.floor(n/2))%n];
+  if(b===a||b.th===a.th||b.en===a.en){ for(var i=0;i<n;i++){ var x=list[(seed+1+i)%n]; if(x!==a&&x.th!==a.th&&x.en!==a.en){ b=x; break; } } }
+  return [a,b];
+}
+function buildReviewQuiz(){
+  var due=IN_GAS?((PROG&&PROG.vocab&&PROG.vocab.due)||[]):DECK, seen={}, pool=[], qs=[], day=Math.floor(Date.now()/864e5);
+  ST.qzProg=!IN_GAS||!!PROG;
+  ((IN_GAS&&PROG&&PROG.vocab&&PROG.vocab.pool)||[]).concat(due,DECK,EXTRA_TERMS).forEach(function(w){
+    var k=String(w.en||'').toLowerCase(); if(k&&w.th&&!seen[k]){ seen[k]=1; pool.push(w); }
+  });
+  due.slice(0,4).forEach(function(w,i){
+    var others=pool.filter(function(x){ return x.en.toLowerCase()!==String(w.en).toLowerCase()&&x.th!==w.th; });
+    if(others.length<2) return;
+    var d=pick2(others,i*3+day), type=['en2th','th2en','listen'][(i+day)%3], why=w.en+' = '+w.th+(w.ex?' · '+w.ex:'');
+    if(type==='th2en') qs.push({q:'"'+w.th+'" ภาษาอังกฤษคือคำใด',opts:[w.en,d[0].en,d[1].en],a:0,why:why,vocab:w.en});
+    else if(type==='listen') qs.push({q:'ฟังคำศัพท์ แล้วเลือกความหมาย',say:w.en,opts:[w.th,d[0].th,d[1].th],a:0,why:why,vocab:w.en});
+    else qs.push({q:'"'+w.en+'" หมายถึง',opts:[w.th,d[0].th,d[1].th],a:0,why:why,vocab:w.en});
+  });
+  ((IN_GAS&&PROG&&PROG.reviewQs)||[]).forEach(function(q){ qs.push({q:q.q,opts:q.opts,a:q.a,why:q.why+(q.from?' (จากเรื่อง '+q.from+')':'')}); });
+  for(var k=0;qs.length<4&&k<QUIZ.length;k++) qs.push(QUIZ[(day+k)%QUIZ.length]);
+  return qs.slice(0,6);
+}
+/* ตอบข้อศัพท์ครั้งแรก → บันทึกการทวนในคลัง และอัปเดตการ์ดคำนั้นในหน้าเดียวกัน */
+function reviewFromQuiz(en,good){
+  var k=String(en).toLowerCase(); ST.qzDone=ST.qzDone||{};
+  if(ST.qzDone[k]) return; ST.qzDone[k]=1;
+  if(!IN_GAS) return;
+  var res=good?'ok':'again', idx=-1;
+  (deckList()||[]).forEach(function(d,i){ if(String(d.en).toLowerCase()===k) idx=i; });
+  var mark=function(txt){ if(idx<0) return; var el=document.getElementById('due'+idx); if(el) el.textContent=txt;
+    document.querySelectorAll('[data-deck="'+idx+'"]').forEach(function(b){ b.disabled=true; b.setAttribute('aria-pressed',b.dataset.v===res); }); };
+  google.script.run
+    .withSuccessHandler(function(r){ mark('ทวนครั้งถัดไป: อีก '+r.days+' วัน (จากควิซ)'); })
+    .withFailureHandler(function(e){ if(isNetErr(e)){ queuePush('seReviewVocab',[localYmd(),en,res]); mark('บันทึกในเครื่องแล้ว — ส่งเมื่อเน็ตกลับ'); } else { ST.qzDone[k]=0; toast(e&&e.message?e.message:String(e),true); } })
+    .seReviewVocab(localYmd(),en,res);
+}
 var RESHUFFLE_BTN=function(which){ return '<div class="row" style="margin-top:10px"><button type="button" class="btn" data-act="reshuffle" data-panel="'+which+'">ทำอีกรอบ (สลับตัวเลือก)</button></div>'; };
 
 /* 2) คุยงาน */
@@ -1224,7 +1405,8 @@ SCREENS.talk=function(){
   '<div class="row" style="margin-top:10px"><span class="seg" role="group" aria-label="รูปแบบการฝึก">'+
     '<button type="button" data-act="talkMode" data-m="chat" aria-pressed="true">คุยกับที่ปรึกษา</button><button type="button" data-act="talkMode" data-m="email" aria-pressed="false">เขียนอีเมล/รายงาน</button></span></div>'+
   '<div id="emailPane" hidden></div><div id="talkPane">'+
-  '<p class="lead" style="margin-top:12px">สถานการณ์: ผลทดสอบความแน่นชั้นพื้นทางไม่ผ่านเกณฑ์ ที่ปรึกษาต้องการคำอธิบายและแผนแก้ไข</p>'+
+  '<p class="lead" style="margin-top:12px"><span class="badge">'+(PRACTICE.talk.source==='topic'?'คุยเรื่องของวันนี้':'สถานการณ์หน้างาน')+'</span> '+
+    '<span id="talkSit">สถานการณ์: '+esc(PRACTICE.talk.situation_th)+'</span></p>'+
   '<div class="chat" id="chat"></div>'+
   '<div class="composer" id="composer">'+
    '<label for="reply" class="demo-note" style="display:block;margin:0 0 6px">ตอบเป็นภาษาอังกฤษ — พิมพ์ หรือกด "พูด"</label>'+
@@ -1348,11 +1530,11 @@ function initTalk(){
   document.getElementById('stopVoice').onclick=stopSpeak;
   /* ผู้ใช้พิมพ์/พูดใส่ช่องตอบ → ที่ปรึกษาเอียงหัวฟัง */
   document.getElementById('reply').addEventListener('input',function(){ if(ST.liam!=='speaking'&&ST.liam!=='thinking') setLiam('listening',1600); });
-  pushThem(SCRIPT[0].say);
+  pushThem(TALK()[0].say);
   document.getElementById('micBtn').onclick=function(){listen(document.getElementById('reply'),this,document.getElementById('talkStatus'));};
   document.getElementById('sendBtn').onclick=sendReply;
   document.getElementById('hintBtn').onclick=function(){
-    var m=(aiOn()&&ST.lastClearer)?ST.lastClearer:(SCRIPT[ST.turn]&&SCRIPT[ST.turn].model); if(!m)return;
+    var m=(aiOn()&&ST.lastClearer)?ST.lastClearer:(TALK()[ST.turn]&&TALK()[ST.turn].model); if(!m)return;
     document.getElementById('hintBox').innerHTML='<div class="hint"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><span class="en">'+esc(m)+'</span>'+speakerBtn(m,'ประโยคตัวอย่าง')+'</div></div>';
   };
 }
@@ -1387,7 +1569,7 @@ function sendReply(){
   var me=document.createElement('div'); me.className='msg me en'; me.textContent=text; c.appendChild(me);
   var ty=document.createElement('div'); ty.className='typing'; ty.textContent=CONSULTANT.name+' is typing…'; c.appendChild(ty); setLiam('thinking');
   ta.value=''; document.getElementById('hintBox').innerHTML='';
-  if(!ST.talkLog) ST.talkLog=[{who:'liam',text:SCRIPT[0].say}];
+  if(!ST.talkLog) ST.talkLog=[{who:'liam',text:TALK()[0].say}];
   var turn=ST.turn+1;
   google.script.run
     .withSuccessHandler(function(r){
@@ -1403,7 +1585,7 @@ function sendReply(){
       ty.remove(); me.remove(); ta.value=text; setLiam('idle'); btnReset(btn,'ส่ง');
       aiFail(e,null); st.textContent='ข้อความยังไม่ถูกส่ง — กด "ส่ง" อีกครั้ง'+(ST.aiOff?' (ระบบจะคุยต่อแบบพื้นฐาน)':'');
     })
-    .seCoachTalk(localYmd(),turn,ST.talkLog,text);
+    .seCoachTalk(localYmd(),turn,ST.talkLog,text,PRACTICE.talk.id);
 }
 /* จบบทสนทนา: ใช้ทั้งโหมด AI และโหมดพื้นฐาน */
 function endTalk(){
@@ -1419,26 +1601,29 @@ function sendReplyMock(){
   var ta=document.getElementById('reply'), btn=document.getElementById('sendBtn'), st=document.getElementById('talkStatus');
   var text=ta.value.trim();
   if(!text){st.textContent='ยังไม่มีข้อความ — พิมพ์หรือกด "พูด" ก่อนส่ง'; ta.focus(); return;}
-  if(ST.talkEnded||ST.turn>=SCRIPT.length-1){st.textContent='จบบทสนทนาวันนี้แล้ว'; return;}
+  var S=TALK();
+  if(ST.talkEnded||ST.turn>=S.length-1){st.textContent='จบบทสนทนาวันนี้แล้ว'; return;}
   st.textContent=''; btn.disabled=true; btn.classList.add('busy'); btn.querySelector('span').textContent='กำลังตอบ…';
   var c=document.getElementById('chat');
   var me=document.createElement('div'); me.className='msg me en'; me.textContent=text; c.appendChild(me);
-  var fb=document.createElement('div'); fb.className='fb'; fb.innerHTML=mockFeedback(text,SCRIPT[ST.turn].model); c.appendChild(fb);
+  var fb=document.createElement('div'); fb.className='fb'; fb.innerHTML=mockFeedback(text,S[ST.turn].model); c.appendChild(fb);
   var ty=document.createElement('div'); ty.className='typing'; ty.textContent=CONSULTANT.name+' is typing…'; c.appendChild(ty); setLiam('thinking');
   ta.value=''; document.getElementById('hintBox').innerHTML=''; addXP(15);
   setTimeout(function(){
-    ty.remove(); ST.turn++; pushThem(SCRIPT[ST.turn].say);
+    ty.remove(); ST.turn++; pushThem(S[ST.turn].say);
     btn.classList.remove('busy');
-    if(SCRIPT[ST.turn].end){ endTalk(); }else{btn.disabled=false; btn.querySelector('span').textContent='ส่ง';}
+    if(S[ST.turn].end||ST.turn>=S.length-1){ endTalk(); }else{btn.disabled=false; btn.querySelector('span').textContent='ส่ง';}
   },900);
 }
 
 /* 3) เกมอธิบาย */
 SCREENS.explain=function(){
+  var E=EX();
   return '<h2>Explain it simply</h2><p class="lead">อธิบายให้คนที่ไม่ใช่วิศวกรเข้าใจ — ฝึกทั้งภาษาและความเข้าใจหลักการไปพร้อมกัน</p>'+
-  '<div class="panel"><b style="font:700 22px var(--font-sign)">'+esc(EXPLAIN.topic)+'</b><p class="en" style="margin:6px 0 0">'+esc(EXPLAIN.task)+'</p></div>'+
+  '<div class="panel"><span class="badge">'+(E.source==='topic'?'หลักการจากเรื่องวันนี้':'หลักการงานทาง')+'</span><br><b style="font:700 22px var(--font-sign)" id="expConcept">'+esc(E.concept)+'</b><p class="en" style="margin:6px 0 0">'+esc(E.task)+'</p>'+
+    (E.hint_th?'<div class="row" style="margin-top:8px"><button type="button" class="btn" id="expHintBtn" aria-expanded="false" aria-controls="expHint">ดูคำใบ้</button></div><p class="demo-note" id="expHint" hidden>'+esc(E.hint_th)+'</p>':'')+'</div>'+
   '<div style="margin-top:14px"><label for="exp" class="demo-note" style="display:block;margin:0 0 6px">คำอธิบายของคุณ</label>'+
-  '<textarea id="exp" autocomplete="off" placeholder="CBR tells us…"></textarea>'+
+  '<textarea id="exp" autocomplete="off" placeholder="Type your explanation…"></textarea>'+
   '<div class="row" style="margin-top:8px"><button type="button" class="btn" id="expMic">'+ICON.mic+'<span>พูด</span></button>'+
   '<button type="button" class="btn primary" id="expScore"><span>ส่งให้ตรวจ</span></button></div>'+
   '<div class="status" id="expStatus" role="status"></div></div><div id="expResult"></div>';
@@ -1483,13 +1668,13 @@ function scoreExplain(){
       document.getElementById('expResult').innerHTML='<h3>ผลคะแนนจากโค้ช AI · +'+gain+' XP</h3><div class="panel"><div class="bars">'+
         bar('ความชัดเจน — ฝรั่งฟังเข้าใจไหม',r.clarity)+bar('ภาษา / ไวยากรณ์',r.language)+bar('ความถูกต้องทางวิชาการ',r.accuracy)+
         '</div>'+(r.tip?'<p style="margin:0 0 12px">'+esc(r.tip)+'</p>':'')+mistakesHTML(r.mistakes)+clearerHTML(r.clearer,'วิธีอธิบายที่ชัดขึ้น (จากข้อความของคุณ)')+
-        '<div class="model"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><b>ตัวอย่างคำอธิบายที่ดี</b>'+speakerBtn(EXPLAIN.model,'ตัวอย่างคำอธิบาย')+'</div><p class="en" style="margin:6px 0 0">'+esc(EXPLAIN.model)+'</p></div></div>'+
+        '<div class="model"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><b>ตัวอย่างคำอธิบายที่ดี</b>'+speakerBtn(EX().model,'ตัวอย่างคำอธิบาย')+'</div><p class="en" style="margin:6px 0 0">'+esc(EX().model)+'</p></div></div>'+
         '<div class="row" style="margin-top:14px"><button type="button" class="btn primary" data-go="review">ไปทบทวน</button></div>';
       fillBars('#expResult'); btnDone(btn,'ส่งให้ตรวจอีกครั้ง');
       document.getElementById('expResult').scrollIntoView({behavior:'smooth',block:'start'});
     })
     .withFailureHandler(function(e){ btnReset(btn,'ส่งให้ตรวจ'); aiFail(e,scoreExplainMock); })
-    .seCoachExplain(localYmd(),text);
+    .seCoachExplain(localYmd(),text,EX().id);
 }
 function scoreExplainMock(){
   var ta=document.getElementById('exp'), st=document.getElementById('expStatus'), btn=document.getElementById('expScore');
@@ -1498,8 +1683,8 @@ function scoreExplainMock(){
   setTimeout(function(){
     var low=text.toLowerCase(), words=text.split(/\s+/).filter(Boolean).length;
     var sents=Math.max(1,text.split(/[.!?]+/).filter(function(s){return s.trim();}).length);
-    var hits=EXPLAIN.keys.filter(function(k){return low.indexOf(k)>-1;}).length;
-    var jar=EXPLAIN.jargon.filter(function(k){return low.indexOf(k)>-1;}).length;
+    var E=EX(), hits=E.keys.filter(function(k){return low.indexOf(k)>-1;}).length;
+    var jar=E.jargon.filter(function(k){return low.indexOf(k)>-1;}).length;
     var thai=/[\u0E00-\u0E7F]/.test(text);
     var clarity=clamp(100-Math.max(0,words/sents-16)*4-jar*8-(words<20?25:0));
     var lang=clamp(thai?40:72+(/^[A-Z]/.test(text)?8:0)+(/[.!?]$/.test(text)?8:0)+(sents>=3?8:0));
@@ -1507,12 +1692,12 @@ function scoreExplainMock(){
     var avg=Math.round((clarity+lang+acc)/3), gain=Math.round(avg/5);
     addXP(gain);
     recordTask('explain',{xp:gain,clarity:clarity,language:lang,accuracy:acc});
-    var tip=jar?'มีศัพท์เทคนิคที่คนทั่วไปไม่รู้จัก ('+EXPLAIN.jargon.filter(function(k){return low.indexOf(k)>-1;}).join(', ')+') ถ้าจำเป็นต้องใช้ ให้อธิบายต่อท้ายสั้น ๆ':
-      hits<4?'ลองบอกให้ครบ 3 เรื่อง: ทดสอบอะไร (ดิน) · ทำอย่างไร (กดแท่งเหล็ก เทียบกับหินมาตรฐาน) · ใช้ทำอะไร (ออกแบบความหนาชั้นทาง)':
+    var tip=jar?'มีศัพท์เทคนิคที่คนทั่วไปไม่รู้จัก ('+E.jargon.filter(function(k){return low.indexOf(k)>-1;}).join(', ')+') ถ้าจำเป็นต้องใช้ ให้อธิบายต่อท้ายสั้น ๆ':
+      hits<4?(E.hint_th?'ลองให้ครบ: '+E.hint_th:'ลองบอกให้ครบ: คืออะไร · ทำงานอย่างไร · สำคัญอย่างไร'):
       'ครอบคลุมหลักการครบ ลองลดความยาวประโยคให้เหลือไม่เกิน 15 คำ จะฟังง่ายขึ้นอีก';
     document.getElementById('expResult').innerHTML='<h3>ผลคะแนน (จำลอง) · +'+gain+' XP</h3><div class="panel"><div class="bars">'+
       bar('ความชัดเจน — ฝรั่งฟังเข้าใจไหม',clarity)+bar('ภาษา / ไวยากรณ์',lang)+bar('ความถูกต้องทางวิชาการ',acc)+
-      '</div><p style="margin:0 0 12px">'+esc(tip)+'</p><div class="model"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><b>ตัวอย่างคำอธิบายที่ดี</b>'+speakerBtn(EXPLAIN.model,'ตัวอย่างคำอธิบาย')+'</div><p class="en" style="margin:6px 0 0">'+esc(EXPLAIN.model)+'</p></div></div>'+
+      '</div><p style="margin:0 0 12px">'+esc(tip)+'</p><div class="model"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><b>ตัวอย่างคำอธิบายที่ดี</b>'+speakerBtn(E.model,'ตัวอย่างคำอธิบาย')+'</div><p class="en" style="margin:6px 0 0">'+esc(E.model)+'</p></div></div>'+
       '<div class="row" style="margin-top:14px"><button type="button" class="btn primary" data-go="review">ไปทบทวน</button></div>';
     requestAnimationFrame(function(){document.querySelectorAll('.fill').forEach(function(f){f.style.width=f.dataset.v+'%';});});
     btn.classList.remove('busy'); btn.classList.add('done'); btn.querySelector('span').textContent='✓ ตรวจแล้ว';
@@ -1524,7 +1709,8 @@ function bar(label,v){return '<div class="bar"><label><span>'+label+'</span><b>'
 
 /* 4) ทบทวน */
 SCREENS.review=function(){
-  var h='<h2>Review</h2><p class="lead">ควิซสั้น 4 ข้อ ทวนคลังศัพท์ และย้อนดูเรื่องที่ผ่านมา</p>'+(IN_GAS?'<div class="panel cefr" id="cefrBox" style="margin-bottom:14px">'+cefrHTML()+'</div>':'')+'<div class="panel" id="qzPanel">'+qzPanelHTML();
+  var h='<h2>Review</h2><p class="lead">ควิซจากคลังศัพท์และเรื่องที่ผ่านมา (ตอบข้อศัพท์ = ทวนคำนั้นให้อัตโนมัติ) · ทวนคลังศัพท์ · ย้อนดูเรื่องที่ผ่านมา</p>'+
+    (IN_GAS?'<div class="panel cefr" id="cefrBox" style="margin-bottom:14px">'+cefrHTML()+'</div><div class="panel week" id="weekBox" style="margin-bottom:14px">'+weekHTML()+'</div>':'')+'<div class="panel" id="qzPanel">'+qzPanelHTML();
   return h+'</div>'+RESHUFFLE_BTN('qz')+'<h3>คลังศัพท์</h3><div class="deck" id="deck">'+deckHTML()+'</div>'+
     (IN_GAS?'<h3>สมุดข้อผิดพลาด</h3><div id="mistakes">'+mistakeBookHTML()+'</div>':'')+
     '<h3>เรื่องที่ผ่านมา (แยกหมวด)</h3><div class="archive" id="archive">'+archiveHTML()+'</div>';
@@ -1545,6 +1731,16 @@ function mistakeBookHTML(){
       '<button type="button" class="btn" data-mk="'+m.row+'">เข้าใจแล้ว</button></li>';}).join('')+'</ul>';
 }
 /* คลังศัพท์: เว็บแอปจริง = คำที่ถึงรอบทวน (Leitner 1·2·4·7·15 วัน) · Demo = ตัวอย่าง */
+/* สรุป 7 วันล่าสุด (วันที่ฝึกครบ · XP · ศัพท์ใหม่ · คะแนนภาษา เทียบสัปดาห์ก่อน · จุดที่ผิดบ่อย) */
+function weekHTML(){
+  var w=PROG&&PROG.week; if(!w) return '<p class="demo-note" style="margin:0">กำลังโหลดสรุป 7 วัน…</p>';
+  var tasks=Object.keys(TASK_TH).filter(function(k){return w.tasks&&w.tasks[k];}).map(function(k){return TASK_TH[k]+' '+w.tasks[k];});
+  var trend=(w.lang!==null&&w.langPrev!==null&&w.lang!==w.langPrev)?(w.lang>w.langPrev?' ↑':' ↓')+' จาก '+w.langPrev:'';
+  var cell=function(v,l){ return '<div><b>'+esc(v)+'</b><small>'+esc(l)+'</small></div>'; };
+  return '<b>สรุป 7 วันล่าสุด</b><div class="week-grid">'+cell(w.days+'/7','วันที่ฝึกครบ')+cell('+'+w.xp,'XP')+cell(w.words,'ศัพท์ใหม่')+cell(w.lang===null?'–':w.lang,'คะแนนภาษาเฉลี่ย'+trend)+'</div>'+
+    (tasks.length?'<p class="demo-note" style="margin:8px 0 0">ภารกิจ: '+esc(tasks.join(' · '))+'</p>':'<p class="demo-note" style="margin:8px 0 0">7 วันนี้ยังไม่ได้ฝึก — เริ่มจากเรื่องวันนี้ได้เลย</p>')+
+    (w.patterns&&w.patterns.length?'<p class="demo-note" style="margin:4px 0 0">จุดที่ผิดบ่อย: '+esc(w.patterns.map(function(x){return x.p+' ('+x.n+')';}).join(' · '))+'</p>':'');
+}
 function deckList(){ return IN_GAS?(PROG?PROG.vocab.due:null):DECK; }
 function deckHTML(){
   var list=deckList(), h='';
@@ -2262,8 +2458,8 @@ function go(name){
   if(ST.screen==='highway'&&name!=='highway') destroyHighway();
   var changed=ST.screen!==name; ST.screen=name;
   if(changed) stopSpeak();   /* ไม่ให้เสียงพูดจากหน้าก่อนดังค้าง */
+  if(name==='today'){ ST.sh=null; ST.ls=null; }   /* ล้างก่อนวาด — วาดแล้วค่อยล้างจะทำให้ปุ่ม "ตรวจ" ของพูดตามไม่มีข้อมูล */
   main.innerHTML=SCREENS[name]();
-  if(name==='today'){ ST.sh=null; ST.ls=null; }
   if(name==='today') initToday();
   if(name==='highway') initHighway();
   if(name==='talk') initTalk();
@@ -2288,6 +2484,12 @@ document.addEventListener('click',function(e){
     if(t.dataset.act==='shNav'){ ST.sh.i=Math.max(0,Math.min(ST.sh.list.length-1,ST.sh.i+(+t.dataset.d))); document.getElementById('shadow').innerHTML=shadowHTML();
       var nb=document.querySelector('#shadow [data-act="shNav"][data-d="'+t.dataset.d+'"]'); if(nb&&!nb.disabled) nb.focus({preventScroll:true}); else document.getElementById('shIn').focus({preventScroll:true}); return; }
     if(t.id==='shCheck'){ shadowCheck(); return; }
+    if(t.id==='shMic'){ var si=document.getElementById('shIn'); listen(si,t,document.getElementById('shStatus'),function(){ if(si.value.trim()) shadowCheck(); }); return; }
+    if(t.id==='expHintBtn'){ var hb=document.getElementById('expHint'); hb.hidden=!hb.hidden; t.setAttribute('aria-expanded',!hb.hidden); return; }
+    if(t.dataset.act==='report'){ var rb=document.getElementById('reportBox'), rbt=document.getElementById('reportBtn'); if(!rb) return;
+      rb.hidden=!rb.hidden; rbt.setAttribute('aria-expanded',!rb.hidden);
+      if(!rb.hidden) document.getElementById('reportNote').focus({preventScroll:true}); else rbt.focus({preventScroll:true}); return; }
+    if(t.id==='reportSend'){ sendReport(t); return; }
     if(t.id==='lsOpen'){ var lb=document.getElementById('listen'), open=lb.hidden; lb.hidden=!open; t.setAttribute('aria-expanded',open); if(open) lsRender(); else stopSpeak(); return; }
     if(t.id==='lsPlay'){ if(ST.ls.playing){ stopSpeak(); } else lsPlayFrom(ST.ls.i>=ST.ls.tracks.length?0:ST.ls.i); return; }
     if(t.dataset.act==='lsNav'){ var ni=Math.max(0,Math.min(ST.ls.tracks.length-1,ST.ls.i+(+t.dataset.d))); if(ST.ls.playing) lsPlayFrom(ni); else { ST.ls.i=ni; lsUI(); } return; }
@@ -2327,11 +2529,12 @@ document.addEventListener('click',function(e){
     if(t.dataset.q){ /* ตอบคำถาม */
       var id=t.dataset.q, box=document.getElementById(id);
       if(box.dataset.done) return;
-      var src=id.indexOf('chk')===0?curTopic().activity.checks[+id.slice(3)]:QUIZ[+id.slice(2)];
+      var src=id.indexOf('chk')===0?curTopic().activity.checks[+id.slice(3)]:qzList()[+id.slice(2)];
       var pick=+t.dataset.i;
       box.querySelector('.opt[data-i="'+src.a+'"]').classList.add('right');   /* ตัวเลือกถูกสลับตำแหน่ง → หาจากลำดับจริง */
       if(pick!==src.a) t.classList.add('wrong'); else addXP(10);
       box.dataset.done='1'; if(pick===src.a) box.dataset.ok='1';
+      if(src.vocab) reviewFromQuiz(src.vocab,pick===src.a);
       var pre=id.indexOf('chk')===0?'chk':'qz', boxes=document.querySelectorAll('.q[id^="'+pre+'"]');
       var all=[].every.call(boxes,function(b){return b.dataset.done;}), okN=[].filter.call(boxes,function(b){return b.dataset.ok;}).length;
       if(all) recordTask(pre==='chk'?'today':'review',{xp:10*okN,quizCorrect:okN});
@@ -2345,7 +2548,9 @@ document.addEventListener('click',function(e){
       dueEl.textContent='กำลังบันทึก…';
       google.script.run
         .withSuccessHandler(function(r){ dueEl.textContent='ทวนครั้งถัดไป: อีก '+r.days+' วัน (กล่อง '+r.box+')'; })
-        .withFailureHandler(function(e){ [].forEach.call(pair,function(b){b.disabled=false;b.setAttribute('aria-pressed','false');}); dueEl.textContent='บันทึกไม่สำเร็จ — ลองกดอีกครั้ง'; toast(e&&e.message?e.message:String(e),true); })
+        .withFailureHandler(function(e){
+          if(isNetErr(e)){ queuePush('seReviewVocab',[localYmd(),w.en,t.dataset.v]); dueEl.textContent='บันทึกในเครื่องแล้ว — ส่งเมื่อเน็ตกลับ'; return; }
+          [].forEach.call(pair,function(b){b.disabled=false;b.setAttribute('aria-pressed','false');}); dueEl.textContent='บันทึกไม่สำเร็จ — ลองกดอีกครั้ง'; toast(e&&e.message?e.message:String(e),true); })
         .seReviewVocab(localYmd(),w.en,t.dataset.v);
       return;
     }
@@ -2374,8 +2579,8 @@ if('speechSynthesis' in window) speechSynthesis.onvoiceschanged=function(){
   var x=thVoiceText(); n.textContent=x; n.hidden=!x;
 };
 go('guide');
-loadTodayTopic();
-loadProgress();
+if(IN_GAS){ DATA.mode='loading'; boot(); }
+netUI();
 /* แจ้งหน้าแอป PWA (ที่ฝังเว็บแอปนี้ไว้) ว่าเปิดสำเร็จแล้ว · ส่งแค่สัญญาณ ไม่มีข้อมูลผู้ใช้ */
 (function(){ try{ if(!IN_APP&&window.top!==window) window.top.postMessage('site-english:ready','*'); }catch(e){} })();
 </script>
