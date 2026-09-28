@@ -132,6 +132,13 @@ h3{font-size:17px;margin:22px 0 8px}
 .seg button:last-child{border-right:0}
 .seg button[aria-pressed="true"]{background:var(--mark);color:#1D2A31;font-weight:700}
 .seg-lbl{font-size:14px;color:var(--muted);margin-right:6px}
+/* โหมดภาษาเนื้อหา · ข้อความไทยใช้ฟอนต์ไทยและระยะบรรทัดที่ไม่ตัดสระบน/ล่าง */
+.lang-bar{margin:0 0 12px;gap:6px}
+.lang-bar .seg{margin-top:0}
+.lang-hint{flex:1 1 220px;margin:0}
+.sign-title.th{font:700 clamp(24px,5.6vw,34px)/1.35 var(--font-th)}
+.term strong.th{font:600 17px/1.4 var(--font-th)}
+.th-sum{font-size:17px;line-height:1.8}
 .sh-words .w{padding:1px 2px;border-radius:3px}.sh-words .ok{background:rgba(63,191,127,.22)}.sh-words .miss{background:rgba(226,88,74,.22);text-decoration:underline dotted}
 .ls-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px;max-height:260px;overflow:auto}
 .ls-list li{padding:6px 10px;border-radius:8px;font-size:14px;border:1px solid transparent}
@@ -347,7 +354,7 @@ nav.tabs button[aria-current="page"]{color:var(--mark);box-shadow:inset 0 3px 0 
  * ║  EXEC_URL = ลิงก์ /exec ของ deployment แบบ "Who has access: Anyone"      ║
  * ║  ⚠️ อัปโหลด index.html ใหม่ทับ → ต้องกรอก EXEC_URL ใหม่ทุกครั้ง            ║
  * ╚════════════════════════════════════════════════════════════════════╝ */
-var EXEC_URL = 'https://script.google.com/macros/s/AKfycbxEZtmvZDSyRwJXkUFaMTDQSw2IFRIGFLaQkvNglunK2kjp9a0IEBLbLwnEuZOCdd4SZA/exec';
+var EXEC_URL = '';
 /* ═══════════════════════════ จบส่วนตั้งค่า ═══════════════════════════ */
 </script>
 <div id="seGate" role="dialog" aria-modal="true" aria-labelledby="gTitle" hidden>
@@ -366,7 +373,7 @@ var EXEC_URL = 'https://script.google.com/macros/s/AKfycbxEZtmvZDSyRwJXkUFaMTDQS
  * หน้าเว็บส่วนที่เหลือเหมือนกับ Index.html ของ Apps Script ทุกอย่าง */
 (function(){
   window.SE_HOST='app';
-  var FNS=["seGetTopicForDate", "seGetProgress", "seRecordActivity", "seReviewVocab", "seCoachWriting", "seCoachTalk", "seCoachExplain", "seSaveWord", "seResolveMistake", "seGetEmailTask", "seCoachEmail", "seRewriteSummary", "seDiagnose"], KEY='se_app_code';
+  var FNS=["seGetTopicForDate", "seGetProgress", "seRecordActivity", "seReviewVocab", "seCoachWriting", "seCoachTalk", "seCoachExplain", "seSaveWord", "seResolveMistake", "seGetEmailTask", "seCoachEmail", "seRewriteSummary", "seDiagnose", "seGetThaiBrief"], KEY='se_app_code';
   var URL_OK=/^https:\/\/script\.google\.com\/macros\/s\/[^\/]+\/exec$/;
   function code(){ try{ return localStorage.getItem(KEY)||''; }catch(e){ return ''; } }
   function $(id){ return document.getElementById(id); }
@@ -492,6 +499,8 @@ var STREAMS = {
 var TOPICS = [
  { stream:'core', cat:'pave', title:'Warm Mix Asphalt', sub:'Paving at lower temperatures — what changes on site?', minutes:12,
    summary:'Warm mix asphalt, or WMA, is produced and placed at temperatures about 20 to 40 degrees Celsius lower than conventional hot mix asphalt. Contractors lower the temperature by foaming the binder with a small amount of water, or by adding organic or chemical additives. Because the plant burns less fuel, WMA reduces emissions and fumes, which also makes working conditions better for the paving crew. The mix stays workable for longer, so it can be hauled further and compacted in cooler weather. However, engineers still need to check moisture sensitivity and early rutting resistance, especially when a foaming process is used.',
+   titleTh:'แอสฟัลต์ผสมอุ่น (Warm Mix Asphalt)', subTh:'ปูผิวทางที่อุณหภูมิต่ำลง — หน้างานเปลี่ยนอะไรบ้าง?',
+   summaryTh:'แอสฟัลต์ผสมอุ่น (Warm Mix Asphalt: WMA) ผลิตและปูที่อุณหภูมิต่ำกว่าแอสฟัลต์คอนกรีตผสมร้อนทั่วไปประมาณ 20–40 องศาเซลเซียส\nผู้รับจ้างลดอุณหภูมิได้โดยทำให้วัสดุยึดเกาะ (binder) เป็นฟองด้วยน้ำปริมาณเล็กน้อย หรือเติมสารเติมแต่งอินทรีย์หรือสารเคมี\nเมื่อโรงงานผสมใช้เชื้อเพลิงน้อยลง WMA จึงลดมลพิษและควัน สภาพการทำงานของทีมปูผิวทางจึงดีขึ้นด้วย\nส่วนผสมทำงานได้ง่าย (workable) นานขึ้น จึงขนส่งได้ไกลขึ้นและบดอัดในอากาศที่เย็นกว่าได้\nอย่างไรก็ตาม วิศวกรยังต้องตรวจความไวต่อความชื้น (moisture sensitivity) และความต้านทานร่องล้อ (rutting) ช่วงแรก โดยเฉพาะเมื่อใช้วิธีทำให้เป็นฟอง',
    source:{note:'เรียบเรียงจากความรู้ทั่วไปเรื่อง WMA — ของจริงจะอ้างมาตรฐาน/เอกสารอ้างอิงที่ใช้'},
    terms:[{en:'binder',th:'วัสดุยึดเกาะ (แอสฟัลต์ซีเมนต์)'},{en:'workable',th:'ทำงานง่าย เกลี่ย/บดอัดได้ดี'},{en:'haul distance',th:'ระยะขนส่ง'},{en:'moisture sensitivity',th:'ความไวต่อความชื้น (การหลุดลอก)'},{en:'rutting',th:'ร่องล้อ'}],
    activity:{type:'quiz', checks:[
@@ -501,6 +510,8 @@ var TOPICS = [
  { stream:'research', cat:'recyc', title:'Cold In-Place Recycling', sub:'How does a foamed-bitumen recycled base perform after three years?', minutes:15,
    fictional:true,
    summary:'This study followed four rural highway sections where the old asphalt and part of the base were recycled in place with foamed bitumen and 1 percent cement. The researchers measured deflection, rutting and cracking every six months for three years. The recycled sections showed deflection similar to a new crushed-rock base, and rut depth stayed below 10 millimetres. Early cracking was higher in one section where the existing base contained a lot of clay. The authors conclude that the method is suitable for low-volume roads, but they recommend testing the plasticity of the existing material before design.',
+   titleTh:'การรีไซเคิลในที่แบบเย็น (Cold In-Place Recycling)', subTh:'พื้นทางรีไซเคิลด้วยโฟมแอสฟัลต์ใช้งานได้ดีแค่ไหนเมื่อผ่านไป 3 ปี?',
+   summaryTh:'งานวิจัยนี้ติดตามทางหลวงชนบท 4 ช่วง ที่นำผิวแอสฟัลต์เดิมและพื้นทางบางส่วนมารีไซเคิลในที่ด้วยโฟมแอสฟัลต์ (foamed bitumen) และปูนซีเมนต์ร้อยละ 1\nผู้วิจัยวัดค่าการแอ่นตัว (deflection) ร่องล้อ และรอยแตก ทุก 6 เดือนเป็นเวลา 3 ปี\nช่วงที่รีไซเคิลมีค่าการแอ่นตัวใกล้เคียงกับพื้นทางหินคลุกที่สร้างใหม่ และร่องล้อลึกไม่เกิน 10 มิลลิเมตร\nมีรอยแตกช่วงแรกมากกว่าในช่วงหนึ่งที่พื้นทางเดิมมีดินเหนียวปนมาก\nผู้วิจัยสรุปว่าวิธีนี้เหมาะกับถนนปริมาณจราจรต่ำ (low-volume road) แต่แนะนำให้ทดสอบความเป็นพลาสติก (plasticity) ของวัสดุเดิมก่อนออกแบบ',
    source:{journal:'(ตัวอย่างสมมติ) Journal of Pavement Recycling', year:'2026', doi:'—', note:'สรุปจากบทคัดย่อเท่านั้น'},
    terms:[{en:'in-place recycling',th:'การนำวัสดุเดิมกลับมาใช้ใหม่ในที่'},{en:'deflection',th:'ค่าการยุบตัว (ค่าแอ่นตัว)'},{en:'low-volume road',th:'ถนนปริมาณจราจรต่ำ'},{en:'plasticity',th:'ความเป็นพลาสติก (ค่า PI)'},{en:'limitation',th:'ข้อจำกัดของงานวิจัย'}],
    activity:{type:'write', mode:'brief', title:'Brief the consultant',
@@ -521,6 +532,8 @@ var TOPICS = [
  },
  { stream:'innov', cat:'digital', title:'Intelligent Compaction', sub:'Rollers that map every pass — would it help DOH sites?', minutes:12,
    summary:'Intelligent compaction, or IC, uses vibratory rollers fitted with an accelerometer, a GPS receiver and an on-board computer. As the roller works, the system measures how the material responds to vibration and shows a stiffness value, the number of passes and, for asphalt, the surface temperature on a colour map. The operator can see weak or under-compacted spots in real time instead of waiting for spot tests. Engineers can also download the data to check coverage over the whole section. IC does not replace density tests, but it helps decide where to test.',
+   titleTh:'การบดอัดอัจฉริยะ (Intelligent Compaction)', subTh:'รถบดที่บันทึกทุกเที่ยวการบด — จะช่วยงานของกรมทางหลวงได้ไหม?',
+   summaryTh:'การบดอัดอัจฉริยะ (Intelligent Compaction: IC) ใช้รถบดสั่นสะเทือนที่ติดเซนเซอร์วัดความเร่ง (accelerometer) เครื่องรับ GPS และคอมพิวเตอร์บนรถ\nขณะบดอัด ระบบวัดการตอบสนองของวัสดุต่อการสั่นสะเทือน แล้วแสดงค่าความแข็ง (stiffness) จำนวนเที่ยวการบด และอุณหภูมิผิวของงานแอสฟัลต์เป็นแผนที่สี\nผู้ควบคุมรถเห็นจุดที่อ่อนหรือบดอัดไม่ถึงได้ทันที ไม่ต้องรอผลการทดสอบเป็นจุด (spot test)\nวิศวกรยังดาวน์โหลดข้อมูลมาตรวจความครอบคลุม (coverage) ของการบดอัดทั้งช่วงงานได้\nIC ไม่ได้ใช้แทนการทดสอบความแน่น แต่ช่วยตัดสินใจว่าควรทดสอบตรงไหน',
    source:{note:'ตัวอย่างข่าวนวัตกรรม — ของจริงดึงจาก RSS ข่าวงานทางพร้อมลิงก์ต้นฉบับ'},
    terms:[{en:'accelerometer',th:'เซนเซอร์วัดความเร่ง'},{en:'coverage',th:'ความครอบคลุมพื้นที่บดอัด'},{en:'spot test',th:'การทดสอบเป็นจุด'},{en:'real time',th:'ทันที ขณะทำงาน'},{en:'under-compacted',th:'บดอัดไม่ถึง'}],
    activity:{type:'write', mode:'opinion', title:'Would you use it?',
@@ -589,6 +602,8 @@ var DECK = [
 var ST = {screen:null, xp:340, turn:0, quizIdx:0, slow:false, listening:null, autoVoice:false};
 /* หน้าคุยงาน: อ่านข้อความที่ปรึกษาออกเสียงอัตโนมัติ — ค่าเริ่มต้นปิด (หน้าเรียนต้องสงบ) จำค่าไว้ในเครื่อง */
 (function(){try{ST.autoVoice=localStorage.getItem('se_talk_voice')==='1';}catch(e){}})();
+/* ภาษาเนื้อหาของเรื่องวันนี้: 'en' = ฝึกภาษาอังกฤษ (ค่าเริ่มต้น) · 'th' = อ่าน/ฟังความรู้เป็นภาษาไทย · จำค่าไว้ในเครื่อง */
+ST.lang='en'; (function(){try{if(localStorage.getItem('se_lang')==='th') ST.lang='th';}catch(e){}})();
 function stopSpeak(){ST.speakSeq=(ST.speakSeq||0)+1; if(ST.ls&&ST.ls.playing){ ST.ls.playing=false; lsUI(); } try{if('speechSynthesis' in window) speechSynthesis.cancel();}catch(e){} if(ST.liam==='speaking') setLiam('idle'); markSpeakBtn(null);}
 /* ปุ่มฟังที่กำลังเล่น: เปลี่ยนเป็นปุ่ม "หยุด" · กดซ้ำเพื่อหยุด · เสียงจบแล้วคืนหน้าตาเดิม */
 function markSpeakBtn(btn){
@@ -679,14 +694,20 @@ function pickVoice(lang){
   if(lang==='th') return vs.filter(function(x){return /^th/i.test(x.lang);})[0]||null;
   return vs.filter(function(x){return /en-AU/i.test(x.lang);})[0]||vs.filter(function(x){return /en-GB/i.test(x.lang);})[0]||vs.filter(function(x){return /^en/i.test(x.lang);})[0]||null;
 }
+var NO_TH_VOICE='เครื่องนี้ไม่มีเสียงภาษาไทย — เพิ่มได้ที่ ตั้งค่าระบบ › การช่วยการเข้าถึง › เนื้อหาที่พูด › จัดการเสียง (Mac: Kanya · iPhone: เสียงไทย)';
+/* รายชื่อเสียงโหลดแล้วหรือยัง (Chrome โหลดช้า — ยังว่าง = ยังไม่รู้ ให้เบราว์เซอร์เลือกเสียงตามภาษาเอง) */
+function voicesKnown(){ return ('speechSynthesis' in window)&&speechSynthesis.getVoices().length>0; }
+function hasTH(s){ return /[\u0E00-\u0E7F]/.test(String(s||'')); }
+/* ข้อความไทย = เสียงไทย · ข้อความอังกฤษ = เสียงอังกฤษ (ไม่มีเสียงไทยในเครื่อง → แจ้ง ไม่ให้เสียงอังกฤษอ่านภาษาไทย) */
 function speak(text,who,btn){
   try{
     if(!('speechSynthesis' in window)){alert('เบราว์เซอร์นี้ไม่รองรับการอ่านออกเสียง'); return;}
     speechSynthesis.cancel();
+    var th=hasTH(text), v=pickVoice(th?'th':'en');
+    if(th&&!v&&voicesKnown()){ markSpeakBtn(null); toast(NO_TH_VOICE,true); return; }
     var u=new SpeechSynthesisUtterance(text);
-    var v=pickVoice('en');
     if(v) u.voice=v;
-    u.lang=v?v.lang:'en-GB';
+    u.lang=v?v.lang:(th?'th-TH':'en-GB');
     u.rate=ST.slow?0.8:0.95;
     var myId=(ST.speakSeq=(ST.speakSeq||0)+1);
     u.onend=u.onerror=function(){ if(ST.speakSeq!==myId) return; if(who==='liam'&&ST.liam==='speaking') setLiam('idle'); markSpeakBtn(null); };
@@ -728,7 +749,7 @@ SCREENS.guide=function(){
   return '<h2>คู่มือการใช้งานฉบับย่อ</h2>'+
   '<p class="lead">วันละประมาณ 10–15 นาที ระบบสุ่มเรื่องให้วันละ 1 เรื่อง ทำตามลำดับ 4 ขั้นแรก แล้วดูผลงานในขั้นที่ 5 และกลับมาดูหน้านี้ได้ทุกเมื่อจากปุ่ม "คู่มือย่อ" มุมขวาบน</p>'+
   '<ol class="steps">'+
-   '<li><div class="n">1</div><div><b>เรื่องวันนี้ — อ่าน ฟัง แล้วลงมือ</b><span>สุ่มจาก 4 สาย: ความรู้หลัก · งานวิจัยต่างประเทศ · งานวิจัยไทย · นวัตกรรม แต่ละสายมีกิจกรรมต่างกัน — ตอบคำถาม, สรุปงานวิจัยให้ที่ปรึกษา, แปลบทคัดย่อไทยเป็นอังกฤษ หรือแสดงความเห็นต่อเทคโนโลยีใหม่ · ทำเสร็จแล้วศัพท์ของเรื่องเข้าคลังศัพท์อัตโนมัติ · เปิด "แตะคำเพื่อเก็บ" แล้วแตะคำในบทสรุปเพื่อเก็บคำอื่นเพิ่ม · ปรับบทสรุป "ง่ายลง/ลึกขึ้น" ได้ · ฝึกพูดตามทีละประโยค (Shadowing) · เปิด "โหมดฟังระหว่างเดินทาง" เพื่อฟังทั้งเรื่องต่อเนื่อง</span></div></li>'+
+   '<li><div class="n">1</div><div><b>เรื่องวันนี้ — อ่าน ฟัง แล้วลงมือ</b><span>สุ่มจาก 4 สาย: ความรู้หลัก · งานวิจัยต่างประเทศ · งานวิจัยไทย · นวัตกรรม แต่ละสายมีกิจกรรมต่างกัน — ตอบคำถาม, สรุปงานวิจัยให้ที่ปรึกษา, แปลบทคัดย่อไทยเป็นอังกฤษ หรือแสดงความเห็นต่อเทคโนโลยีใหม่ · สลับ <b>ภาษาเนื้อหา English / ไทย</b> เพื่ออ่านและฟังความรู้ของเรื่องเป็นภาษาไทยก่อน แล้วสลับกลับมาฝึกภาษาอังกฤษ (เสียงอ่านเปลี่ยนตามภาษา: ไทยใช้เสียงไทยของเครื่อง · กิจกรรมฝึกยังเป็นภาษาอังกฤษ) · ทำเสร็จแล้วศัพท์ของเรื่องเข้าคลังศัพท์อัตโนมัติ · เปิด "แตะคำเพื่อเก็บ" แล้วแตะคำในบทสรุปเพื่อเก็บคำอื่นเพิ่ม · ปรับบทสรุป "ง่ายลง/ลึกขึ้น" ได้ · ฝึกพูดตามทีละประโยค (Shadowing) · เปิด "โหมดฟังระหว่างเดินทาง" เพื่อฟังทั้งเรื่องต่อเนื่อง</span></div></li>'+
    '<li><div class="n">2</div><div><b>คุยงาน — ตอบที่ปรึกษาชาวต่างชาติ</b><span>พิมพ์หรือกด "พูด" เพื่อตอบ ระบบจะแนะนำวิธีพูดที่ชัดกว่า ถ้าติดให้กด "ดูประโยคตัวอย่าง" · สลับเป็น "เขียนอีเมล/รายงาน" เพื่อฝึกเขียนงานจริง (โจทย์เปลี่ยนทุกวัน) · ฟังข้อความที่ปรึกษาได้จากปุ่มลำโพง หรือเปิด "อ่านอัตโนมัติ" (ค่าเริ่มต้นปิด) และกด "หยุดเสียง" ได้ทุกเมื่อ · ภาพที่ปรึกษาจะขยับปากเมื่อพูด เอียงหัวฟังเมื่อคุณพิมพ์ และแสดงสถานะกำลังคิดก่อนตอบ</span></div></li>'+
    '<li><div class="n">3</div><div><b>เกมอธิบาย — อธิบายให้คนทั่วไปเข้าใจ</b><span>อธิบายหลักการทางวิศวกรรม 3–4 ประโยค แล้วรับคะแนนความชัดเจน ภาษา และความถูกต้องทางวิชาการ</span></div></li>'+
    '<li><div class="n">4</div><div><b>ทบทวน — ควิซ คลังศัพท์ และเรื่องที่ผ่านมา</b><span>ตอบควิซสะสม XP (ตัวเลือกสลับตำแหน่งทุกรอบ กด \"ทำอีกรอบ\" เพื่อฝึกซ้ำ) กด "จำได้" หรือ "ทวนอีก" ในคลังศัพท์ (ระบบนัดทวนซ้ำที่ 1 · 2 · 4 · 7 · 15 วัน) · ดูระดับภาษาโดยประมาณ (CEFR) · สมุดข้อผิดพลาดรวมจุดที่โค้ช AI ให้แก้ กด "เข้าใจแล้ว" เมื่อจำได้ · และย้อนดูเรื่องเก่าแยกตามหมวด</span></div></li>'+
@@ -736,7 +757,7 @@ SCREENS.guide=function(){
   '</ol>'+
   '<h3>หมวดหมู่เนื้อหา</h3><div class="chips">'+cats+'</div>'+
   (IN_GAS
-   ? '<div class="demo-note">งานวิจัยสรุปจาก <b>บทคัดย่อเท่านั้น</b> และแสดงวารสาร ปี และ DOI เสมอ · <b>เรื่องวันนี้เป็นของจริง</b> ระบบดึงจาก OpenAlex/Crossref/ThaiJO และข่าว RSS ทุกเช้ามืด แล้วให้ Gemini สรุปและตรวจตัวเลขกับบทคัดย่อ · <b>ผลการฝึกบันทึกจริงแล้ว</b> (XP · วันที่ฝึก · ถนน · ตำแหน่ง · คลังศัพท์ · เรื่องที่ผ่านมา) โดย XP นับเฉพาะครั้งแรกของแต่ละภารกิจในวัน · การตรวจงานเขียน บทสนทนากับที่ปรึกษา และคะแนนเกมอธิบาย <b>ใช้โค้ช AI</b> (มีเพดานต่อวัน — เกินแล้วหรือ AI ไม่ว่าง ระบบใช้การตรวจแบบพื้นฐานแทนให้เอง) · '+MIC_NOTE+'</div>'
+   ? '<div class="demo-note">งานวิจัยสรุปจาก <b>บทคัดย่อเท่านั้น</b> และแสดงวารสาร ปี และ DOI เสมอ · <b>เรื่องวันนี้เป็นของจริง</b> ระบบดึงจาก OpenAlex/Crossref/ThaiJO และข่าว RSS ทุกเช้ามืด แล้วให้ Gemini สรุปและตรวจตัวเลขกับบทคัดย่อ · <b>ผลการฝึกบันทึกจริงแล้ว</b> (XP · วันที่ฝึก · ถนน · ตำแหน่ง · คลังศัพท์ · เรื่องที่ผ่านมา) โดย XP นับเฉพาะครั้งแรกของแต่ละภารกิจในวัน · การตรวจงานเขียน บทสนทนากับที่ปรึกษา และคะแนนเกมอธิบาย <b>ใช้โค้ช AI</b> (มีเพดานต่อวัน — เกินแล้วหรือ AI ไม่ว่าง ระบบใช้การตรวจแบบพื้นฐานแทนให้เอง) · <b>ฉบับภาษาไทย</b>เรียบเรียงโดยโค้ช AI จากบทสรุปภาษาอังกฤษ ตรวจตัวเลขกับต้นฉบับ แล้วเก็บไว้ใช้ซ้ำ · '+MIC_NOTE+'</div>'
    : '<div class="demo-note">งานวิจัยสรุปจาก <b>บทคัดย่อเท่านั้น</b> และแสดงวารสาร ปี และ DOI เสมอ · นี่คือ <b>Demo</b> — เรื่องงานวิจัยในตัวอย่างเป็นเรื่องสมมติ ของจริงดึงจาก OpenAlex/Crossref/ThaiJO และข่าว RSS แล้วให้ Gemini สรุป · การพูดใช้ได้ดีที่สุดบน Chrome และต้องอนุญาตไมโครโฟน</div>')+
   '<div class="row"><button type="button" class="btn primary" data-go="today">เริ่มฝึกวันนี้</button>'+
   '<button type="button" class="btn" data-act="slow" aria-pressed="'+ST.slow+'">'+(ST.slow?'เสียงพูดช้า: เปิด':'เสียงพูดช้า: ปิด')+'</button></div>';
@@ -749,6 +770,27 @@ SCREENS.today=function(){
   if(DATA.mode!=='live'&&DATA.mode!=='demo') return todayStateBox();
   var t=curTopic(), s=STREAMS[t.stream], h='';
   h+='<div class="row" style="margin-bottom:10px;justify-content:space-between"><span class="stream s-'+t.stream+'">'+esc(s.th)+' · '+esc(s.en)+'</span>'+catChip(t.cat)+'</div>';
+  h+=langBarHTML()+'<div id="knowBox">'+knowHTML()+'</div>';
+  var a=t.activity;
+  if(a.type==='quiz'){
+    h+='<h3>เช็กความเข้าใจ</h3><div class="panel" id="chkPanel">'+chkPanelHTML(a)+'</div>'+RESHUFFLE_BTN('chk');
+  }else{
+    h+='<h3>'+esc(a.title)+'</h3><div class="panel"><p class="en" style="margin-top:0">'+esc(a.task)+'</p>'+
+       '<label for="wr" class="demo-note" style="display:block;margin:0 0 6px">คำตอบของคุณ (ภาษาอังกฤษ)</label><textarea id="wr" autocomplete="off"></textarea>'+
+       '<div class="row" style="margin-top:8px"><button type="button" class="btn" id="wrMic">'+ICON.mic+'<span>พูด</span></button>'+
+       '<button type="button" class="btn primary" id="wrBtn"><span>ส่งให้ตรวจ</span></button></div>'+
+       '<div class="status" id="wrStatus" role="status"></div><div id="wrResult"></div></div>';
+  }
+  h+='<h3>ฝึกพูดตาม (Shadowing)</h3><div class="panel" id="shadow">'+shadowHTML()+'</div>';
+  h+='<div class="row" style="margin-top:12px"><button type="button" class="btn" id="lsOpen" aria-expanded="false" aria-controls="listen">'+ICON.speaker+'โหมดฟังระหว่างเดินทาง</button></div>'+
+     '<div class="panel" id="listen" hidden style="margin-top:8px"></div>';
+  h+='<div class="row" style="margin-top:16px"><button type="button" class="btn primary" data-go="talk">ไปคุยงานกับที่ปรึกษา</button>'+
+     (DATA.mode==='demo'?'<button type="button" class="btn" data-act="nextTopic">ดูตัวอย่างสายถัดไป (เฉพาะ Demo)</button>':'')+'</div>';
+  return h;
+};
+/* เนื้อหาความรู้ฉบับภาษาอังกฤษ (โหมด English — เหมือนเดิมทุกอย่าง) */
+function knowEN(){
+  var t=curTopic(), h='';
   h+='<div class="sign"><div class="sign-in">'+ICON.arrow+
      '<div class="sign-title">'+esc(t.title)+'</div><div class="sign-sub">'+esc(t.sub)+'</div>'+
      '<div class="sign-meta"><span>'+(DATA.mode==='live'?esc(thDate(t.date)):'Day '+DAY_NO)+'</span><span>~'+t.minutes+' นาที</span><span>'+esc(CATS[t.cat].en)+'</span></div></div></div>';
@@ -767,23 +809,98 @@ SCREENS.today=function(){
   h+='<h3>คำศัพท์วันนี้</h3><div class="terms">';
   t.terms.forEach(function(x){h+='<div class="term">'+speakerBtn(x.en,x.en)+'<div><strong>'+esc(x.en)+'</strong><small>'+esc(x.th)+'</small></div></div>';});
   h+='</div>';
-  var a=t.activity;
-  if(a.type==='quiz'){
-    h+='<h3>เช็กความเข้าใจ</h3><div class="panel" id="chkPanel">'+chkPanelHTML(a)+'</div>'+RESHUFFLE_BTN('chk');
-  }else{
-    h+='<h3>'+esc(a.title)+'</h3><div class="panel"><p class="en" style="margin-top:0">'+esc(a.task)+'</p>'+
-       '<label for="wr" class="demo-note" style="display:block;margin:0 0 6px">คำตอบของคุณ (ภาษาอังกฤษ)</label><textarea id="wr" autocomplete="off"></textarea>'+
-       '<div class="row" style="margin-top:8px"><button type="button" class="btn" id="wrMic">'+ICON.mic+'<span>พูด</span></button>'+
-       '<button type="button" class="btn primary" id="wrBtn"><span>ส่งให้ตรวจ</span></button></div>'+
-       '<div class="status" id="wrStatus" role="status"></div><div id="wrResult"></div></div>';
-  }
-  h+='<h3>ฝึกพูดตาม (Shadowing)</h3><div class="panel" id="shadow">'+shadowHTML()+'</div>';
-  h+='<div class="row" style="margin-top:12px"><button type="button" class="btn" id="lsOpen" aria-expanded="false" aria-controls="listen">'+ICON.speaker+'โหมดฟังระหว่างเดินทาง</button></div>'+
-     '<div class="panel" id="listen" hidden style="margin-top:8px"></div>';
-  h+='<div class="row" style="margin-top:16px"><button type="button" class="btn primary" data-go="talk">ไปคุยงานกับที่ปรึกษา</button>'+
-     (DATA.mode==='demo'?'<button type="button" class="btn" data-act="nextTopic">ดูตัวอย่างสายถัดไป (เฉพาะ Demo)</button>':'')+'</div>';
   return h;
-};
+}
+/* ---------- โหมดภาษาเนื้อหา: English (ฝึกภาษา) · ไทย (อ่าน/ฟังความรู้เป็นภาษาไทย) ----------
+ * สลับแล้ววาดใหม่เฉพาะกล่องความรู้ (#knowBox) — คำตอบที่พิมพ์ค้างไว้ · ควิซ · พูดตาม ไม่หาย
+ * ฉบับไทยมาพร้อมเรื่อง (รอบเช้าเตรียมไว้) หรือขอจาก seGetThaiBrief() ครั้งแรกที่สลับ แล้วระบบเก็บไว้ในชีต */
+var THAI_SUB='ฝึกแปลบทคัดย่อภาษาไทยให้วิศวกรต่างชาติเข้าใจ';
+function isTH(){ return ST.lang==='th'; }
+function thaiOf(t){
+  if(t.summaryTh) return {title:t.titleTh||t.title, sub:t.subTh||'', summary:t.summaryTh};
+  if(t.stream==='thai'&&t.thaiAbstract) return {title:t.title, sub:THAI_SUB, summary:t.thaiAbstract};
+  return null;
+}
+/* ประโยคภาษาไทย: ฉบับไทยคั่นด้วยขึ้นบรรทัด · บทคัดย่อก้อนเดียว → ตัดที่ช่องว่างเป็นช่วงละประมาณ 120 ตัวอักษร */
+function thLines(txt){
+  txt=String(txt||'').trim(); if(!txt) return [];
+  if(txt.indexOf('\n')>-1) return txt.split('\n').map(function(x){return x.trim();}).filter(Boolean);
+  var out=[], cur='';
+  txt.split(/\s+/).forEach(function(w){ cur=cur?cur+' '+w:w; if(cur.length>=120){ out.push(cur); cur=''; } });
+  if(cur) out.push(cur);
+  return out;
+}
+function langHint(){ return isTH()?'อ่านและฟังความรู้เป็นภาษาไทย · กิจกรรมฝึกยังเป็นภาษาอังกฤษ':'อ่านและฟังเป็นภาษาอังกฤษ'; }
+function langBarHTML(){
+  return '<div class="row lang-bar"><span class="seg-lbl" id="langLbl">ภาษาเนื้อหา</span><span class="seg" role="group" aria-labelledby="langLbl">'+
+    [['en','English'],['th','ไทย']].map(function(x){return '<button type="button" data-act="lang" data-lang="'+x[0]+'" aria-pressed="'+(ST.lang===x[0])+'">'+x[1]+'</button>';}).join('')+
+    '</span><span class="seg-lbl lang-hint" id="langHint">'+langHint()+'</span></div>';
+}
+function knowHTML(){ return isTH()?knowTH():knowEN(); }
+/* เนื้อหาความรู้ฉบับภาษาไทย */
+function knowTH(){
+  var t=curTopic(), T=thaiOf(t), h='';
+  var title=T?T.title:t.title, sub=T?T.sub:t.sub;
+  h+='<div class="sign"><div class="sign-in">'+ICON.arrow+
+     '<div class="sign-title'+(hasTH(title)?' th':'')+'">'+esc(title)+'</div><div class="sign-sub">'+esc(sub)+'</div>'+
+     '<div class="sign-meta"><span>'+(DATA.mode==='live'?esc(thDate(t.date)):'Day '+DAY_NO)+'</span><span>~'+t.minutes+' นาที</span><span>'+esc(CATS[t.cat].th)+'</span></div></div></div>';
+  if(t.fictional) h+='<div class="demo-note">เรื่องนี้เป็น <b>ตัวอย่างสมมติ</b> เพื่อแสดงรูปแบบเท่านั้น ไม่ใช่งานวิจัยที่ตีพิมพ์จริง</div>';
+  if(T){
+    var lines=thLines(T.summary);
+    h+='<h3>'+(t.stream==='thai'?'บทคัดย่อ (ภาษาไทย)':'สรุปความรู้ (ภาษาไทย)')+'</h3><div class="panel"><p id="sumText" class="th-sum" style="margin-top:0">'+esc(lines.join(' '))+'</p>'+
+       (t.stream==='thai'?'':'<p class="demo-note">'+(DATA.mode==='live'?'ฉบับภาษาไทยเรียบเรียงโดยโค้ช AI จากบทสรุปภาษาอังกฤษ — ข้อเท็จจริงและตัวเลขตรวจกับต้นฉบับแล้ว':'ตัวอย่างฉบับภาษาไทย — ของจริงเรียบเรียงโดยโค้ช AI และตรวจตัวเลขกับต้นฉบับ')+'</p>')+
+       '<div class="row"><button type="button" class="btn" id="sumSpeak" data-speak="'+esc(lines.join(' '))+'">'+ICON.speaker+'ฟังทั้งย่อหน้า</button></div>'+
+       (voicesKnown()&&!pickVoice('th')?'<p class="demo-note" id="thVoiceNote">'+esc(NO_TH_VOICE)+'</p>':'')+srcBlock(t)+'</div>';
+  }else{
+    var st=(ST.thai&&ST.thai.id===t.id)?ST.thai:null;
+    h+='<h3>สรุปความรู้ (ภาษาไทย)</h3><div class="panel load-box" role="status">';
+    if(st&&st.state==='error') h+='<p style="margin:0"><b>ยังเตรียมฉบับภาษาไทยไม่ได้</b></p><p style="margin:0">'+esc(st.err)+'</p>'+
+       '<div class="row"><button type="button" class="btn primary" data-act="thRetry">ลองอีกครั้ง</button><button type="button" class="btn" data-act="lang" data-lang="en">อ่านฉบับ English</button></div>';
+    else if(IN_GAS&&DATA.mode==='live') h+='<p style="margin:0">กำลังเตรียมฉบับภาษาไทย… (ครั้งแรกของเรื่องนี้ ประมาณ 5–15 วินาที ครั้งต่อไปเปิดได้ทันที)</p>';
+    else h+='<p style="margin:0">เรื่องนี้ยังไม่มีฉบับภาษาไทย</p>';
+    h+='</div>';
+  }
+  h+='<h3>คำศัพท์วันนี้</h3><div class="terms">';
+  t.terms.forEach(function(x){h+='<div class="term">'+speakerBtn(x.en,x.en)+'<div><strong class="th">'+esc(x.th)+'</strong><small>'+esc(x.en)+'</small></div></div>';});
+  return h+'</div>';
+}
+/* ขอฉบับไทยจาก backend (เฉพาะเรื่องจริงที่ยังไม่มี) · ผิดพลาดแล้วไม่ลองเองซ้ำ (ไม่เปลืองโควตา) ต้องกด "ลองอีกครั้ง" */
+function ensureThai(force){
+  var t=curTopic();
+  if(!isTH()||thaiOf(t)||!IN_GAS||DATA.mode!=='live') return;
+  var st=(ST.thai&&ST.thai.id===t.id)?ST.thai:null;
+  if(st&&(st.state==='loading'||(st.state==='error'&&!force))) return;
+  ST.thai={id:t.id,state:'loading',err:''};
+  var back=function(){ if(ST.screen==='today'&&curTopic()===t&&isTH()) renderKnow(false); };
+  google.script.run
+    .withSuccessHandler(function(r){ t.titleTh=r.title; t.subTh=r.sub; t.summaryTh=r.summary; ST.thai={id:t.id,state:'ok',err:''}; back(); })
+    .withFailureHandler(function(e){
+      var m=(e&&e.message?e.message:String(e)).replace(/^Exception:\s*/,'');
+      if(/^QUOTA/.test(m)) m='โค้ช AI ครบโควตาของวันนี้แล้ว — อ่านฉบับ English ไปก่อน แล้วลองใหม่พรุ่งนี้';
+      ST.thai={id:t.id,state:'error',err:m}; back();
+    })
+    .seGetThaiBrief(localYmd(),t.id);
+}
+/* วาดใหม่เฉพาะกล่องความรู้ · คงโฟกัส · ถ้าผู้ใช้เลื่อนลงไปอยู่ใต้กล่องแล้ว ชดเชยความสูงที่เปลี่ยนไม่ให้หน้ากระโดด */
+function renderKnow(fromToggle){
+  var kb=document.getElementById('knowBox'); if(!kb) return;
+  var a=document.activeElement, had=kb.contains(a), aid=had&&a.id, r0=kb.getBoundingClientRect();
+  kb.innerHTML=knowHTML();
+  if(r0.top<0){ var d=kb.getBoundingClientRect().height-r0.height; if(d) window.scrollBy(0,d); }
+  if(had){ var n=(aid&&document.getElementById(aid))||document.querySelector('.lang-bar [aria-pressed="true"]'); if(n) n.focus({preventScroll:true}); }
+  var lb=document.getElementById('listen');
+  if(lb&&!lb.hidden&&(fromToggle||!(ST.ls&&ST.ls.playing))) lsRender();
+}
+function setLang(lang){
+  if(lang!=='th') lang='en';
+  if(ST.lang===lang) return;
+  ST.lang=lang; try{localStorage.setItem('se_lang',lang);}catch(e){}
+  stopSpeak();
+  document.querySelectorAll('.lang-bar [data-act="lang"]').forEach(function(b){ b.setAttribute('aria-pressed',b.dataset.lang===lang); });
+  var hn=document.getElementById('langHint'); if(hn) hn.textContent=langHint();
+  ensureThai(false);
+  renderKnow(true);
+}
 /* กล่องสถานะระหว่างโหลด/ไม่มีเรื่อง/ผิดพลาด (โหมดเว็บแอปจริง) */
 function todayStateBox(){
   var h='<h2>เรื่องวันนี้</h2><div class="panel load-box" role="status">';
@@ -939,7 +1056,14 @@ function shadowCheck(){
 }
 /* ---------- โหมดฟังระหว่างเดินทาง: อ่านต่อเนื่องทั้งเรื่อง (หัวข้อ · บทสรุป · คำศัพท์ อังกฤษ–ไทย · ตัวอย่างคำตอบ) ---------- */
 function lsTracks(){
-  var t=curTopic(), L=[{x:t.title,lang:'en'}];
+  var t=curTopic(), T=isTH()?thaiOf(t):null, L;
+  if(T){
+    L=[{x:T.title,lang:'th'}];
+    thLines(T.summary).forEach(function(x){ L.push({x:x,lang:'th'}); });
+    t.terms.forEach(function(w){ L.push({x:w.th,lang:'th'},{x:w.en,lang:'en'}); });
+    return L;
+  }
+  L=[{x:t.title,lang:'en'}];
   if(t.stream==='thai') L.push({x:t.thaiAbstract,lang:'th'});
   else (String(curSummary()).match(/[^.!?]+[.!?]*/g)||[]).forEach(function(x){ L.push({x:x.trim(),lang:'en'}); });
   t.terms.forEach(function(w){ L.push({x:w.en,lang:'en'},{x:w.th,lang:'th'}); });
@@ -953,13 +1077,17 @@ function lsUI(){
   document.querySelectorAll('#lsList li').forEach(function(li,k){ li.className=k===i&&ST.ls.playing?'now':''; if(k===i&&ST.ls.playing) li.scrollIntoView({block:'nearest'}); });
   var st=document.getElementById('lsStat'); if(st) st.textContent=i>=L.length?'ฟังจบแล้ว':'ช่วงที่ '+(i+1)+'/'+L.length;
 }
+function lsNote(){
+  if(!isTH()) return 'เปิดฟังต่อเนื่องได้ระหว่างเดินทาง อังกฤษสลับไทยในส่วนคำศัพท์';
+  return thaiOf(curTopic())?'ฟังความรู้ภาษาไทยต่อเนื่องระหว่างเดินทาง คำศัพท์อ่านไทยแล้วตามด้วยอังกฤษ':'ฉบับภาษาไทยยังไม่พร้อม — เล่นฉบับภาษาอังกฤษไปก่อน';
+}
 function lsRender(){
   var box=document.getElementById('listen'); ST.ls={tracks:lsTracks(),i:0,playing:false,seq:0};
   box.innerHTML='<div class="row" style="justify-content:space-between"><b>โหมดฟัง</b><span class="seg-lbl" id="lsStat" role="status"></span></div>'+
-    '<p class="demo-note" style="margin:4px 0 8px">เปิดฟังต่อเนื่องได้ระหว่างเดินทาง อังกฤษสลับไทยในส่วนคำศัพท์ · ถ้าจอดับ บางเครื่องจะหยุดอ่าน</p>'+
+    '<p class="demo-note" style="margin:4px 0 8px">'+lsNote()+' · ถ้าจอดับ บางเครื่องจะหยุดอ่าน</p>'+
     '<div class="row"><button type="button" class="btn primary" id="lsPlay">เล่น</button>'+
     '<button type="button" class="btn" data-act="lsNav" data-d="-1">ก่อนหน้า</button><button type="button" class="btn" data-act="lsNav" data-d="1">ถัดไป</button></div>'+
-    '<ol class="ls-list" id="lsList">'+ST.ls.tracks.map(function(x){return '<li'+(x.lang==='en'?' class="en"':'')+'>'+esc(x.x)+'</li>';}).join('')+'</ol>';
+    '<ol class="ls-list" id="lsList">'+ST.ls.tracks.map(function(x){return '<li'+(x.lang==='en'?' class="en" lang="en"':'')+'>'+esc(x.x)+'</li>';}).join('')+'</ol>';
   lsUI();
 }
 function lsPlayFrom(i){
@@ -968,8 +1096,8 @@ function lsPlayFrom(i){
   stopSpeak(); S.i=Math.max(0,i); S.playing=S.i<S.tracks.length; var my=++S.seq; lsUI();
   if(!S.playing) return;
   var tr=S.tracks[S.i], u=new SpeechSynthesisUtterance(tr.x), vo=pickVoice(tr.lang);
-  if(tr.lang==='th'&&!vo){   /* ไม่มีเสียงไทยในเครื่อง → ข้ามคำแปลไทย ไม่ให้เสียงอังกฤษอ่านภาษาไทย */
-    if(!S.noTh){ S.noTh=true; toast('เครื่องนี้ไม่มีเสียงภาษาไทย — ข้ามคำแปลไทย (เพิ่มได้ที่ตั้งค่าระบบ › การช่วยการเข้าถึง › เนื้อหาที่พูด)',true); }
+  if(tr.lang==='th'&&!vo&&voicesKnown()){   /* ไม่มีเสียงไทยในเครื่อง → ข้ามภาษาไทย ไม่ให้เสียงอังกฤษอ่านภาษาไทย */
+    if(!S.noTh){ S.noTh=true; toast(NO_TH_VOICE+' — ข้ามส่วนภาษาไทย',true); }
     setTimeout(function(){ if(S.playing&&S.seq===my) lsPlayFrom(S.i+1); },50); return;
   }
   if(vo) u.voice=vo;
@@ -987,6 +1115,7 @@ function srcBlock(t){
   return h+'<span>'+esc(s.note)+'</span></div>';
 }
 function initToday(){
+  ensureThai(false);
   var b=document.getElementById('wrBtn'); if(!b) return;
   document.getElementById('wrMic').onclick=function(){listen(document.getElementById('wr'),this,document.getElementById('wrStatus'));};
   b.onclick=scoreWriting;
@@ -2123,6 +2252,8 @@ document.addEventListener('click',function(e){
     if(t.dataset.speak){ if(ST.speakBtn===t){ stopSpeak(); return; } speak(t.dataset.speak,t.dataset.who,t); return; }
     if(t.dataset.act==='diagnose'){runDiagnose(t); return;}
     if(t.dataset.act==='level'){ setLevel(t); return; }
+    if(t.dataset.act==='lang'){ setLang(t.dataset.lang); return; }
+    if(t.dataset.act==='thRetry'){ ensureThai(true); renderKnow(false); return; }
     if(t.dataset.act==='shNav'){ ST.sh.i=Math.max(0,Math.min(ST.sh.list.length-1,ST.sh.i+(+t.dataset.d))); document.getElementById('shadow').innerHTML=shadowHTML();
       var nb=document.querySelector('#shadow [data-act="shNav"][data-d="'+t.dataset.d+'"]'); if(nb&&!nb.disabled) nb.focus({preventScroll:true}); else document.getElementById('shIn').focus({preventScroll:true}); return; }
     if(t.id==='shCheck'){ shadowCheck(); return; }
@@ -2206,7 +2337,12 @@ document.addEventListener('keydown',function(e){
     if(e.target.id==='wr') scoreWriting();
   }
 });
-if('speechSynthesis' in window) speechSynthesis.onvoiceschanged=function(){};
+/* รายชื่อเสียงโหลดช้า (Chrome) → โหลดเสร็จแล้วค่อยบอกว่าไม่มีเสียงไทย (เฉพาะโหมดภาษาไทย · เพิ่มข้อความจุดเดียว ไม่วาดหน้าใหม่) */
+if('speechSynthesis' in window) speechSynthesis.onvoiceschanged=function(){
+  if(ST.screen!=='today'||!isTH()) return;
+  var sp=document.getElementById('sumSpeak');
+  if(sp&&!document.getElementById('thVoiceNote')&&voicesKnown()&&!pickVoice('th')) sp.parentNode.insertAdjacentHTML('afterend','<p class="demo-note" id="thVoiceNote">'+esc(NO_TH_VOICE)+'</p>');
+};
 go('guide');
 loadTodayTopic();
 loadProgress();
