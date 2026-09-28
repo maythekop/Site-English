@@ -2,7 +2,7 @@
  * เก็บหน้าแอป + config.js + ไอคอน ไว้เปิดได้แม้ไม่มีเน็ต (เรื่อง/ผลการฝึกแอปเก็บเองใน localStorage)
  * ไม่แคชข้อมูลจาก Google Apps Script (ข้อมูลต้องสดเสมอ)
  * ⚠️ แก้ไฟล์ใน repo แล้ว ให้เพิ่มเลขเวอร์ชันด้านล่าง เครื่องจะโหลดของใหม่ */
-var CACHE = 'site-english-shell-v8';
+var CACHE = 'site-english-shell-v9';
 var SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png',
   './icons/icon-maskable-512.png', './icons/apple-touch-icon.png', './icons/favicon-32.png'];
 

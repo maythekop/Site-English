@@ -148,7 +148,16 @@ h3{font-size:17px;margin:22px 0 8px}
 .sign-title.th{font:700 clamp(24px,5.6vw,34px)/1.35 var(--font-th)}
 .term strong.th{font:600 17px/1.4 var(--font-th)}
 .th-sum{font-size:17px;line-height:1.8}
-.sh-words .w{padding:1px 2px;border-radius:3px}.sh-words .ok{background:rgba(63,191,127,.22)}.sh-words .miss{background:rgba(226,88,74,.22);text-decoration:underline dotted}
+/* พูดตาม: ตรง = เขียว · เกือบตรง (รูปคำต่าง) = เหลือง + ขีดเส้นประ · ขาด/ไม่ตรง = แดง + ขีดหยัก · คำที่พูดเกิน = ขีดฆ่า */
+.sh-words{line-height:2}
+.sh-words .w{padding:1px 4px;border-radius:4px}
+.sh-words .ok{background:rgba(63,191,127,.30)}
+.sh-words .near{background:rgba(242,183,5,.35);text-decoration:underline dotted;text-underline-offset:3px}
+.sh-words .miss{background:rgba(226,88,74,.26);text-decoration:underline wavy rgba(226,88,74,.95);text-underline-offset:3px}
+.sh-words .extra{color:var(--bad);text-decoration:line-through}
+.sh-lbl{display:block;color:var(--muted);font-size:13px;margin:10px 0 0}
+.sh-fix{margin:8px 0 0;padding-left:20px;font-size:15px}
+.sh-fix li{margin:2px 0}
 .ls-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px;max-height:260px;overflow:auto}
 .ls-list li{padding:6px 10px;border-radius:8px;font-size:14px;border:1px solid transparent}
 .ls-list li.now{border-color:var(--mark);background:var(--panel-2);font-weight:600}
@@ -1178,24 +1187,70 @@ function shadowList(){
   (String(src).match(/[^.!?]+[.!?]*/g)||[]).forEach(function(x){ out=out.concat(shChunk(x.trim())); });
   return out.filter(function(x){return x.split(/\s+/).length>=4;}).slice(0,6);
 }
-/* ประโยคยาวเกิน 20 คำ → แบ่งเป็นช่วงสั้นให้พูดตามไหว (ตัดที่จุลภาคก่อน ไม่มีจึงตัดทุก ~15 คำ) */
+/* พูดตามทั้งประโยคตามที่เห็นในบทสรุป (บทสรุปเขียนประโยคละไม่เกิน 25 คำ)
+ * ยาวเกิน 28 คำเท่านั้นจึงแบ่ง 2 ช่วงที่จุดใกล้กึ่งกลาง (หลัง , ; : หรือก่อนคำเชื่อม) ทั้งสองช่วงยาวอย่างน้อย 8 คำ
+ * ไม่ตัดทุกจุลภาค — ไม่อย่างนั้นได้ประโยคขาดหัว เช่น "is produced and placed…" ที่อ่านตามบทสรุปไม่ได้ */
 function shChunk(x){
-  var w=x.split(/\s+/); if(w.length<=20) return [x];
-  var parts=x.split(/(?:,|;)\s+/);
-  if(parts.length>1&&parts.every(function(p){return p.split(/\s+/).length<=20;})) return parts;
-  var out=[]; for(var i=0;i<w.length;i+=15) out.push(w.slice(i,i+15).join(' '));
-  if(out.length>1&&out[out.length-1].split(' ').length<5) out[out.length-2]+=' '+out.pop();   /* ช่วงท้ายสั้นเกิน → รวมกับช่วงก่อน */
+  var w=String(x).split(/\s+/).filter(Boolean);
+  if(w.length<=28) return [w.join(' ')];
+  var mid=w.length/2, best=-1, bestD=1e9;
+  for(var i=8;i<=w.length-8;i++){
+    var punct=/[,;:]$/.test(w[i-1]), conj=/^(and|but|so|which|because|while|when|where|although|or)$/i.test(w[i]);
+    if(!punct&&!conj) continue;
+    var d=Math.abs(i-mid)-(punct?0.5:0);
+    if(d<bestD){ bestD=d; best=i; }
+  }
+  if(best<0) best=Math.round(mid);
+  return shChunk(w.slice(0,best).join(' ')).concat(shChunk(w.slice(best).join(' ')));
+}
+/* ---------- เทียบคำที่พูดกับต้นฉบับ ----------
+ * ปรับให้เทียบได้ยุติธรรม: ตัวเลข = คำอ่านตัวเลข (twenty = 20) · we'll = we will · 92% = 92 percent · สะกดแบบอังกฤษ/อเมริกัน
+ * ตรง = คำเดียวกัน · เกือบตรง = รากคำเดียวกันแต่รูปต่าง (produce/produced, degree/degrees) ได้ครึ่งคะแนน */
+var SH_NUM={zero:0,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,thirteen:13,fourteen:14,fifteen:15,
+  sixteen:16,seventeen:17,eighteen:18,nineteen:19,twenty:20,thirty:30,forty:40,fifty:50,sixty:60,seventy:70,eighty:80,ninety:90};
+var SH_SPELL={colour:'color',colours:'colors',metre:'meter',metres:'meters',centre:'center',centres:'centers',tyre:'tire',tyres:'tires',
+  litre:'liter',litres:'liters',programme:'program',grey:'gray',aluminium:'aluminum',kerb:'curb',kerbs:'curbs'};
+function shTokens(text){
+  var s=String(text||'').replace(/[\u2018\u2019`]/g,"'")
+    .replace(/\bcan't\b/gi,'cannot').replace(/\bwon't\b/gi,'will not').replace(/n't\b/gi,' not')
+    .replace(/'ll\b/gi,' will').replace(/'re\b/gi,' are').replace(/'ve\b/gi,' have').replace(/'m\b/gi,' am').replace(/'d\b/gi,' would')
+    .replace(/(\d)\s*%/g,'$1 percent').replace(/\bper cent\b/gi,'percent')
+    .replace(/[\u2013\u2014\u2212]/g,' ').replace(/([A-Za-z0-9])-(?=[A-Za-z0-9])/g,'$1 ');
+  var out=[];
+  s.split(/\s+/).forEach(function(w){
+    var d=w.replace(/^[^A-Za-z0-9]+|[^A-Za-z0-9]+$/g,''); if(!d) return;
+    var n=d.toLowerCase().replace(/[^a-z0-9]/g,''); if(!n) return;
+    if(SH_SPELL[n]) n=SH_SPELL[n];
+    if(SH_NUM[n]!==undefined){
+      var v=SH_NUM[n], prev=out[out.length-1];
+      if(prev&&prev.tens&&v>0&&v<10){ prev.n=String(Number(prev.n)+v); prev.d+=' '+d; prev.tens=false; return; }   /* twenty five = 25 */
+      out.push({d:d,n:String(v),tens:v>=20}); return;
+    }
+    out.push({d:d,n:n});
+  });
   return out;
 }
-function shWords(x){ return String(x).toLowerCase().replace(/[^a-z0-9'\s-]/g,' ').split(/\s+/).filter(Boolean); }
-/* ความยาวลำดับย่อยร่วมที่ยาวที่สุด (LCS) → ระบุคำที่พูดตามตรงลำดับ */
-function shMatch(target,said){
-  var a=shWords(target), b=shWords(said), n=a.length, m=b.length, L=[], i, j;
-  for(i=0;i<=n;i++){ L[i]=[]; for(j=0;j<=m;j++) L[i][j]=(i&&j)?(a[i-1]===b[j-1]?L[i-1][j-1]+1:Math.max(L[i-1][j],L[i][j-1])):0; }
-  var hit=[]; i=n; j=m;
-  while(i>0&&j>0){ if(a[i-1]===b[j-1]){ hit[i-1]=true; i--; j--; } else if(L[i-1][j]>=L[i][j-1]) i--; else j--; }
-  return { pct:n?Math.round(L[n][m]/n*100):0, hit:hit, words:a };
+function shStem(n){ return n.length>3?n.replace(/(ing|ed|es|s|e|d)$/,''):n; }
+function shW(a,b){ if(a.n===b.n) return 2; if(a.n.length>2&&b.n.length>2&&shStem(a.n)===shStem(b.n)) return 1; return 0; }
+/* จับคู่คำตามลำดับให้ได้คะแนนสูงสุด (LCS แบบให้น้ำหนัก) · ta = สถานะคำต้นฉบับ · sb = สถานะคำที่พูด */
+function shAlign(target,said){
+  var a=shTokens(target), b=shTokens(said), n=a.length, m=b.length, L=[], i, j, k;
+  for(i=0;i<=n;i++){ L[i]=[]; for(j=0;j<=m;j++){
+    if(!i||!j){ L[i][j]=0; continue; }
+    var w=shW(a[i-1],b[j-1]); L[i][j]=Math.max(L[i-1][j],L[i][j-1],w?L[i-1][j-1]+w:0);
+  } }
+  var ta=[], sb=[]; for(k=0;k<n;k++) ta[k]={st:'miss'}; for(k=0;k<m;k++) sb[k]={st:'extra'};
+  i=n; j=m;
+  while(i>0&&j>0){
+    var w2=shW(a[i-1],b[j-1]);
+    if(w2&&L[i][j]===L[i-1][j-1]+w2){ var st=w2===2?'ok':'near'; ta[i-1]={st:st,said:b[j-1].d}; sb[j-1]={st:st}; i--; j--; }
+    else if(L[i-1][j]>=L[i][j-1]) i--; else j--;
+  }
+  var ok=ta.filter(function(x){return x.st==='ok';}).length, near=ta.filter(function(x){return x.st==='near';}).length;
+  return { a:a, b:b, ta:ta, sb:sb, ok:ok, near:near, n:n, pct:n?Math.round((ok+near*0.5)/n*100):0 };
 }
+/* ใช้ในที่อื่น (โครงเดิม): คืนเปอร์เซ็นต์ + คำที่ตรง */
+function shMatch(target,said){ var r=shAlign(target,said); return { pct:r.pct, hit:r.ta.map(function(x){return x.st==='ok';}), words:r.a.map(function(x){return x.n;}) }; }
 function shadowHTML(){
   if(!ST.sh) ST.sh={i:0,list:shadowList(),done:{},recorded:false};
   var S=ST.sh, x=S.list[S.i];
@@ -1211,12 +1266,31 @@ function shadowHTML(){
 }
 function shadowCheck(){
   var S=ST.sh, said=document.getElementById('shIn').value.trim(), out=document.getElementById('shResult');
-  if(!said){ out.innerHTML='<p class="status">พูดหรือพิมพ์ตามก่อน แล้วกดตรวจ</p>'; return; }
-  var r=shMatch(S.list[S.i],said);
+  if(!S||!S.list[S.i]) return;
+  if(!said){ out.innerHTML='<p class="status">ยังไม่มีข้อความ — กด "พูด" หรือพิมพ์ตามประโยคก่อน แล้วกดตรวจ</p>'; out.scrollIntoView({block:'nearest',behavior:'smooth'}); return; }
+  var target=S.list[S.i], r=shAlign(target,said);
   S.done[S.i]=r.pct;
-  out.innerHTML='<p style="margin:10px 0 4px"><b>ตรงตามต้นฉบับ '+r.pct+'%</b> '+(r.pct>=85?'— ยอดเยี่ยม':r.pct>=60?'— ดีแล้ว ลองอีกครั้งให้ครบทุกคำ':'— ฟังอีกรอบแล้วพูดตามช้า ๆ')+'</p>'+
-    '<p class="en sh-words" style="margin:0">'+r.words.map(function(w,k){return '<span class="w '+(r.hit[k]?'ok':'miss')+'">'+esc(w)+'</span>';}).join(' ')+'</p>'+
-    '<p class="demo-note" style="margin:6px 0 0">สีเขียว = พูดตามได้ · ขีดเส้นประ = คำที่ยังขาดหรือพูดไม่ตรง</p>';
+  var chip=function(t,st){ return '<span class="w '+st+'">'+esc(t)+'</span>'; };
+  /* สิ่งที่ต้องแก้ เป็นข้อความ (ไม่พึ่งสีอย่างเดียว) */
+  var nearL=[], missL=[], run=[];
+  r.a.forEach(function(x,k){
+    var t=r.ta[k];
+    if(t.st==='miss') run.push(x.d); else { if(run.length){ missL.push(run.join(' ')); run=[]; } }
+    if(t.st==='near') nearL.push('"'+t.said+'" → "'+x.d+'"');
+  });
+  if(run.length) missL.push(run.join(' '));
+  var extraL=r.b.filter(function(x,k){return r.sb[k].st==='extra';}).map(function(x){return x.d;});
+  var fixes=(nearL.length?'<li>รูปคำต่าง (ได้ครึ่งคะแนน): '+esc(nearL.slice(0,5).join(' · '))+'</li>':'')+
+    (missL.length?'<li>ขาด/ไม่ตรง: '+esc(missL.slice(0,4).join(' … '))+'</li>':'')+
+    (extraL.length?'<li>พูดเกินหรือพูดต่างจากต้นฉบับ: '+esc(extraL.slice(0,6).join(' '))+'</li>':'');
+  out.innerHTML='<p style="margin:12px 0 2px"><b>ตรง '+r.ok+(r.near?' · เกือบตรง '+r.near:'')+' จาก '+r.n+' คำ ('+r.pct+'%)</b> '+
+      (r.pct>=85?'— ยอดเยี่ยม':r.pct>=60?'— ดีแล้ว ลองอีกครั้งให้ครบทุกคำ':'— ฟังอีกรอบแล้วพูดตามช้า ๆ')+'</p>'+
+    '<span class="sh-lbl">ประโยคต้นฉบับ</span><p class="en sh-words" style="margin:0">'+r.a.map(function(x,k){return chip(x.d,r.ta[k].st);}).join(' ')+'</p>'+
+    '<span class="sh-lbl">ที่คุณพูด/พิมพ์</span><p class="en sh-words" style="margin:0">'+(r.b.length?r.b.map(function(x,k){return chip(x.d,r.sb[k].st);}).join(' '):'<i>ไม่พบคำภาษาอังกฤษ</i>')+'</p>'+
+    (fixes?'<ul class="sh-fix">'+fixes+'</ul>':'<p style="margin:8px 0 0">ครบทุกคำ ✓</p>')+
+    '<p class="demo-note" style="margin:8px 0 0">เขียว = ตรง · เหลือง = เกือบตรง (รูปคำต่าง เช่น -s -ed) · แดง = ขาดหรือไม่ตรง · ขีดฆ่า = พูดเกิน</p>'+
+    '<div class="row" style="margin-top:8px"><button type="button" class="btn" data-speak="'+esc(target)+'">'+ICON.speaker+'ฟังต้นฉบับอีกครั้ง</button></div>';
+  out.scrollIntoView({block:'nearest',behavior:'smooth'});
   var keys=Object.keys(S.done);
   if(!S.recorded&&keys.length>=3){ S.recorded=true; var avg=Math.round(keys.reduce(function(a,k){return a+S.done[k];},0)/keys.length);
     recordTask('shadow',{xp:Math.round(avg/5),accuracy:avg}); }
