@@ -2,7 +2,7 @@
  * เก็บเฉพาะหน้าเปิดแอป + ไอคอน ไว้เปิดได้แม้ไม่มีเน็ต (แสดงข้อความให้ต่อเน็ต)
  * ไม่แคชตัวเว็บแอป Google Apps Script (ข้อมูลต้องสดเสมอ)
  * ⚠️ แก้ไฟล์ใน repo แล้ว ให้เพิ่มเลขเวอร์ชันด้านล่าง เครื่องจะโหลดของใหม่ */
-var CACHE = 'site-english-shell-v4';
+var CACHE = 'site-english-shell-v5';
 var SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png',
   './icons/icon-maskable-512.png', './icons/apple-touch-icon.png', './icons/favicon-32.png'];
 
